@@ -1,5 +1,5 @@
-import { login } from "@/service/user";
-import { removeToken, setToken, decodeToken } from "@/plugin/auth";
+import { login } from '@/service/user'
+import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -7,22 +7,22 @@ const actions = {
   // ////////////////////////////////////////////
 
   updateSidebarWidth({ commit }, width) {
-    commit("UPDATE_SIDEBAR_WIDTH", width);
+    commit('UPDATE_SIDEBAR_WIDTH', width)
   },
   updateI18nLocale({ commit }, locale) {
-    commit("UPDATE_I18N_LOCALE", locale);
+    commit('UPDATE_I18N_LOCALE', locale)
   },
   toggleContentOverlay({ commit }) {
-    commit("TOGGLE_CONTENT_OVERLAY");
+    commit('TOGGLE_CONTENT_OVERLAY')
   },
   updateTheme({ commit }, val) {
-    commit("UPDATE_THEME", val);
+    commit('UPDATE_THEME', val)
   },
   updateUserRole({ commit }, val) {
-    commit("UPDATE_USER_ROLE", val);
+    commit('UPDATE_USER_ROLE', val)
   },
   updateWindowWidth({ commit }, width) {
-    commit("UPDATE_WINDOW_WIDTH", width);
+    commit('UPDATE_WINDOW_WIDTH', width)
   },
 
   // ////////////////////////////////////////////
@@ -31,15 +31,15 @@ const actions = {
 
   // VxAutoSuggest
   updateStarredPage({ commit }, payload) {
-    commit("UPDATE_STARRED_PAGE", payload);
+    commit('UPDATE_STARRED_PAGE', payload)
   },
 
   //  The Navbar
   arrangeStarredPagesLimited({ commit }, list) {
-    commit("ARRANGE_STARRED_PAGES_LIMITED", list);
+    commit('ARRANGE_STARRED_PAGES_LIMITED', list)
   },
   arrangeStarredPagesMore({ commit }, list) {
-    commit("ARRANGE_STARRED_PAGES_MORE", list);
+    commit('ARRANGE_STARRED_PAGES_MORE', list)
   },
 
   // ////////////////////////////////////////////
@@ -47,25 +47,26 @@ const actions = {
   // ////////////////////////////////////////////
 
   async login({ commit, dispatch }, loginInfo) {
-    const { data } = await login(loginInfo);
+    const { data } = await login(loginInfo)
     if (data.success) {
-      commit("SET_ACCESS_TOKEN", data.data.accessToken);
-      setToken(data.data.accessToken);
+      const token = data.data.accessToken.substring(7)
+      commit('SET_ACCESS_TOKEN', token)
+      setToken(token)
     } else {
-      dispatch("logout");
+      dispatch('logout')
     }
   },
 
   async getInfo({ commit, state }) {
-    const user = decodeToken(state.token);
-    commit("SET_ACTIVE_USER", user);
+    const user = decodeToken(state.accessToken)
+    commit('SET_ACTIVE_USER', user)
   },
 
   async logout({ commit }) {
-    commit("SET_ACCESS_TOKEN", null);
-    commit("SET_ACTIVE_USER", null);
-    removeToken();
+    commit('SET_ACCESS_TOKEN', null)
+    commit('SET_ACTIVE_USER', null)
+    removeToken()
   }
-};
+}
 
-export default actions;
+export default actions

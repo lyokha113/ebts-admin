@@ -1,13 +1,3 @@
-<!-- =========================================================================================
-    File Name: Login.vue
-    Description: Login Page
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
-
 <template>
   <div
     class="h-screen flex w-full bg-img vx-row no-gutter items-center justify-center"
@@ -32,6 +22,7 @@
                   icon-pack="feather"
                   label-placeholder="Email"
                   v-model="email"
+                  :disable="loading"
                   class="w-full no-icon-border"
                 />
 
@@ -42,6 +33,7 @@
                   icon-pack="feather"
                   label-placeholder="Password"
                   v-model="password"
+                  :disable="loading"
                   class="w-full mt-6 no-icon-border"
                 />
 
@@ -59,28 +51,38 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      email: "",
-      password: ""
-    };
+      email: '',
+      password: '',
+      loading: false
+    }
   },
   computed: {
-    ...mapGetters(["accessToken"])
+    ...mapGetters(['accessToken'])
   },
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(['login', 'logout']),
     async handleLogin() {
+      this.loading = false
       await this.login({
         email: this.email,
         password: this.password
-      });
+      })
       if (this.accessToken) {
-        this.$router.push("/");
+        this.$router.push('/')
+      } else {
+        this.$vs.notify({
+          title: 'Warning',
+          text: 'Incorrect login information',
+          color: 'warning',
+          position: 'top-right'
+        })
       }
+      this.loading = true
     }
   }
-};
+}
 </script>

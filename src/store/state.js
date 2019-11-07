@@ -1,17 +1,17 @@
-import navbarSearchAndPinList from "@/layouts/components/navbarSearchAndPinList";
-import themeConfig from "@/../themeConfig.js";
-import colors from "@/../themeConfig.js";
+import navbarSearchAndPinList from '@/layouts/components/navbarSearchAndPinList'
+import themeConfig from '@/../themeConfig.js'
+import colors from '@/../themeConfig.js'
 
-import { getToken } from "@/plugin/auth";
+import { getToken } from '@/plugin/auth'
 
 const state = {
   isSidebarActive: true,
   breakpoint: null,
-  sidebarWidth: "default",
+  sidebarWidth: 'default',
   reduceButton: themeConfig.sidebarCollapsed,
   bodyOverlay: false,
   sidebarItemsMin: false,
-  theme: themeConfig.theme || "semi-dark",
+  theme: themeConfig.theme || 'semi-dark',
   navbarSearchAndPinList: navbarSearchAndPinList,
   activeUser: null,
   accessToken: getToken(),
@@ -29,6 +29,6 @@ const state = {
   ),
   userRole: null,
   windowWidth: null
-};
+}
 
-export default state;
+export default state

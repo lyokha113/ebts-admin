@@ -1,8 +1,11 @@
 <template>
   <div class="vx-input-group flex">
-
     <!-- SLOT: PREPEND -->
-    <div class="vx-input-group-prepend flex" :class="prependClasses" v-if="this.$slots.prepend">
+    <div
+      class="vx-input-group-prepend flex"
+      :class="prependClasses"
+      v-if="this.$slots.prepend"
+    >
       <slot name="prepend"></slot>
     </div>
 
@@ -12,7 +15,11 @@
     </div>
 
     <!-- SLOT: APPEND -->
-    <div class="vx-input-group-append flex" :class="appendClasses" v-if="this.$slots.append">
+    <div
+      class="vx-input-group-append flex"
+      :class="appendClasses"
+      v-if="this.$slots.append"
+    >
       <slot name="append"></slot>
     </div>
   </div>
@@ -23,15 +30,15 @@ export default {
   name: 'vx-input-group',
   props: {
     prependClasses: {
-      type: String,
+      type: String
     },
     appendClasses: {
-      type: String,
+      type: String
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/vuesax/components/vxInputGroup.scss";
+@import '@/assets/scss/vuesax/components/vxInputGroup.scss';
 </style>

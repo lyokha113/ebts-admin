@@ -6,6 +6,6 @@ const getters = {
   // USER
   accessToken: state => state.accessToken,
   activeUser: state => state.activeUser
-};
+}
 
-export default getters;
+export default getters
