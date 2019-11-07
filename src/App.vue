@@ -1,24 +1,48 @@
 <template>
-  <v-app>
-    <core-app-bar />
-
-    <core-drawer />
-
-    <core-view />
-
-    <core-footer />
-  </v-app>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-export default {
-  components: {
-    CoreDrawer: () => import('@/components/core/Drawer'),
-    CoreFooter: () => import('@/components/core/Footer'),
-    CoreAppBar: () => import('@/components/core/AppBar'),
-    CoreView: () => import('@/components/core/View')
-  }
-}
-</script>
+import themeConfig from "@/../themeConfig.js";
 
-<style></style>
+export default {
+  watch: {
+    "$store.state.theme"(val) {
+      this.toggleClassInBody(val);
+    }
+  },
+  methods: {
+    toggleClassInBody(className) {
+      if (className == "dark") {
+        if (document.body.className.match("theme-semi-dark"))
+          document.body.classList.remove("theme-semi-dark");
+        document.body.classList.add("theme-dark");
+      } else if (className == "semi-dark") {
+        if (document.body.className.match("theme-dark"))
+          document.body.classList.remove("theme-dark");
+        document.body.classList.add("theme-semi-dark");
+      } else {
+        if (document.body.className.match("theme-dark"))
+          document.body.classList.remove("theme-dark");
+        if (document.body.className.match("theme-semi-dark"))
+          document.body.classList.remove("theme-semi-dark");
+      }
+    },
+    handleWindowResize(event) {
+      this.$store.dispatch("updateWindowWidth", event.currentTarget.innerWidth);
+    }
+  },
+  mounted() {
+    this.toggleClassInBody(themeConfig.theme);
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.handleWindowResize);
+    });
+    this.$store.dispatch("updateWindowWidth", window.innerWidth);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleWindowResize);
+  }
+};
+</script>
