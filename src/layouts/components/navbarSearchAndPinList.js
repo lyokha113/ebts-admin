@@ -4,16 +4,16 @@ export default {
   data: [
     {
       index: 0,
-      label: 'Home',
-      url: '/',
-      labelIcon: 'HomeIcon',
+      label: 'Account',
+      url: '/account',
+      labelIcon: 'UsersIcon',
       highlightAction: false
     },
     {
       index: 1,
-      label: 'Page 2',
-      url: '/page2',
-      labelIcon: 'CalendarIcon',
+      label: 'Category',
+      url: '/category',
+      labelIcon: 'GridIcon',
       highlightAction: false
     }
   ]

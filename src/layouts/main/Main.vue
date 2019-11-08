@@ -1,8 +1,5 @@
 z<template>
-  <div
-    class="layout--main"
-    :class="[navbarClasses, footerClasses, { 'app-page': isAppPage }]"
-  >
+  <div class="layout--main" :class="[navbarClasses, footerClasses, { 'app-page': isAppPage }]">
     <vx-sidebar
       :sidebarItems="sidebarItems"
       :logo="require('@/assets/images/logo/logo.png')"
@@ -10,10 +7,7 @@ z<template>
       parent=".layout--main"
     />
 
-    <div
-      id="content-area"
-      :class="[contentAreaClass, { 'show-overlay': bodyOverlay }]"
-    >
+    <div id="content-area" :class="[contentAreaClass, { 'show-overlay': bodyOverlay }]">
       <div id="content-overlay"></div>
 
       <div class="content-wrapper">
@@ -26,10 +20,7 @@ z<template>
         />
 
         <div class="router-view">
-          <div
-            class="router-content"
-            :class="{ 'mt-0': navbarType == 'hidden' }"
-          >
+          <div class="router-content" :class="{ 'mt-0': navbarType == 'hidden' }">
             <transition :name="routerTransition">
               <div
                 class="router-header flex flex-wrap items-center mb-6"
@@ -46,79 +37,12 @@ z<template>
                 </div>
 
                 <!-- BREADCRUMB -->
-                <vx-breadcrumb
-                  class="ml-4 md:block hidden"
-                  v-if="$route.meta.breadcrumb"
-                />
-
-                <!-- DROPDOWN -->
-                <vs-dropdown
-                  class="ml-auto md:block hidden cursor-pointer"
-                  vs-trigger-click
-                >
-                  <vs-button
-                    radius
-                    icon="icon-settings"
-                    icon-pack="feather"
-                  ></vs-button>
-
-                  <vs-dropdown-menu class="w-32">
-                    <vs-dropdown-item>
-                      <div
-                        @click="$router.push('/pages/profile')"
-                        class="flex items-center"
-                      >
-                        <feather-icon
-                          icon="UserIcon"
-                          class="inline-block mr-2"
-                          svgClasses="w-4 h-4"
-                        />
-                        <span>Profile</span>
-                      </div>
-                    </vs-dropdown-item>
-
-                    <vs-dropdown-item>
-                      <div
-                        @click="$router.push('/apps/todo')"
-                        class="flex items-center"
-                      >
-                        <feather-icon
-                          icon="CheckSquareIcon"
-                          class="inline-block mr-2"
-                          svgClasses="w-4 h-4"
-                        />
-                        <span>Tasks</span>
-                      </div>
-                    </vs-dropdown-item>
-
-                    <vs-dropdown-item>
-                      <div
-                        @click="$router.push('/apps/email')"
-                        class="flex items-center"
-                      >
-                        <feather-icon
-                          icon="MailIcon"
-                          class="inline-block mr-2"
-                          svgClasses="w-4 h-4"
-                        />
-                        <span>Inbox</span>
-                      </div>
-                    </vs-dropdown-item>
-                  </vs-dropdown-menu>
-                </vs-dropdown>
+                <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb" />
               </div>
             </transition>
             <div class="content-area__content">
-              <back-to-top
-                bottom="5%"
-                visibleoffset="500"
-                v-if="!hideScrollToTop"
-              >
-                <vs-button
-                  icon-pack="feather"
-                  icon="icon-arrow-up"
-                  class="shadow-lg"
-                />
+              <back-to-top bottom="5%" visibleoffset="500" v-if="!hideScrollToTop">
+                <vs-button icon-pack="feather" icon="icon-arrow-up" class="shadow-lg" />
               </back-to-top>
               <transition :name="routerTransition" mode="out-in">
                 <router-view @changeRouteTitle="changeRouteTitle"></router-view>
@@ -187,6 +111,7 @@ export default {
       if (this.sidebarWidth == 'default') return 'content-area-default'
       else if (this.sidebarWidth == 'reduced') return 'content-area-reduced'
       else if (this.sidebarWidth) return 'content-area-full'
+      return 'content-area-default'
     },
     navbarClasses() {
       return {

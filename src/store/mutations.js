@@ -100,6 +100,13 @@ const mutations = {
   },
   SET_ACTIVE_USER(state, user) {
     state.activeUser = user
+  },
+
+  // ////////////////////////////////////////////
+  // ACCOUNT
+  // ////////////////////////////////////////////
+  SET_ACCOUNTS(state, accounts) {
+    state.accounts = accounts
   }
 }
 

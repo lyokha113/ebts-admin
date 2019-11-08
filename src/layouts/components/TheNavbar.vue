@@ -29,62 +29,6 @@
               </li>
             </draggable>
           </ul>
-
-          <!-- STARRED PAGES MORE -->
-          <div class="vx-navbar__starred-pages--more-dropdown" v-if="starredPagesMore.length">
-            <vs-dropdown vs-custom-content vs-trigger-click>
-              <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" class="cursor-pointer p-2"></feather-icon>
-              <vs-dropdown-menu>
-                <ul class="vx-navbar__starred-pages-more--list">
-                  <draggable
-                    v-model="starredPagesMore"
-                    :group="{ name: 'pinList' }"
-                    class="cursor-move"
-                  >
-                    <li
-                      class="starred-page--more flex items-center cursor-pointer"
-                      v-for="page in starredPagesMore"
-                      :key="page.url"
-                      @click="$router.push(page.url)"
-                    >
-                      <feather-icon svgClasses="h-5 w-5" class="ml-2 mr-1" :icon="page.labelIcon"></feather-icon>
-                      <span class="px-2 pt-2 pb-1">{{ page.label }}</span>
-                    </li>
-                  </draggable>
-                </ul>
-              </vs-dropdown-menu>
-            </vs-dropdown>
-          </div>
-
-          <div class="bookmark-container">
-            <feather-icon
-              icon="StarIcon"
-              :svgClasses="[
-                'stoke-current text-warning',
-                { 'text-white': navbarColor != '#fff' }
-              ]"
-              class="cursor-pointer p-2"
-              @click.stop="
-                showBookmarkPagesDropdown = !showBookmarkPagesDropdown
-              "
-            />
-            <div
-              v-click-outside="outside"
-              class="absolute bookmark-list w-1/3 xl:w-1/4 mt-4"
-              v-if="showBookmarkPagesDropdown"
-            >
-              <vx-auto-suggest
-                :autoFocus="true"
-                :data="navbarSearchAndPinList"
-                @selected="selected"
-                @actionClicked="actionClicked"
-                inputClassses="w-full"
-                show-action
-                show-pinned
-                background-overlay
-              ></vx-auto-suggest>
-            </div>
-          </div>
         </template>
 
         <vs-spacer></vs-spacer>
@@ -161,11 +105,7 @@
                       <small>{{ ntf.msg }}</small>
                     </div>
                   </div>
-                  <small class="mt-1 whitespace-no-wrap">
-                    {{
-                    elapsedTime(ntf.time)
-                    }}
-                  </small>
+                  <small class="mt-1 whitespace-no-wrap">{{ elapsedTime(ntf.time) }}</small>
                 </li>
               </ul>
             </VuePerfectScrollbar>
@@ -186,16 +126,6 @@
           <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
             <div class="con-img ml-3">
               <img
-                v-if="activeUserImg.startsWith('http')"
-                key="onlineImg"
-                :src="activeUserImg"
-                alt="user-img"
-                width="40"
-                height="40"
-                class="rounded-full shadow-md cursor-pointer block"
-              />
-              <img
-                v-else
                 key="localImg"
                 :src="activeUserImg"
                 alt="user-img"
@@ -208,36 +138,14 @@
               <ul style="min-width: 9rem">
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/pages/profile')"
+                  @click="$router.push('/profile')"
                 >
                   <feather-icon icon="UserIcon" svgClasses="w-4 h-4"></feather-icon>
                   <span class="ml-2">Profile</span>
                 </li>
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/apps/email')"
-                >
-                  <feather-icon icon="MailIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-2">Inbox</span>
-                </li>
-                <li
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/apps/todo')"
-                >
-                  <feather-icon icon="CheckSquareIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-2">Tasks</span>
-                </li>
-                <li
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/apps/chat')"
-                >
-                  <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-2">Chat</span>
-                </li>
-                <vs-divider class="m-1"></vs-divider>
-                <li
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/pages/login')"
+                  @click="handleLogout"
                 >
                   <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4"></feather-icon>
                   <span class="ml-2">Logout</span>
@@ -255,7 +163,7 @@
 import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'the-navbar',
@@ -341,6 +249,7 @@ export default {
       if (this.sidebarWidth == 'default') return 'navbar-default'
       else if (this.sidebarWidth == 'reduced') return 'navbar-reduced'
       else if (this.sidebarWidth) return 'navbar-full'
+      return 'navbar-default'
     },
 
     // BOOKMARK & SEARCH
@@ -369,10 +278,10 @@ export default {
 
     // PROFILE
     user_displayName() {
-      return this.activeUser.fullName
+      return this.activeUser && this.activeUser.fullName
     },
     activeUserImg() {
-      return this.activeUser.imageUrl
+      return this.activeUser && this.activeUser.imageUrl
     }
   },
   methods: {
@@ -432,6 +341,12 @@ export default {
     },
     outside: function() {
       this.showBookmarkPagesDropdown = false
+    },
+
+    ...mapActions(['logout']),
+    async handleLogout() {
+      await this.logout()
+      this.$router.push('/login')
     }
   },
   directives: {

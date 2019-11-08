@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store/store'
-import { async } from 'q'
 
 Vue.use(Router)
 
@@ -23,14 +22,28 @@ const router = new Router({
         // Theme Routes
         // =============================================================================
         {
-          path: '/',
-          name: 'home',
-          component: () => import('./views/Home.vue')
+          path: '/account',
+          name: 'Account',
+          component: () => import('./views/account/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: 'Home', url: '/' },
+              { title: 'Account', active: true }
+            ],
+            pageTitle: 'Account Management'
+          }
         },
         {
-          path: '/page2',
-          name: 'page2',
-          component: () => import('./views/Page2.vue')
+          path: '/category',
+          name: 'Category',
+          component: () => import('./views/category/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: 'Home', url: '/' },
+              { title: 'Category', active: true }
+            ],
+            pageTitle: 'Category Management'
+          }
         }
       ]
     },
@@ -64,6 +77,11 @@ const router = new Router({
   ]
 })
 
+const logoutAction = async function(next) {
+  await store.dispatch('logout')
+  return next(`/login`)
+}
+
 router.afterEach(() => {
   const appLoading = document.getElementById('loading-bg')
   if (appLoading) {
@@ -76,13 +94,11 @@ router.beforeEach(async (to, from, next) => {
     return next()
   } else {
     try {
-      console.log(store.getters.accessToken)
       if (store.getters.accessToken) {
         await store.dispatch('getInfo')
-        return next({ ...to, replace: true })
+        return next({ ...to, replace: false })
       } else {
-        await store.dispatch('logout')
-        return next(`/login`)
+        logoutAction(next)
       }
     } catch (error) {
       await store.dispatch('logout')

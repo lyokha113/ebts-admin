@@ -28,7 +28,12 @@ const state = {
     page => page.highlightAction
   ),
   userRole: null,
-  windowWidth: null
+  windowWidth: null,
+
+  // ////////////////////////////////////////////
+  // ACCOUNT
+  // ////////////////////////////////////////////
+  accounts: []
 }
 
 export default state

@@ -1,4 +1,5 @@
 import { login } from '@/service/user'
+import { getAccounts } from '@/service/account'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
 const actions = {
@@ -50,8 +51,11 @@ const actions = {
     const { data } = await login(loginInfo)
     if (data.success) {
       const token = data.data.accessToken.substring(7)
-      commit('SET_ACCESS_TOKEN', token)
-      setToken(token)
+      const user = decodeToken(token)
+      if (user.roleId == 1) {
+        commit('SET_ACCESS_TOKEN', token)
+        setToken(token)
+      }
     } else {
       dispatch('logout')
     }
@@ -66,6 +70,16 @@ const actions = {
     commit('SET_ACCESS_TOKEN', null)
     commit('SET_ACTIVE_USER', null)
     removeToken()
+  },
+
+  // ////////////////////////////////////////////
+  // ACCOUNT
+  // ////////////////////////////////////////////
+  async getAccounts({ commit }, accounts) {
+    const { data } = await getAccounts(accounts)
+    if (data.success) {
+      commit('SET_ACCOUNTS', data.data)
+    }
   }
 }
 
