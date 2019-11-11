@@ -27,13 +27,17 @@ const state = {
   starredPages: navbarSearchAndPinList.data.filter(
     page => page.highlightAction
   ),
-  userRole: null,
   windowWidth: null,
 
   // ////////////////////////////////////////////
   // ACCOUNT
   // ////////////////////////////////////////////
-  accounts: []
+  accounts: [],
+
+  // ////////////////////////////////////////////
+  // CATEGORY
+  // ////////////////////////////////////////////
+  categories: []
 }
 
 export default state

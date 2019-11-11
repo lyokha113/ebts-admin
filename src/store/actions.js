@@ -1,5 +1,10 @@
 import { login } from '@/service/user'
-import { getAccounts } from '@/service/account'
+import { getAccounts, createAccount, updateAccount } from '@/service/account'
+import {
+  getCategories,
+  createCategory,
+  updateCategory
+} from '@/service/category'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
 const actions = {
@@ -79,6 +84,40 @@ const actions = {
     const { data } = await getAccounts(accounts)
     if (data.success) {
       commit('SET_ACCOUNTS', data.data)
+    }
+  },
+  async updateAccount({ commit }, account) {
+    const { data } = await updateAccount(account)
+    if (data.success) {
+      commit('UPDATE_ACCOUNT', data.data)
+    }
+  },
+  async createAccount({ commit }, account) {
+    const { data } = await createAccount(account)
+    if (data.success) {
+      commit('CREATE_ACCOUNT', data.data)
+    }
+  },
+
+  // ////////////////////////////////////////////
+  // CATEGORY
+  // ////////////////////////////////////////////
+  async getCategories({ commit }, accounts) {
+    const { data } = await getCategories(accounts)
+    if (data.success) {
+      commit('SET_CATEGORIES', data.data)
+    }
+  },
+  async updateCategory({ commit }, account) {
+    const { data } = await updateCategory(account)
+    if (data.success) {
+      commit('UPDATE_CATEGORY', data.data)
+    }
+  },
+  async createCategory({ commit }, account) {
+    const { data } = await createCategory(account)
+    if (data.success) {
+      commit('CREATE_CATEGORY', data.data)
     }
   }
 }

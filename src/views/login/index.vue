@@ -8,7 +8,11 @@
         <div slot="no-body" class="full-page-bg-color">
           <div class="vx-row no-gutter justify-center items-center">
             <div class="vx-col hidden lg:block lg:w-1/2">
-              <img src="@/assets/images/pages/login.png" alt="login" class="mx-auto" />
+              <img
+                src="@/assets/images/pages/login.png"
+                alt="login"
+                class="mx-auto"
+              />
             </div>
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
               <div class="p-8">
@@ -40,7 +44,9 @@
                 <div class="flex flex-wrap justify-between my-5">
                   <router-link to="#">Forgot Password?</router-link>
                 </div>
-                <vs-button class="float-right mb-5" @click="handleLogin">Login</vs-button>
+                <vs-button class="float-right mb-5" @click="handleLogin"
+                  >Login</vs-button
+                >
               </div>
             </div>
           </div>
@@ -67,7 +73,7 @@ export default {
     ...mapActions(['login', 'logout']),
     async handleLogin() {
       this.loading = false
-      await this.login({
+      await this.handleCallAPI(this.login, {
         email: this.email,
         password: this.password
       })
@@ -81,6 +87,7 @@ export default {
           position: 'top-right'
         })
       }
+
       this.loading = true
     }
   }

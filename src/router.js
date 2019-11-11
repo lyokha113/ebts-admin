@@ -77,11 +77,6 @@ const router = new Router({
   ]
 })
 
-const logoutAction = async function(next) {
-  await store.dispatch('logout')
-  return next(`/login`)
-}
-
 router.afterEach(() => {
   const appLoading = document.getElementById('loading-bg')
   if (appLoading) {
@@ -96,9 +91,10 @@ router.beforeEach(async (to, from, next) => {
     try {
       if (store.getters.accessToken) {
         await store.dispatch('getInfo')
-        return next({ ...to, replace: false })
+        return next()
       } else {
-        logoutAction(next)
+        await store.dispatch('logout')
+        return next(`/login`)
       }
     } catch (error) {
       await store.dispatch('logout')

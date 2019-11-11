@@ -12,7 +12,6 @@
     <template slot-scope="tour">
       <transition name="fade">
         <v-step
-          v-if="tour.currentStep === index"
           v-for="(step, index) of tour.steps"
           :key="index"
           :step="step"
@@ -34,9 +33,8 @@
               color="#fff"
               type="border"
               v-if="tour.currentStep != tour.steps.length - 1"
+              >Skip</vs-button
             >
-              Skip
-            </vs-button>
 
             <vs-button
               size="small"
@@ -47,9 +45,8 @@
               type="border"
               class="mr-3"
               v-if="tour.currentStep"
+              >Previous</vs-button
             >
-              Previous
-            </vs-button>
 
             <vs-button
               size="small"
@@ -61,9 +58,8 @@
               type="border"
               class="btn-tour-next"
               v-if="tour.currentStep != tour.steps.length - 1"
+              >Next</vs-button
             >
-              Next
-            </vs-button>
 
             <vs-button
               size="small"
@@ -75,9 +71,8 @@
               type="border"
               class="btn-tour-finish"
               v-if="tour.currentStep == tour.steps.length - 1"
+              >Finish</vs-button
             >
-              Finish
-            </vs-button>
           </div>
         </v-step>
       </transition>

@@ -1,7 +1,11 @@
 <template>
   <div class="relative">
     <div class="vx-navbar-wrapper">
-      <vs-navbar class="vx-navbar navbar-custom" :color="navbarColor" :class="classObj">
+      <vs-navbar
+        class="vx-navbar navbar-custom"
+        :color="navbarColor"
+        :class="classObj"
+      >
         <!-- SM - OPEN SIDEBAR BUTTON -->
         <feather-icon
           class="sm:inline-flex xl:hidden cursor-pointer mr-1"
@@ -17,7 +21,11 @@
               :group="{ name: 'pinList' }"
               class="flex cursor-move"
             >
-              <li class="starred-page" v-for="page in starredPagesLimited" :key="page.url">
+              <li
+                class="starred-page"
+                v-for="page in starredPagesLimited"
+                :key="page.url"
+              >
                 <vx-tooltip :text="page.label" position="bottom" delay=".3s">
                   <feather-icon
                     svgClasses="h-6 w-6"
@@ -66,13 +74,19 @@
         ></feather-icon>
 
         <!-- NOTIFICATIONS -->
-        <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer ml-4">
+        <vs-dropdown
+          vs-custom-content
+          vs-trigger-click
+          class="cursor-pointer ml-4"
+        >
           <feather-icon
             icon="BellIcon"
             class="cursor-pointer mt-1 sm:mr-6 mr-2"
             :badge="unreadNotifications.length"
           ></feather-icon>
-          <vs-dropdown-menu class="notification-dropdown dropdown-custom vx-navbar-dropdown">
+          <vs-dropdown-menu
+            class="notification-dropdown dropdown-custom vx-navbar-dropdown"
+          >
             <div class="notification-top text-center p-5 bg-primary text-white">
               <h3 class="text-white">{{ unreadNotifications.length }} New</h3>
               <p class="opacity-75">App Notifications</p>
@@ -101,11 +115,14 @@
                       <span
                         class="font-medium block notification-title"
                         :class="[`text-${ntf.category}`]"
-                      >{{ ntf.title }}</span>
+                        >{{ ntf.title }}</span
+                      >
                       <small>{{ ntf.msg }}</small>
                     </div>
                   </div>
-                  <small class="mt-1 whitespace-no-wrap">{{ elapsedTime(ntf.time) }}</small>
+                  <small class="mt-1 whitespace-no-wrap">{{
+                    elapsedTime(ntf.time)
+                  }}</small>
                 </li>
               </ul>
             </VuePerfectScrollbar>
@@ -123,7 +140,11 @@
             <p class="font-semibold">{{ user_displayName }}</p>
             <small>Available</small>
           </div>
-          <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
+          <vs-dropdown
+            vs-custom-content
+            vs-trigger-click
+            class="cursor-pointer"
+          >
             <div class="con-img ml-3">
               <img
                 key="localImg"
@@ -140,14 +161,20 @@
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="$router.push('/profile')"
                 >
-                  <feather-icon icon="UserIcon" svgClasses="w-4 h-4"></feather-icon>
+                  <feather-icon
+                    icon="UserIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
                   <span class="ml-2">Profile</span>
                 </li>
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="handleLogout"
                 >
-                  <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4"></feather-icon>
+                  <feather-icon
+                    icon="LogOutIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
                   <span class="ml-2">Logout</span>
                 </li>
               </ul>

@@ -1,12 +1,3 @@
-/*=========================================================================================
-  File Name: mutations.js
-  Description: Vuex Store - mutations
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
-
 const mutations = {
   // ////////////////////////////////////////////
   // SIDEBAR & UI UX
@@ -35,10 +26,6 @@ const mutations = {
   },
   UPDATE_PRIMARY_COLOR(state, val) {
     state.themePrimaryColor = val
-  },
-  UPDATE_USER_ROLE(state, val) {
-    state.userRole = val
-    localStorage.setItem('userRole', val)
   },
   // UPDATE_STATUS_CHAT(state, value) {
   //     state.activeUser.status = value;
@@ -107,6 +94,27 @@ const mutations = {
   // ////////////////////////////////////////////
   SET_ACCOUNTS(state, accounts) {
     state.accounts = accounts
+  },
+  CREATE_ACCOUNT(state, account) {
+    state.accounts.unshift(account)
+  },
+  UPDATE_ACCOUNT(state, account) {
+    const current = state.accounts.find(a => a.id === account.id)
+    Object.assign(current, account)
+  },
+
+  // ////////////////////////////////////////////
+  // CATEGORY
+  // ////////////////////////////////////////////
+  SET_CATEGORIES(state, categories) {
+    state.categories = categories
+  },
+  CREATE_CATEGORY(state, category) {
+    state.categories.unshift(category)
+  },
+  UPDATE_CATEGORY(state, category) {
+    const current = state.categories.find(c => c.id === category.id)
+    Object.assign(current, category)
   }
 }
 

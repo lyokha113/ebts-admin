@@ -1,12 +1,3 @@
-/*=========================================================================================
-  File Name: main.js
-  Description: main vue(js) file
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
-
 import Vue from 'vue'
 import App from './App.vue'
 
@@ -48,6 +39,9 @@ import 'prismjs/themes/prism-tomorrow.css'
 // Feather font icon
 require('./assets/css/iconfont.css')
 
+// Mixins
+import mixins from '@/mixin.js'
+
 Vue.config.productionTip = false
 
 new Vue({
@@ -55,3 +49,5 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+Vue.mixin(mixins)
