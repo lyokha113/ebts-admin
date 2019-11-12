@@ -1,13 +1,3 @@
-<!-- =========================================================================================
-    File Name: VxSidebar.vue
-    Description: Sidebar Component
-    Component Name: VxSidebar
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 <template>
   <div class="parentx">
     <vs-sidebar
@@ -23,18 +13,10 @@
       :reduce-not-rebound="reduceNotRebound"
     >
       <div @mouseenter="sidebarMouseEntered" @mouseleave="sidebarMouseLeave">
-        <div
-          class="header-sidebar flex items-end justify-between"
-          slot="header"
-        >
+        <div class="header-sidebar flex items-end justify-between" slot="header">
           <div class="logo flex items-center">
             <img :src="logo" alt="logo" class="w-10 mr-4" v-if="logo" />
-            <span
-              class="logo-text"
-              v-show="isMouseEnter || !reduce"
-              v-if="title"
-              >{{ title }}</span
-            >
+            <span class="logo-text" v-show="isMouseEnter || !reduce" v-if="title">{{ title }}</span>
           </div>
           <div>
             <template v-if="showCloseButton">
@@ -79,8 +61,7 @@
               :key="`header-${index}`"
               v-if="sidebarItem.header && !sidebarItemsMin"
               class="navigation-header truncate"
-              >{{ sidebarItem.header }}</span
-            >
+            >{{ sidebarItem.header }}</span>
             <template v-else-if="!sidebarItem.header">
               <!-- IF IT'S SINGLE ITEM -->
               <vx-sidebar-item
@@ -94,15 +75,16 @@
                 :target="sidebarItem.target"
                 :isDisabled="sidebarItem.isDisabled"
               >
-                <span v-show="!sidebarItemsMin" class="truncate">{{
+                <span v-show="!sidebarItemsMin" class="truncate">
+                  {{
                   sidebarItem.name
-                }}</span>
+                  }}
+                </span>
                 <vs-chip
                   class="ml-auto"
                   :color="sidebarItem.tagColor"
                   v-if="sidebarItem.tag && (isMouseEnter || !reduce)"
-                  >{{ sidebarItem.tag }}</vs-chip
-                >
+                >{{ sidebarItem.tag }}</vs-chip>
               </vx-sidebar-item>
 
               <!-- IF HAVE SUBMENU / DROPDOWN -->

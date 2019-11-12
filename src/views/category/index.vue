@@ -1,22 +1,32 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <!-- <vs-popup class="holamundo" title="Lorem ipsum dolor sit amet" :active.sync="addPrompt">
+    <vs-popup title="Add new category" :active.sync="addPrompt">
       <div>
-        Enter template name:
-        <vs-input placeholder="Name" v-model="name" />
+        Enter category name:
+        <vs-input placeholder="Name" v-model="name" style="width: 270px" class="my-2" />
+        <vs-button color="primary" type="filled" class="float-right mt-2" @click="handleAdd">Add</vs-button>
       </div>
-    </vs-popup>-->
-    <vs-prompt :active.sync="addPrompt">
-      Enter template name:
-      <vs-input placeholder="Name" v-model="name" />
-    </vs-prompt>
+    </vs-popup>
+
+    <vs-popup title="Update category" :active.sync="updatePrompt">
+      <div>
+        Enter category name:
+        <vs-input placeholder="Name" v-model="updateName" style="width: 270px" class="my-2" />
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          @click="handleUpdate"
+        >Update</vs-button>
+      </div>
+    </vs-popup>
 
     <vs-table ref="table" pagination search :max-items="itemsPerPage" :data="categories">
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center">
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="addPrompt = true"
+            @click="(name = '', addPrompt = true)"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Add New</span>
@@ -85,11 +95,29 @@
               <span
                 v-if="activeUser && activeUser.id != tr.id"
                 class="action-icon mx-1"
+                @click="(updateName ='', selected = JSON.parse(JSON.stringify(tr)), updatePrompt = true)"
+              >
+                <vs-icon size="small" icon="create" />
+              </span>
+
+              <span
+                v-if="activeUser && activeUser.id != tr.id"
+                class="action-icon mx-1"
                 @click="handleStatus(tr)"
               >
                 <vs-icon size="small" :icon="tr.active ? 'lock' : 'lock_open'" />
               </span>
             </vs-td>
+
+            <template class="expand-user" slot="expand">
+              <div>
+                <div class="items-grid-view vx-row match-height" v-if="tr.templates.length" appear>
+                  <div class="vx-col w-full" v-for="template in tr.templates" :key="template.id">
+                    <ItemGridView :template="template" />
+                  </div>
+                </div>
+              </div>
+            </template>
           </vs-tr>
         </tbody>
       </template>
@@ -98,16 +126,22 @@
 </template>
 
 <script>
+import ItemGridView from '@/components/category/ItemGridView.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  components: {
+    ItemGridView
+  },
   data() {
     return {
       selected: null,
       itemsPerPage: 10,
       isMounted: false,
       addPrompt: false,
-      name: ''
+      name: '',
+      updatePrompt: false,
+      updateName: ''
     }
   },
   computed: {
@@ -122,16 +156,28 @@ export default {
   methods: {
     ...mapActions(['getCategories', 'createCategory', 'updateCategory']),
     handleAdd() {
+      this.addPrompt = false
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
         title: `Confirm`,
-        text: `This action could be affect to other parts. Do you want to  this category ?`
+        text: `Do you want to create new category ?`,
+        accept: this.handleAddConfirm
       })
     },
-    handleStatus(template) {
-      this.selected = JSON.parse(JSON.stringify(template))
-      const actionMsg = template.active ? 'lock' : 'unlock'
+    handleUpdate() {
+      this.updatePrompt = false
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to update this category ?`,
+        accept: this.handleUpdatedConfirm
+      })
+    },
+    handleStatus(category) {
+      this.selected = JSON.parse(JSON.stringify(category))
+      const actionMsg = category.active ? 'lock' : 'unlock'
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
@@ -140,13 +186,31 @@ export default {
         accept: this.handleStatusConfirm
       })
     },
-    async handleAddConfirm() {},
+    async handleAddConfirm() {
+      await this.handleCallAPI(this.createCategory, { name: this.name })
+      this.$vs.notify({
+        title: 'Information',
+        text: 'Category created',
+        color: 'success',
+        position: 'top-right'
+      })
+    },
+    async handleUpdatedConfirm() {
+      this.selected.name = this.updateName
+      await this.handleCallAPI(this.updateCategory, this.selected)
+      this.$vs.notify({
+        title: 'Information',
+        text: 'Category updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    },
     async handleStatusConfirm() {
       this.selected.active = !this.selected.active
       await this.handleCallAPI(this.updateCategory, this.selected)
       this.$vs.notify({
         title: 'Information',
-        text: 'Template status updated',
+        text: 'Category status updated',
         color: 'success',
         position: 'top-right'
       })
@@ -161,87 +225,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+
+<style lang="scss" scoped>
+/deep/ .vs-popup {
+  width: 300px;
+}
+
 .action-icon:hover {
   color: mediumslateblue;
 }
-
-#data-list-list-view {
-  .vs-con-table {
-    .vs-table--header {
-      display: flex;
-      flex-wrap: wrap-reverse;
-      margin-left: 1.5rem;
-      margin-right: 1.5rem;
-      > span {
-        display: flex;
-        flex-grow: 1;
-      }
-
-      .vs-table--search {
-        padding-top: 0;
-
-        .vs-table--search-input {
-          padding: 0.9rem 2.5rem;
-          font-size: 1rem;
-
-          & + i {
-            left: 1rem;
-          }
-
-          &:focus + i {
-            left: 1rem;
-          }
-        }
-      }
-    }
-
-    .vs-table {
-      border-collapse: separate;
-      border-spacing: 0 1.3rem;
-      padding: 0 1rem;
-
-      tr {
-        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-        td {
-          padding: 20px;
-          &:first-child {
-            border-top-left-radius: 0.5rem;
-            border-bottom-left-radius: 0.5rem;
-          }
-          &:last-child {
-            border-top-right-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
-          }
-        }
-        td.td-check {
-          padding: 20px !important;
-        }
-      }
-    }
-
-    .vs-table--thead {
-      th {
-        padding-top: 0;
-        padding-bottom: 0;
-
-        .vs-table-text {
-          text-transform: uppercase;
-          font-weight: 600;
-        }
-      }
-      th.td-check {
-        padding: 0 15px !important;
-      }
-      tr {
-        background: none;
-        box-shadow: none;
-      }
-    }
-
-    .vs-table--pagination {
-      justify-content: center;
-    }
-  }
-}
 </style>
+
+

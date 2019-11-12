@@ -44,6 +44,18 @@ const router = new Router({
             ],
             pageTitle: 'Category Management'
           }
+        },
+        {
+          path: '/tutorial',
+          name: 'Tutorial',
+          component: () => import('./views/tutorial/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: 'Home', url: '/' },
+              { title: 'Tutorial', active: true }
+            ],
+            pageTitle: 'Tutorial Management'
+          }
         }
       ]
     },

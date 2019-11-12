@@ -10,5 +10,11 @@ export default [
     name: 'Categories',
     slug: 'category',
     icon: 'GridIcon'
+  },
+  {
+    url: '/tutorial',
+    name: 'Tutorial',
+    slug: 'tutorial',
+    icon: 'FileTextIcon'
   }
 ]
