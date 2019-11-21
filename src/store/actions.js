@@ -5,6 +5,12 @@ import {
   createCategory,
   updateCategory
 } from '@/service/category'
+import {
+  getTutorials,
+  getTutorial,
+  createTutorial,
+  updateTutorial
+} from '@/service/tutorial'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
 const actions = {
@@ -80,16 +86,10 @@ const actions = {
   // ////////////////////////////////////////////
   // ACCOUNT
   // ////////////////////////////////////////////
-  async getAccounts({ commit }, accounts) {
-    const { data } = await getAccounts(accounts)
+  async getAccounts({ commit }) {
+    const { data } = await getAccounts()
     if (data.success) {
       commit('SET_ACCOUNTS', data.data)
-    }
-  },
-  async updateAccount({ commit }, account) {
-    const { data } = await updateAccount(account)
-    if (data.success) {
-      commit('UPDATE_ACCOUNT', data.data)
     }
   },
   async createAccount({ commit }, account) {
@@ -98,26 +98,60 @@ const actions = {
       commit('CREATE_ACCOUNT', data.data)
     }
   },
+  async updateAccount({ commit }, account) {
+    const { data } = await updateAccount(account)
+    if (data.success) {
+      commit('UPDATE_ACCOUNT', data.data)
+    }
+  },
 
   // ////////////////////////////////////////////
   // CATEGORY
   // ////////////////////////////////////////////
-  async getCategories({ commit }, accounts) {
-    const { data } = await getCategories(accounts)
+  async getCategories({ commit }) {
+    const { data } = await getCategories()
     if (data.success) {
       commit('SET_CATEGORIES', data.data)
     }
   },
-  async updateCategory({ commit }, account) {
-    const { data } = await updateCategory(account)
+  async createCategory({ commit }, category) {
+    const { data } = await createCategory(category)
+    if (data.success) {
+      commit('CREATE_CATEGORY', data.data)
+    }
+  },
+  async updateCategory({ commit }, category) {
+    const { data } = await updateCategory(category)
     if (data.success) {
       commit('UPDATE_CATEGORY', data.data)
     }
   },
-  async createCategory({ commit }, account) {
-    const { data } = await createCategory(account)
+
+  // ////////////////////////////////////////////
+  // TUTORIAL
+  // ////////////////////////////////////////////
+  async getTutorials({ commit }) {
+    const { data } = await getTutorials()
+    if (data.success) {
+      commit('SET_TUTORIALS', data.data)
+    }
+  },
+  async getTutorial({ commit }, id) {
+    const { data } = await getTutorial(id)
+    if (data.success) {
+      commit('SET_CURRENT_TUTORIAL', data.data)
+    }
+  },
+  async createTutorial({ commit }, tutorial) {
+    const { data } = await createTutorial(tutorial)
     if (data.success) {
       commit('CREATE_CATEGORY', data.data)
+    }
+  },
+  async updateTutorial({ commit }, tutorial) {
+    const { data } = await updateTutorial(tutorial)
+    if (data.success) {
+      commit('UPDATE_TUTORIALS', data.data)
     }
   }
 }

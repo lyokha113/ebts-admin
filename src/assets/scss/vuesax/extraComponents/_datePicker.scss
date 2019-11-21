@@ -7,23 +7,22 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
+@import '../_variables.scss';
 
-@import "../_variables.scss";
+.vdp-datepicker {
+  input {
+    padding: 0.7rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: $content-color;
+  }
 
-.vdp-datepicker{
-    input{
-        padding: .7rem;
-        font-size: 1rem;
-        border-radius: 5px;
-        border: 1px solid rgba(0, 0, 0, .2);
-        color: $content-color;
-    }
+  .day.blank {
+    background: transparent;
+  }
 
-    .day.blank {
-      background: transparent;
-    }
-
-    .cell.day.selected {
-      color: $white;
-    }
+  .cell.day.selected {
+    color: $white;
+  }
 }

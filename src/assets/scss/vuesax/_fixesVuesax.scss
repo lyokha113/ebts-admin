@@ -7,11 +7,10 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
 // ALERT COMPONENT
 .vs-alert {
   font-size: 1rem;
-  code{
+  code {
     background: #b5b5b5;
     color: $white;
   }
@@ -31,20 +30,19 @@
 }
 
 // TOOLTIP COMPONENT
-.vs-tooltip{
+.vs-tooltip {
   z-index: 52000;
 }
 
-
 // CHIPS COMPONENT
-.con-chips{
-  .con-chips--input{
+.con-chips {
+  .con-chips--input {
     border: none;
   }
   .con-vs-chip {
-    margin: .75rem;
+    margin: 0.75rem;
   }
-  .con-chips--remove-all{
+  .con-chips--remove-all {
     right: 9px;
   }
 }
@@ -52,7 +50,7 @@
 .con-vs-chip {
   min-height: 26px;
   min-width: 26px;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 // COLLAPSE COMPONENT
@@ -66,9 +64,12 @@
   padding: 1rem;
 }
 
-.vs-collapse.default, .vs-collapse.shadow, .vs-collapse.border, .vs-collapse.margin{
-  .open-item{
-    .con-content--item{
+.vs-collapse.default,
+.vs-collapse.shadow,
+.vs-collapse.border,
+.vs-collapse.margin {
+  .open-item {
+    .con-content--item {
       opacity: 1;
       padding: 1rem;
     }
@@ -77,45 +78,43 @@
 
 // Fixes reverse arrow in shadow collapse - Making PR
 .vs-collapse.shadow .vs-collapse-item--icon-header {
-  -webkit-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 .vs-collapse.shadow .open-item .vs-collapse-item--icon-header {
-  -webkit-transform: translate(-50%,-50%) rotate(180deg);
-    transform: translate(-50%,-50%) rotate(180deg);
+  -webkit-transform: translate(-50%, -50%) rotate(180deg);
+  transform: translate(-50%, -50%) rotate(180deg);
 }
-
 
 // DIALOG COMPONENT
 .con-vs-dialog {
   z-index: 52005;
-  .vs-dialog{
+  .vs-dialog {
     header {
-      h3{
+      h3 {
         padding: 0.8rem;
       }
-      span.after{
+      span.after {
         width: 0;
       }
     }
-    .vs-dialog-text{
+    .vs-dialog-text {
       padding: 1rem;
       font-size: 1rem;
     }
 
-    footer{
+    footer {
       padding: 1rem;
     }
   }
 }
 
-
 // DROPDOWN COMPONENT
-.vs-con-dropdown{
+.vs-con-dropdown {
   font-size: 1rem;
 }
-.con-vs-dropdown--menu{
+.con-vs-dropdown--menu {
   z-index: 42000;
 }
 
@@ -123,19 +122,19 @@
 .vs-list--item {
   .list-titles {
     .vs-list--subtitle {
-        font-size: .85rem;
+      font-size: 0.85rem;
     }
   }
-  &:last-child{
+  &:last-child {
     border-bottom: none;
   }
 }
 
 // POPUP COMPONENT
-.con-vs-popup{
+.con-vs-popup {
   z-index: 53000;
   .vs-popup--content {
-      padding: 1rem;
+    padding: 1rem;
     font-size: 1rem;
   }
 }
@@ -147,68 +146,68 @@
 
 // SELECT FORM ELEMENT COMPONENT
 .con-select {
-  .vs-select--input{
+  .vs-select--input {
     padding: 10px;
     font-size: 1rem;
-      border: 1px solid rgba(0,0,0,.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 }
 
 // SELECT OPTIONS FONT SIZE FIX
-.vs-select--options{
+.vs-select--options {
   font-size: 1rem;
-  span{
+  span {
     color: $content-color;
     font-size: 1rem;
   }
 }
 
 // SWITCH FORM ELEMENT COMPONENT
-.vs-switch--text{
+.vs-switch--text {
   font-size: 0.7rem;
 }
 
 // INPUT FORM ELEMENT COMPONENT
-.vs-con-input{
-  .vs-inputx{
-    padding: .7rem;
-    font-size:1rem;
-    border: 1px solid rgba(0,0,0,.2);
+.vs-con-input {
+  .vs-inputx {
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
   .vx-inputx:not(.input-rounded-full) {
     border-radius: 5px;
   }
 }
 .vs-input--input.normal {
-  padding: .7rem;
-  font-size:1rem;
+  padding: 0.7rem;
+  font-size: 1rem;
 }
 .vs-input--input.hasIcon {
   padding: 0.7rem 1rem 0.7rem 3rem;
-  &.icon-after-input{
+  &.icon-after-input {
     padding: 0.7rem 3rem 0.7rem 1rem;
   }
 }
-.vs-input--placeholder.normal{
-  padding: .6rem;
+.vs-input--placeholder.normal {
+  padding: 0.6rem;
 }
 .vs-input--input.large {
   padding: 1rem;
-  font-size:1.2rem;
-  &.hasIcon{
+  font-size: 1.2rem;
+  &.hasIcon {
     padding: 1rem 0.8rem 1rem 2.5rem;
   }
 }
-.vs-input--placeholder.large{
+.vs-input--placeholder.large {
   padding: 1rem;
 }
 .vs-input--input.small {
-  padding: .4rem;
-  font-size: .8rem;
+  padding: 0.4rem;
+  font-size: 0.8rem;
 }
-.vs-input--placeholder.small{
-  padding: .2rem .6rem;
-  font-size: .8rem;
+.vs-input--placeholder.small {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
 }
 
 .vs-input--input.large ~ .vs-input--icon {
@@ -217,33 +216,31 @@
 }
 .vs-input--icon {
   top: 13px;
-  &.feather{
-    top:10px;
+  &.feather {
+    top: 10px;
   }
 }
 
-.no-icon-border{
-  .vs-input--icon{
+.no-icon-border {
+  .vs-input--icon {
     border: none;
   }
 }
 
-
-.vs-textarea{
+.vs-textarea {
   font-size: 1rem;
 }
-.vs-con-textarea{
-  border: 1px solid rgba(0,0,0,.2);
+.vs-con-textarea {
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.vs-checkbox-small .vs-checkbox--input:checked+.vs-checkbox .vs-icon{
+.vs-checkbox-small .vs-checkbox--input:checked + .vs-checkbox .vs-icon {
   transform: translateY(-3px);
 }
 
 .vs-col {
   padding: 0 15px;
 }
-
 
 .con-img-upload {
   overflow: hidden;
@@ -253,13 +250,12 @@
     margin: 15px;
   }
 }
-.view-upload{
+.view-upload {
   z-index: 52000;
 }
 
-
 // same height as input in form wizard
-.select-large input.vs-select--input{
+.select-large input.vs-select--input {
   padding: 11px;
 }
 
@@ -269,7 +265,7 @@ i.wizard-icon {
 }
 
 .stepTitle {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
 // font icon of feather
@@ -278,20 +274,20 @@ i.feather {
 }
 
 // Table
-.vs-con-table{
+.vs-con-table {
   background: transparent;
-  .vs-table--header{
-    .vs-table--search{
+  .vs-table--header {
+    .vs-table--search {
       padding: 1rem 0;
 
       // align text in search input
-      .vs-table--search-input{
+      .vs-table--search-input {
         padding: 10px 28px;
-        border: 1px solid rgba(0,0,0,.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         font-size: 0.9rem;
       }
 
-      .vs-table--search-input:focus+i {
+      .vs-table--search-input:focus + i {
         left: 10px;
       }
 
@@ -300,34 +296,33 @@ i.feather {
         left: 10px;
       }
     }
-
   }
-  .vs-con-tbody{
+  .vs-con-tbody {
     background: #f8f8f8;
     border: 2px solid #f8f8f8;
     width: 100%;
     overflow: auto;
-    .vs-table--tbody-table{
+    .vs-table--tbody-table {
       font-size: 1rem;
-      .tr-spacer{
+      .tr-spacer {
         height: 2px;
       }
-      .tr-table{
-        .tr-expand{
-          td{
+      .tr-table {
+        .tr-expand {
+          td {
             padding: 0;
           }
         }
-        td{
+        td {
           padding: 1rem;
         }
       }
-      .vs-table--thead{
-        th{
+      .vs-table--thead {
+        th {
           padding-top: 1rem;
           padding-bottom: 1rem;
         }
-        .con-td-check{
+        .con-td-check {
           background: #f8f8f8;
           box-shadow: none;
         }
@@ -335,7 +330,7 @@ i.feather {
     }
   }
 
-  .vs-table--pagination{
+  .vs-table--pagination {
     margin-top: 1rem;
   }
 }
@@ -355,10 +350,10 @@ i.feather {
   border-radius: 20px;
 }
 
-.v-select{
-  .dropdown-toggle{
-    .vs__actions{
-      .clear{
+.v-select {
+  .dropdown-toggle {
+    .vs__actions {
+      .clear {
         padding-top: 4px;
       }
     }
@@ -366,7 +361,7 @@ i.feather {
 }
 
 .vs-button {
-  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
   font-size: 1rem;
 
   &.vs-button-gradient {
@@ -375,26 +370,25 @@ i.feather {
     }
   }
 
-  &:not(.vs-radius):not(.includeIconOnly):not(.small):not(.large){
-    padding: .75rem 2rem;
-    &.vs-button-border{
-      padding: .679rem 2rem;
+  &:not(.vs-radius):not(.includeIconOnly):not(.small):not(.large) {
+    padding: 0.75rem 2rem;
+    &.vs-button-border {
+      padding: 0.679rem 2rem;
     }
-
   }
-  &.small:not(.includeIconOnly){
+  &.small:not(.includeIconOnly) {
     padding: 0.5rem 1.5rem;
   }
-  &.large:not(.includeIconOnly){
+  &.large:not(.includeIconOnly) {
     padding: 1rem 2.5rem;
   }
-  &.large{
+  &.large {
     font-size: 1.25rem;
-    .vs-button--icon{
+    .vs-button--icon {
       font-size: 1.25rem;
     }
   }
-  &.round{
+  &.round {
     border-radius: 1.5rem;
   }
 
@@ -404,13 +398,13 @@ i.feather {
 }
 
 .vs-popup--title,
-.vs-notifications{
+.vs-notifications {
   h3 {
     margin-bottom: 0;
   }
 }
 
-.vs-notifications{
+.vs-notifications {
   z-index: 200000 !important;
   h3 {
     color: $white;
@@ -418,7 +412,6 @@ i.feather {
     font-size: $h5-font-size;
   }
 }
-
 
 // Navbar
 .vs-navbar-null,
@@ -453,9 +446,9 @@ h3.vs-navbar--title {
 }
 
 // Dropdown Button padding
-.dropdown-button-container{
-  .vs-button{
-    padding: .72rem 1.5rem !important;
+.dropdown-button-container {
+  .vs-button {
+    padding: 0.72rem 1.5rem !important;
   }
   .vs-button-line {
     padding: 9px 10px !important;
@@ -472,94 +465,90 @@ h3.vs-navbar--title {
   color: inherit;
 }
 
-
-
 // search icon fix
 .vs-input.input-rounded-full {
   .vs-input--input.hasIcon {
-    padding: .8rem 1rem 0.8rem 3rem;
+    padding: 0.8rem 1rem 0.8rem 3rem;
   }
 
   .input-span-placeholder {
     padding-left: 3rem;
-    padding-top: .7rem;
+    padding-top: 0.7rem;
   }
 
   .vs-icon {
-    margin-top: .1rem;
+    margin-top: 0.1rem;
     margin-left: 0.6rem;
     font-size: 1rem;
   }
 }
 
-
 // Position left tab component
 .vs-tabs-position-left {
-  .vs-tabs--li{
-    padding: .35rem 0.3rem;
+  .vs-tabs--li {
+    padding: 0.35rem 0.3rem;
   }
 }
 
 // Pagination border radius
-.vs-pagination--li.is-current{
+.vs-pagination--li.is-current {
+  border-radius: 50%;
+  .effect {
     border-radius: 50%;
-    .effect {
-      border-radius: 50%;
-    }
+  }
 }
-.vs-pagination--ul{
-  padding:0;
+.vs-pagination--ul {
+  padding: 0;
 }
 
 // Select border color
-.vs-select--options{
+.vs-select--options {
   border: 1px solid #eee;
   z-index: 530001;
 }
 
 // Input box iocn aliment
-.vs-input--icon.feather{
-  padding: .2rem .5rem 0rem .4rem;
+.vs-input--icon.feather {
+  padding: 0.2rem 0.5rem 0rem 0.4rem;
 }
-.vs-input--input.hasIcon+.vs-input--placeholder{
-     padding-left: 3rem;
- }
+.vs-input--input.hasIcon + .vs-input--placeholder {
+  padding-left: 3rem;
+}
 
 // Search Box Text
-.vs-input--input.large.hasIcon{
-    padding: 1rem .8rem 1rem 3rem;
+.vs-input--input.large.hasIcon {
+  padding: 1rem 0.8rem 1rem 3rem;
 }
 
 // Alert shadow and color issue
-.con-vs-alert{
+.con-vs-alert {
   box-shadow: none !important;
 }
-.vs-alert{
+.vs-alert {
   font-weight: 500;
 }
 
-
 // Checkbox size: Small styles
-.vs-checkbox-small .vs-checkbox--input:checked + .vs-checkbox .vs-icon{
-    margin-top: 4px;
-    margin-left: -1px;
+.vs-checkbox-small .vs-checkbox--input:checked + .vs-checkbox .vs-icon {
+  margin-top: 4px;
+  margin-left: -1px;
 }
-.vs-checkbox-small input:checked+.vs-checkbox{
-  background-color: rgba(var(--vs-primary),1)!important;
+.vs-checkbox-small input:checked + .vs-checkbox {
+  background-color: rgba(var(--vs-primary), 1) !important;
 }
 
 .vs-dialog {
   footer {
     .vs-button:last-of-type {
-      margin-left: .5rem !important;
-      border-color: rgba(0,0,0,0.2) !important;
+      margin-left: 0.5rem !important;
+      border-color: rgba(0, 0, 0, 0.2) !important;
     }
   }
 }
 
 // Feather icon in avatar component
 .vs-avatar--text.feather {
-    font-size: 1.3rem;
+  font-size: 1.3rem;
 }
 
 .vs-avatar--con-img {

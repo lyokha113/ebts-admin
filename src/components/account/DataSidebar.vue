@@ -10,12 +10,19 @@
     v-model="isSidebarActiveLocal"
   >
     <div class="mt-6 flex items-center justify-between px-6">
-      <h4>{{ selected ? 'UPDATE ACCOUNT' : 'ADD NEW ACCOUNT' }}</h4>
-      <feather-icon icon="XIcon" @click.stop="isSidebarActiveLocal = false" class="cursor-pointer"></feather-icon>
+      <h4>{{ selected ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
+      <feather-icon
+        icon="XIcon"
+        @click.stop="isSidebarActiveLocal = false"
+        class="cursor-pointer"
+      ></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
 
-    <VuePerfectScrollbar class="scroll-area--data-list-add-new pt-4 pb-6" :settings="settings">
+    <VuePerfectScrollbar
+      class="scroll-area--data-list-add-new pt-4 pb-6"
+      :settings="settings"
+    >
       <div class="p-6">
         <vs-input
           label="Email"
@@ -24,7 +31,12 @@
           class="mt-5 w-full"
           :readonly="selected"
         />
-        <vs-input label="Full name" name="fullname" v-model="fullName" class="mt-5 w-full" />
+        <vs-input
+          label="Full name"
+          name="fullname"
+          v-model="fullName"
+          class="mt-5 w-full"
+        />
         <vs-input
           label="Password"
           name="password"
@@ -33,7 +45,12 @@
           class="mt-5 w-full"
         />
 
-        <vs-select v-model="provider" label="Provider" class="mt-5 w-full" disabled>
+        <vs-select
+          v-model="provider"
+          label="Provider"
+          class="mt-5 w-full"
+          disabled
+        >
           <vs-select-item
             :key="item.value"
             :value="item.value"
@@ -54,8 +71,15 @@
     </VuePerfectScrollbar>
 
     <div class="flex flex-wrap items-center justify-center p-6" slot="footer">
-      <vs-button class="mr-6" @click="handleSubmit">{{ selected ? 'Update' : 'Create' }}</vs-button>
-      <vs-button type="border" color="danger" @click="isSidebarActiveLocal = false">Cancel</vs-button>
+      <vs-button class="mr-6" @click="handleSubmit">{{
+        selected ? 'Update' : 'Create'
+      }}</vs-button>
+      <vs-button
+        type="border"
+        color="danger"
+        @click="isSidebarActiveLocal = false"
+        >Cancel</vs-button
+      >
     </div>
   </vs-sidebar>
 </template>

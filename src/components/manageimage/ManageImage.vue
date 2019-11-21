@@ -1,0 +1,30 @@
+<template>
+  <div class="con-example-images">
+    <vs-upload
+      action="https://jsonplaceholder.typicode.com/posts/"
+      @on-success="successUpload"
+    />
+    <vs-images>
+      <vs-image
+        :key="index"
+        :src="`https://picsum.photos/400/400?image=2${index}`"
+        v-for="(image, index) in 9"
+      />
+      <vs-image
+        :key="index"
+        :src="`https://picsum.photos/400/400?image=1${index}`"
+        v-for="(image, index) in 7"
+      />
+    </vs-images>
+  </div>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style lang="scss">
+.con-example-images {
+  overflow: auto;
+}
+</style>

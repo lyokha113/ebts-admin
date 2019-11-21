@@ -1,35 +1,61 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <vs-popup title="Add new category" :active.sync="addPrompt">
+    <vs-popup title="CREATE NEW CATEGORY" :active.sync="addPrompt">
       <div>
         Enter category name:
-        <vs-input placeholder="Name" v-model="name" style="width: 270px" class="my-2" />
-        <vs-button color="primary" type="filled" class="float-right mt-2" @click="handleAdd">Add</vs-button>
+        <vs-input
+          placeholder="Name"
+          v-model="name"
+          style="width: 270px"
+          class="my-2"
+        />
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          @click="handleAdd"
+          >Add</vs-button
+        >
       </div>
     </vs-popup>
 
-    <vs-popup title="Update category" :active.sync="updatePrompt">
+    <vs-popup title="UPDATE CATEGORY" :active.sync="updatePrompt">
       <div>
         Enter category name:
-        <vs-input placeholder="Name" v-model="updateName" style="width: 270px" class="my-2" />
+        <vs-input
+          placeholder="Name"
+          v-model="updateName"
+          style="width: 270px"
+          class="my-2"
+        />
         <vs-button
           color="primary"
           type="filled"
           class="float-right mt-2"
           @click="handleUpdate"
-        >Update</vs-button>
+          >Update</vs-button
+        >
       </div>
     </vs-popup>
 
-    <vs-table ref="table" pagination search :max-items="itemsPerPage" :data="categories">
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+    <vs-table
+      ref="table"
+      pagination
+      search
+      :max-items="itemsPerPage"
+      :data="categories"
+    >
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <div class="flex flex-wrap-reverse items-center">
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="(name = '', addPrompt = true)"
+            @click=";(name = ''), (addPrompt = true)"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Add New</span>
+            <span class="ml-2 text-base text-primary">Create new</span>
           </div>
         </div>
 
@@ -41,9 +67,9 @@
             <span class="mr-2">
               {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
               {{
-              categories.length - currentPage * itemsPerPage > 0
-              ? currentPage * itemsPerPage
-              : categories.length
+                categories.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : categories.length
               }}
               of {{ categories.length }}
             </span>
@@ -85,7 +111,10 @@
             </vs-td>
 
             <vs-td>
-              <vs-chip :color="tr.active ? 'success' : 'danger'" class="product-order-status">
+              <vs-chip
+                :color="tr.active ? 'success' : 'danger'"
+                class="product-order-status"
+              >
                 <vs-avatar :icon="tr.active ? 'done' : 'lock'" />
                 {{ tr.active ? 'Active' : 'Locked' }}
               </vs-chip>
@@ -93,30 +122,37 @@
 
             <vs-td>
               <span
-                v-if="activeUser && activeUser.id != tr.id"
                 class="action-icon mx-1"
-                @click="(updateName ='', selected = JSON.parse(JSON.stringify(tr)), updatePrompt = true)"
+                @click.stop="
+                  ;(updateName = ''),
+                    (selected = JSON.parse(JSON.stringify(tr))),
+                    (updatePrompt = true)
+                "
               >
                 <vs-icon size="small" icon="create" />
               </span>
 
-              <span
-                v-if="activeUser && activeUser.id != tr.id"
-                class="action-icon mx-1"
-                @click="handleStatus(tr)"
-              >
-                <vs-icon size="small" :icon="tr.active ? 'lock' : 'lock_open'" />
+              <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
+                <vs-icon
+                  size="small"
+                  :icon="tr.active ? 'lock' : 'lock_open'"
+                />
               </span>
             </vs-td>
 
             <template class="expand-user" slot="expand">
-              <div>
-                <div class="items-grid-view vx-row match-height" v-if="tr.templates.length" appear>
-                  <div class="vx-col w-full" v-for="template in tr.templates" :key="template.id">
-                    <ItemGridView :template="template" />
-                  </div>
-                </div>
-              </div>
+              <vs-row v-if="tr.templates.length" appear>
+                <vs-col
+                  v-for="template in tr.templates"
+                  :key="template.id"
+                  vs-type="flex"
+                  vs-justify="center"
+                  vs-align="center"
+                  vs-w="4"
+                >
+                  <ItemGridView :template="template" />
+                </vs-col>
+              </vs-row>
             </template>
           </vs-tr>
         </tbody>
@@ -145,7 +181,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categories', 'activeUser']),
+    ...mapGetters(['categories']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
@@ -225,7 +261,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 /deep/ .vs-popup {
   width: 300px;
@@ -235,5 +270,3 @@ export default {
   color: mediumslateblue;
 }
 </style>
-
-

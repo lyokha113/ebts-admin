@@ -1,16 +1,29 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <DataSidebar :isSidebarActive="sideBar" :selected="selected" @closeSidebar="sideBar = false" />
+    <DataSidebar
+      :isSidebarActive="sideBar"
+      :selected="selected"
+      @closeSidebar="sideBar = false"
+    />
 
-    <vs-table ref="table" pagination search :max-items="itemsPerPage" :data="accounts">
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+    <vs-table
+      ref="table"
+      pagination
+      search
+      :max-items="itemsPerPage"
+      :data="accounts"
+    >
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <div class="flex flex-wrap-reverse items-center">
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
             @click="handleSideBar(null)"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Add New</span>
+            <span class="ml-2 text-base text-primary">Create new</span>
           </div>
         </div>
 
@@ -22,9 +35,9 @@
             <span class="mr-2">
               {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
               {{
-              accounts.length - currentPage * itemsPerPage > 0
-              ? currentPage * itemsPerPage
-              : accounts.length
+                accounts.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : accounts.length
               }}
               of {{ accounts.length }}
             </span>
@@ -61,7 +74,11 @@
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
-              <vs-avatar size="large" :src="tr.imageUrl" @click="handleSelected(tr)" />
+              <vs-avatar
+                size="large"
+                :src="tr.imageUrl"
+                @click="handleSelected(tr)"
+              />
             </vs-td>
 
             <vs-td>
@@ -81,7 +98,10 @@
             </vs-td>
 
             <vs-td>
-              <vs-chip :color="tr.active ? 'success' : 'danger'" class="product-order-status">
+              <vs-chip
+                :color="tr.active ? 'success' : 'danger'"
+                class="product-order-status"
+              >
                 <vs-avatar :icon="tr.active ? 'done' : 'lock'" />
                 {{ tr.active ? 'Active' : 'Locked' }}
               </vs-chip>
@@ -100,7 +120,10 @@
                 class="action-icon mx-1"
                 @click="handleStatus(tr)"
               >
-                <vs-icon size="small" :icon="tr.active ? 'lock' : 'lock_open'" />
+                <vs-icon
+                  size="small"
+                  :icon="tr.active ? 'lock' : 'lock_open'"
+                />
               </span>
             </vs-td>
           </vs-tr>
@@ -171,5 +194,3 @@ export default {
   }
 }
 </script>
-
-

@@ -36,6 +36,14 @@ Vue.use(VueHammer)
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 
+import 'froala-editor/css/froala_editor.pkgd.min.css'
+
+// Import and use Vue Froala lib.
+import VueFroala from 'vue-froala-wysiwyg'
+import 'froala-editor/css/froala_editor.pkgd.min.css'
+import 'froala-editor/js/plugins.pkgd.min'
+Vue.use(VueFroala)
+
 // Feather font icon
 require('./assets/css/iconfont.css')
 

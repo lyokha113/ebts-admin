@@ -99,6 +99,19 @@ export default {
             border-top-right-radius: 0.5rem;
             border-bottom-right-radius: 0.5rem;
           }
+          &.img-container {
+            width: 1rem;
+            background: #fff;
+
+            span {
+              display: flex;
+              justify-content: center;
+            }
+
+            .product-img {
+              height: 110px;
+            }
+          }
         }
         td.td-check {
           padding: 20px !important;

@@ -7,15 +7,15 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
-@import "../_variables.scss";
+@import '../_variables.scss';
 
 $datetimePickerSpace: 13px;
 
 .flatpickr-calendar {
   width: calc(307.875px + #{$datetimePickerSpace} * 2) !important;
-  box-shadow: 0 15px 30px 0 rgba(0,0,0,0.11), 0 5px 15px 0 rgba(0,0,0,0.08) !important;
-  border-radius: .5rem !important;
+  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11),
+    0 5px 15px 0 rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0.5rem !important;
   overflow: hidden;
 
   &.arrowTop {
@@ -102,7 +102,7 @@ $datetimePickerSpace: 13px;
     &.endRange.nextMonthDay {
       background: $primary !important;
       -webkit-box-shadow: none;
-              box-shadow: none;
+      box-shadow: none;
       color: $white;
       border-color: $primary !important;
     }
@@ -110,10 +110,10 @@ $datetimePickerSpace: 13px;
 }
 
 .flatpickr-input {
-  padding: .7rem;
+  padding: 0.7rem;
   font-size: 1rem;
   border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, .2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   color: $content-color;
 
   &.active {
@@ -121,12 +121,10 @@ $datetimePickerSpace: 13px;
   }
 }
 
-
 .flatpickr-months .flatpickr-prev-month:hover svg,
 .flatpickr-months .flatpickr-next-month:hover svg {
   fill: $primary !important;
 }
-
 
 .theme-dark {
   .flatpickr-calendar {
@@ -181,9 +179,8 @@ $datetimePickerSpace: 13px;
       &.prevMonthDay,
       &.nextMonthDay,
       &.disabled {
-        opacity: .3;
+        opacity: 0.3;
       }
-
     }
     .flatpickr-time {
       border-top-color: $theme-dark-border-color !important;
@@ -191,7 +188,6 @@ $datetimePickerSpace: 13px;
       input {
         color: $theme-dark-text-color;
       }
-
 
       input:hover,
       .flatpickr-am-pm:hover,
@@ -204,13 +200,16 @@ $datetimePickerSpace: 13px;
         color: $theme-dark-text-color;
       }
 
-
-      ::-moz-selection { background: transparent; }
-      ::selection { background: transparent; }
+      ::-moz-selection {
+        background: transparent;
+      }
+      ::selection {
+        background: transparent;
+      }
     }
 
     .numInputWrapper {
-      .arrowUp{
+      .arrowUp {
         &:after {
           border-bottom-color: $white;
         }

@@ -7,20 +7,18 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
 ///////////////////////////////////////////////////////////
 // transition-group : list;
 ///////////////////////////////////////////////////////////
 .list-leave-active {
-    position: absolute;
+  position: absolute;
 }
 
 .list-enter,
-.list-leave-to{
-    opacity: 0;
-    transform: translateX(30px);
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
-
 
 ///////////////////////////////////////////////////////////
 // transition-group : list-enter-up;

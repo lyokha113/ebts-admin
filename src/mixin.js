@@ -4,9 +4,10 @@ export default {
       try {
         await api(args)
       } catch (error) {
+        console.log(error.response)
         this.$vs.notify({
           title: 'Error',
-          text: 'Something was wrong',
+          text: error.response.data.status,
           color: 'danger',
           position: 'top-right'
         })

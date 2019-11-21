@@ -115,6 +115,23 @@ const mutations = {
   UPDATE_CATEGORY(state, category) {
     const current = state.categories.find(c => c.id === category.id)
     Object.assign(current, category)
+  },
+
+  // ////////////////////////////////////////////
+  // TUTORIAL
+  // ////////////////////////////////////////////
+  SET_TUTORIALS(state, tutorials) {
+    state.tutorials = tutorials
+  },
+  SET_CURRENT_TUTORIAL(state, tutorial) {
+    state.currentTutorial = tutorial
+  },
+  CREATE_TUTORIAL(state, tutorial) {
+    state.tutorials.unshift(tutorial)
+  },
+  UPDATE_TUTORIALS(state, tutorial) {
+    const current = state.tutorials.find(t => t.id === tutorial.id)
+    Object.assign(current, tutorial)
   }
 }
 

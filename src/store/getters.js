@@ -7,7 +7,11 @@ const getters = {
   accounts: state => state.accounts,
 
   // CATEGORY
-  categories: state => state.categories
+  categories: state => state.categories,
+
+  // TUTORIAL
+  tutorials: state => state.tutorials,
+  currentTutorial: state => state.currentTutorial
 }
 
 export default getters
