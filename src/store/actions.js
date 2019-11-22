@@ -5,6 +5,7 @@ import {
   createCategory,
   updateCategory
 } from '@/service/category'
+import { getFiles, createFile, deleteFile } from '@/service/file'
 import {
   getTutorials,
   getTutorial,
@@ -124,6 +125,28 @@ const actions = {
     const { data } = await updateCategory(category)
     if (data.success) {
       commit('UPDATE_CATEGORY', data.data)
+    }
+  },
+
+  // ////////////////////////////////////////////
+  // CATEGORY
+  // ////////////////////////////////////////////
+  async getFiles({ commit }) {
+    const { data } = await getFiles()
+    if (data.success) {
+      commit('SET_FILES', data.data)
+    }
+  },
+  async createFile({ commit }, uploader) {
+    const { data } = await createFile(uploader.file, uploader.onUploadProgress)
+    if (data.success) {
+      commit('CREATE_FILE', data.data)
+    }
+  },
+  async deleteFile({ commit }, id) {
+    const { data } = await deleteFile(id)
+    if (data.success) {
+      commit('DELETE_FILE', data.data)
     }
   },
 

@@ -9,6 +9,9 @@ const getters = {
   // CATEGORY
   categories: state => state.categories,
 
+  // FILE
+  files: state => state.files,
+
   // TUTORIAL
   tutorials: state => state.tutorials,
   currentTutorial: state => state.currentTutorial

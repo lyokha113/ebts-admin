@@ -118,6 +118,20 @@ const mutations = {
   },
 
   // ////////////////////////////////////////////
+  // FILES
+  // ////////////////////////////////////////////
+  SET_FILES(state, files) {
+    state.files = files
+  },
+  CREATE_FILE(state, files) {
+    state.files = state.files.concat(files)
+  },
+  DELETE_FILE(state, file) {
+    const idx = state.files.findIndex(f => f.id === file.id)
+    state.files = state.files.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
   // TUTORIAL
   // ////////////////////////////////////////////
   SET_TUTORIALS(state, tutorials) {

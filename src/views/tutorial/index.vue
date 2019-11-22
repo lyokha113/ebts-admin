@@ -112,6 +112,7 @@
     </vs-table>
 
     <CustomPopup
+      id="custom-popup"
       fullscreen
       :title="title"
       :active.sync="editorPopup"
@@ -415,5 +416,9 @@ export default {
 
 .action-icon:hover {
   color: mediumslateblue;
+}
+
+#custom-popup {
+  z-index: 51100;
 }
 </style>
