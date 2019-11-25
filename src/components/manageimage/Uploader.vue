@@ -4,6 +4,7 @@
       <div class="con-input-upload">
         <button
           type="button"
+          :disabled="uploading"
           title="Upload"
           class="btn-upload-all vs-upload--button-upload"
         >
@@ -20,13 +21,33 @@
         </button>
       </div>
     </div>
+    <CustomPopup
+      button-close-hidden
+      title="File upload"
+      :active.sync="uploading"
+    >
+      <span v-if="uploadPercent == 100"
+        >Uploaded. Waiting for server processing !</span
+      >
+      <span v-else>Uploading to server </span>
+      <vs-progress
+        :percent="uploadPercent"
+        :height="8"
+        color="success"
+      ></vs-progress>
+    </CustomPopup>
   </div>
 </template>
 <script>
+import CustomPopup from '@/components/CustomPopup.vue'
 import { mapActions } from 'vuex'
 export default {
+  components: {
+    CustomPopup
+  },
   data: () => ({
     files: [],
+    uploading: false,
     uploadPercent: 0
   }),
   methods: {
@@ -42,7 +63,8 @@ export default {
             title: 'File not supported',
             text: `Can't upload ${file.name}`,
             color: 'warning',
-            icon: 'error'
+            icon: 'error',
+            position: 'top-right'
           })
         }
       })
@@ -54,6 +76,7 @@ export default {
       )
     },
     async uploadFile() {
+      this.uploading = true
       this.uploadPercent = 0
       let formData = new FormData()
       this.files.forEach(f => {
@@ -67,6 +90,7 @@ export default {
       await this.handleCallAPI(this.createFile, uploader)
       this.files = []
       this.uploadPercent = 0
+      this.uploading = false
     }
   }
 }
@@ -74,7 +98,7 @@ export default {
 <style lang="scss" scoped>
 /deep/ .con-input-upload {
   width: 70px;
-  height: 70px;
+  height: 50px;
 }
 /deep/ .vs-upload--button-upload {
   height: 100%;

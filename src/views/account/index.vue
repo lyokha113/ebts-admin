@@ -111,19 +111,19 @@
               <span
                 v-if="activeUser && activeUser.id != tr.id"
                 class="action-icon mx-1"
-                @click="handleSideBar(tr)"
-              >
-                <vs-icon size="small" icon="create" />
-              </span>
-              <span
-                v-if="activeUser && activeUser.id != tr.id"
-                class="action-icon mx-1"
                 @click="handleStatus(tr)"
               >
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
                 />
+              </span>
+              <span
+                v-if="activeUser && activeUser.id != tr.id && tr.roleId == 1"
+                class="action-icon mx-1"
+                @click="handleSideBar(tr)"
+              >
+                <vs-icon size="small" icon="create" />
               </span>
             </vs-td>
           </vs-tr>

@@ -5,7 +5,7 @@ import {
   createCategory,
   updateCategory
 } from '@/service/category'
-import { getFiles, createFile, deleteFile } from '@/service/file'
+import { getFiles, createFile, changeStatusFile } from '@/service/file'
 import {
   getTutorials,
   getTutorial,
@@ -129,7 +129,7 @@ const actions = {
   },
 
   // ////////////////////////////////////////////
-  // CATEGORY
+  // FILES
   // ////////////////////////////////////////////
   async getFiles({ commit }) {
     const { data } = await getFiles()
@@ -143,10 +143,10 @@ const actions = {
       commit('CREATE_FILE', data.data)
     }
   },
-  async deleteFile({ commit }, id) {
-    const { data } = await deleteFile(id)
+  async changeStatusFile({ commit }, file) {
+    const { data } = await changeStatusFile(file.id, file.active)
     if (data.success) {
-      commit('DELETE_FILE', data.data)
+      commit('CHANGE_STATUS_FILE', file)
     }
   },
 
@@ -162,7 +162,7 @@ const actions = {
   async getTutorial({ commit }, id) {
     const { data } = await getTutorial(id)
     if (data.success) {
-      commit('SET_CURRENT_TUTORIAL', data.data)
+      return data.data
     }
   },
   async createTutorial({ commit }, tutorial) {

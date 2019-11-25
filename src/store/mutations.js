@@ -126,9 +126,9 @@ const mutations = {
   CREATE_FILE(state, files) {
     state.files = state.files.concat(files)
   },
-  DELETE_FILE(state, file) {
-    const idx = state.files.findIndex(f => f.id === file.id)
-    state.files = state.files.splice(idx, 1)
+  CHANGE_STATUS_FILE(state, file) {
+    const current = state.files.find(f => f.id === file.id)
+    Object.assign(current, file)
   },
 
   // ////////////////////////////////////////////
@@ -136,9 +136,6 @@ const mutations = {
   // ////////////////////////////////////////////
   SET_TUTORIALS(state, tutorials) {
     state.tutorials = tutorials
-  },
-  SET_CURRENT_TUTORIAL(state, tutorial) {
-    state.currentTutorial = tutorial
   },
   CREATE_TUTORIAL(state, tutorial) {
     state.tutorials.unshift(tutorial)

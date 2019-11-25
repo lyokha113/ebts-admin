@@ -13,8 +13,7 @@ const getters = {
   files: state => state.files,
 
   // TUTORIAL
-  tutorials: state => state.tutorials,
-  currentTutorial: state => state.currentTutorial
+  tutorials: state => state.tutorials
 }
 
 export default getters

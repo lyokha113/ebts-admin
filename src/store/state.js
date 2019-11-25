@@ -47,13 +47,7 @@ const state = {
   // ////////////////////////////////////////////
   // TUTORIAL
   // ////////////////////////////////////////////
-  tutorials: [],
-  currentTutorial: {
-    content: '',
-    description: '',
-    name: '',
-    thumbnail: ''
-  }
+  tutorials: []
 }
 
 export default state

@@ -121,6 +121,12 @@
             </vs-td>
 
             <vs-td>
+              <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
+                <vs-icon
+                  size="small"
+                  :icon="tr.active ? 'lock' : 'lock_open'"
+                />
+              </span>
               <span
                 class="action-icon mx-1"
                 @click.stop="
@@ -130,13 +136,6 @@
                 "
               >
                 <vs-icon size="small" icon="create" />
-              </span>
-
-              <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
-                <vs-icon
-                  size="small"
-                  :icon="tr.active ? 'lock' : 'lock_open'"
-                />
               </span>
             </vs-td>
 

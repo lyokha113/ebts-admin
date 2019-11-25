@@ -13,6 +13,6 @@ export function createFile(file, onUploadProgress) {
   return axios.post(`${URI}`, file, configToUpload)
 }
 
-export function deleteFile(id) {
-  return axios.delete(`${URI}/${id}`)
+export function changeStatusFile(id, active) {
+  return axios.put(`${URI}/${id}?active=${active}`)
 }
