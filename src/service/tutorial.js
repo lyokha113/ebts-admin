@@ -14,6 +14,10 @@ export function createTutorial(tutorial) {
   return axios.post(`${URI}`, tutorial)
 }
 
-export function updateTutorial(tutorial) {
-  return axios.put(`${URI}/${tutorial.id}`, tutorial)
+export function updateTutorial(id, tutorial) {
+  return axios.put(`${URI}/${id}`, tutorial)
+}
+
+export function updateStatusTutorial(id, active) {
+  return axios.patch(`${URI}/${id}?active=${active}`)
 }

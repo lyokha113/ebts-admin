@@ -187,7 +187,7 @@ export default {
     }
   },
   async created() {
-    await this.handleCallAPI(this.getAccounts, null)
+    await this.handleCallAPI(this.getAccounts)
   },
   mounted() {
     this.isMounted = true

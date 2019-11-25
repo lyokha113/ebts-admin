@@ -10,7 +10,8 @@ import {
   getTutorials,
   getTutorial,
   createTutorial,
-  updateTutorial
+  updateTutorial,
+  updateStatusTutorial
 } from '@/service/tutorial'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
@@ -168,11 +169,17 @@ const actions = {
   async createTutorial({ commit }, tutorial) {
     const { data } = await createTutorial(tutorial)
     if (data.success) {
-      commit('CREATE_CATEGORY', data.data)
+      commit('CREATE_TUTORIAL', data.data)
     }
   },
-  async updateTutorial({ commit }, tutorial) {
-    const { data } = await updateTutorial(tutorial)
+  async updateTutorial({ commit }, req) {
+    const { data } = await updateTutorial(req.id, req.tutorial)
+    if (data.success) {
+      commit('UPDATE_TUTORIALS', data.data)
+    }
+  },
+  async updateStatusTutorial({ commit }, tutorial) {
+    const { data } = await updateStatusTutorial(tutorial.id, tutorial.active)
     if (data.success) {
       commit('UPDATE_TUTORIALS', data.data)
     }

@@ -252,7 +252,7 @@ export default {
     }
   },
   async created() {
-    await this.handleCallAPI(this.getCategories, null)
+    await this.handleCallAPI(this.getCategories)
   },
   mounted() {
     this.isMounted = true

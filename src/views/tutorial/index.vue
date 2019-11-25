@@ -98,7 +98,7 @@
                 <vs-icon size="small" icon="create" />
               </span>
 
-              <span class="action-icon mx-1">
+              <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
@@ -130,16 +130,10 @@
         </div>
 
         <div class="flex justify-end mt-3">
-          <vs-button class="flex mx-2" @click="handleDetail">
-            Next
-          </vs-button>
-          <vs-button
-            type="border"
-            class="flex mx-2"
-            @click="handleCloseContent"
+          <vs-button class="flex mx-2" @click="handleDetail">Next</vs-button>
+          <vs-button type="border" class="flex mx-2" @click="handleCloseContent"
+            >Cancel</vs-button
           >
-            Cancel
-          </vs-button>
         </div>
       </vx-card>
     </CustomPopup>
@@ -155,8 +149,14 @@
           <h2 class="mb-5">PREVIEW</h2>
         </vs-col>
 
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <froalaView id="content" class="py-2 px-5" v-model="content" />
+        <vs-col
+          id="content-container"
+          vs-type="flex"
+          vs-justify="center"
+          vs-align="center"
+          vs-w="12"
+        >
+          <froalaView id="content" class="py-2 px-" v-model="content" />
         </vs-col>
       </vs-row>
 
@@ -180,9 +180,9 @@
           />
         </vs-col>
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <vs-button color="primary" class="mt-4 mr-2" @click="handleSubmit">{{
-            isCreating ? 'Create' : 'Update'
-          }}</vs-button>
+          <vs-button color="primary" class="mt-4 mr-2" @click="handleSubmit">
+            {{ isCreating ? 'Create' : 'Update' }}
+          </vs-button>
           <vs-button
             color="danger"
             type="border"
@@ -197,11 +197,9 @@
 </template>
 
 <script>
-import html2canvas from 'html2canvas'
 import Prism from 'vue-prism-component'
 import CustomPopup from '@/components/CustomPopup.vue'
 import { mapGetters, mapActions } from 'vuex'
-
 export default {
   components: {
     CustomPopup,
@@ -209,6 +207,7 @@ export default {
   },
   data() {
     return {
+      id: '',
       selected: null,
       content: '',
       name: '',
@@ -312,9 +311,11 @@ export default {
       'getTutorials',
       'getTutorial',
       'createTutorial',
-      'updateTutorial'
+      'updateTutorial',
+      'updateStatusTutorial'
     ]),
     resetTutorial() {
+      this.id = ''
       this.content = ''
       this.name = ''
       this.description = ''
@@ -344,10 +345,31 @@ export default {
       this.contentPopup = false
       this.detailPopup = true
     },
+    handleStatus(tutorial) {
+      const actionMsg = tutorial.active ? 'lock' : 'unlock'
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to ${actionMsg} this tutorial ?`,
+        accept: () => this.handleStatusConfirm(tutorial)
+      })
+    },
+    async handleStatusConfirm(tutorial) {
+      tutorial.active = !tutorial.active
+      await this.handleCallAPI(this.updateStatusTutorial, tutorial)
+      this.$vs.notify({
+        title: 'Information',
+        text: 'Tutorial status updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    },
     async handleContent(id) {
       if (id != null) {
         this.isCreating = false
         const tutorial = await this.getTutorial(id)
+        this.id = id
         this.content = tutorial.content
         this.name = tutorial.name
         this.description = tutorial.description
@@ -366,29 +388,38 @@ export default {
         return
       }
 
-      var contentNode = document.getElementById('content')
-      const canvas = await html2canvas(contentNode, {
-        backgroundColor: 'white',
-        imageTimeout: 30000,
-        useCORS: true,
-        logging: false
-      })
-      this.thumbnail = canvas.toDataURL()
+      const contentNode = document.getElementById('content')
+      this.thumbnail = await this.html2Image(contentNode)
 
       let tutorial = new FormData()
-      tutorial.append(name, this.name)
+      tutorial.append('name', this.name)
       tutorial.append('content', this.content)
       tutorial.append('description', this.description)
-      tutorial.append('thumbnail', this.thumbnail)
+      tutorial.append('thumbnail', this.base64ImageToBlob(this.thumbnail))
       tutorial.append('active', true)
 
-      await this.handleCallAPI(this.createTutorial, tutorial)
+      if (this.isCreating) {
+        await this.handleCallAPI(this.createTutorial, tutorial)
+      } else {
+        const req = {
+          id: this.id,
+          tutorial: tutorial
+        }
+        await this.handleCallAPI(this.updateTutorial, req)
+      }
+
+      this.$vs.notify({
+        title: 'Information',
+        text: `Tutorial ${this.isCreating ? 'created' : 'upadted'} sucessfully`,
+        color: 'success',
+        position: 'top-right'
+      })
       this.contentPopup = false
       this.detailPopup = false
     }
   },
   async created() {
-    await this.handleCallAPI(this.getTutorials, null)
+    await this.handleCallAPI(this.getTutorials)
   },
   mounted() {
     this.isMounted = true
