@@ -74,7 +74,7 @@
         ></feather-icon>
 
         <!-- NOTIFICATIONS -->
-        <vs-dropdown
+        <!-- <vs-dropdown
           vs-custom-content
           vs-trigger-click
           class="cursor-pointer ml-4"
@@ -132,7 +132,7 @@
               <span>View All Notifications</span>
             </div>
           </vs-dropdown-menu>
-        </vs-dropdown>
+        </vs-dropdown> -->
 
         <!-- USER META -->
         <div class="the-navbar__user-meta flex items-center">
@@ -188,7 +188,6 @@
 
 <script>
 import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -397,7 +396,6 @@ export default {
   },
   components: {
     VxAutoSuggest,
-    VuePerfectScrollbar,
     draggable
   }
 }

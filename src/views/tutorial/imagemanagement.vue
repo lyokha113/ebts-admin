@@ -80,15 +80,13 @@
 </template>
 
 <script>
-import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
 import Uploader from '@/components/manageimage/Uploader.vue'
 import ViewImage from '@/components/manageimage/ViewImage.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     Uploader,
-    ViewImage,
-    VxAutoSuggest
+    ViewImage
   },
   data() {
     return {

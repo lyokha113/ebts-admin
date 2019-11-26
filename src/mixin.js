@@ -16,12 +16,10 @@ export default {
     },
     async html2Image(node) {
       const canvas = await html2canvas(node, {
-        logging: false,
         imageTimeout: 30000,
         useCORS: true,
         backgroundColor: 'white'
       })
-
       return canvas.toDataURL()
     },
     base64ImageToBlob(str) {

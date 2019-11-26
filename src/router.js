@@ -59,8 +59,8 @@ const router = new Router({
         },
         {
           path: '/image',
-          name: 'ImageManagement',
-          component: () => import('./views/imagemanagement/index.vue'),
+          name: 'Images',
+          component: () => import('./views/tutorial/imagemanagement.vue'),
           meta: {
             breadcrumb: [
               { title: 'Home', url: '/' },

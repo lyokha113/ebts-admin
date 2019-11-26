@@ -75,11 +75,11 @@
               <img :src="tr.thumbnail" class="product-img" />
             </vs-td>
 
-            <vs-td style="width: 800px">
+            <vs-td style="width: 300px">
               <p class="product-name font-medium">{{ tr.name }}</p>
             </vs-td>
 
-            <vs-td>
+            <vs-td style="width: 400px">
               <p class="product-category">{{ tr.description }}</p>
             </vs-td>
 
@@ -114,10 +114,41 @@
       id="custom-popup"
       fullscreen
       title="Tutorial content"
-      :active.sync="contentPopup"
+      :active.sync="popup"
       buttonCloseHidden
     >
-      <vx-card style="min-height: 350px; margin: auto">
+      <vx-card style="min-height: 500px; margin: auto">
+        <vs-row class="mb-5" vs-align="center">
+          <vs-col vs-type="flex" vs-align="center" vs-w="3  ">
+            <span>Tutorial name: &nbsp;</span>
+            <vs-input placeholder="Name" v-model="name" />
+          </vs-col>
+          <vs-col vs-type="flex" vs-align="center" vs-w="3">
+            <span>Tutorial description: &nbsp;</span>
+            <vs-input placeholder="Description" v-model="description" />
+          </vs-col>
+          <vs-col
+            id="file-uploader"
+            style="margin-left: auto"
+            vs-type="flex"
+            vs-align="center"
+            vs-w="3"
+          >
+            <input
+              type="file"
+              ref="uploader"
+              id="file"
+              accept=".gif,.jpg,.jpeg,.png"
+              @change="handleUpload"
+            />
+            <label for="file" class="btn-upload"
+              ><span style="">{{
+                thumbnail ? thumbnail.name : 'Thumbnail'
+              }}</span></label
+            >
+          </vs-col>
+        </vs-row>
+
         <div>
           <froala
             id="edit"
@@ -128,70 +159,18 @@
           <vs-divider />
           <prism language="html">{{ content }}</prism>
         </div>
-
         <div class="flex justify-end mt-3">
-          <vs-button class="flex mx-2" @click="handleDetail">Next</vs-button>
+          <vs-button class="flex mx-2" type="gradient" @click="handleSubmit">
+            {{ isCreating ? 'Create' : 'Update' }}
+          </vs-button>
+          <vs-button class="flex mx-2" type="gradient" @click="handlePreview"
+            >Preview</vs-button
+          >
           <vs-button type="border" class="flex mx-2" @click="handleCloseContent"
             >Cancel</vs-button
           >
         </div>
       </vx-card>
-    </CustomPopup>
-
-    <CustomPopup
-      fullscreen
-      title="Tutorial detail"
-      :active.sync="detailPopup"
-      button-close-hidden
-    >
-      <vs-row>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <h2 class="mb-5">PREVIEW</h2>
-        </vs-col>
-
-        <vs-col
-          id="content-container"
-          vs-type="flex"
-          vs-justify="center"
-          vs-align="center"
-          vs-w="12"
-        >
-          <froalaView id="content" class="py-2 px-" v-model="content" />
-        </vs-col>
-      </vs-row>
-
-      <vs-divider border-style="dashed" class="my-3" />
-
-      <vs-row>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <vs-input
-            placeholder="Enter name"
-            v-model="name"
-            style="width: 270px"
-            class="my-2"
-          />
-        </vs-col>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <vs-input
-            placeholder="Enter description"
-            v-model="description"
-            style="width: 270px"
-            class="my-2"
-          />
-        </vs-col>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <vs-button color="primary" class="mt-4 mr-2" @click="handleSubmit">
-            {{ isCreating ? 'Create' : 'Update' }}
-          </vs-button>
-          <vs-button
-            color="danger"
-            type="border"
-            class="mt-4 ml-2"
-            @click="handleBackToContent"
-            >Back</vs-button
-          >
-        </vs-col>
-      </vs-row>
     </CustomPopup>
   </div>
 </template>
@@ -216,8 +195,7 @@ export default {
       itemsPerPage: 10,
       isMounted: false,
       isCreating: true,
-      contentPopup: false,
-      detailPopup: false,
+      popup: false,
       config: {
         toolbarButtons: [
           'fullscreen',
@@ -323,18 +301,25 @@ export default {
       this.isCreating = true
     },
     handleCloseContent() {
-      this.contentPopup = false
+      this.popup = false
       this.resetTutorial()
     },
-    handleBackToContent() {
-      this.contentPopup = true
-      this.detailPopup = false
+    async handleContent(id) {
+      if (id != null) {
+        this.isCreating = false
+        const tutorial = await this.getTutorial(id)
+        this.id = id
+        this.content = tutorial.content
+        this.name = tutorial.name
+        this.description = tutorial.description
+      }
+      this.popup = true
     },
-    handleDetail() {
-      if (!this.content) {
+    async handleSubmit() {
+      if (!this.content || !this.name || !this.description) {
         this.$vs.notify({
           title: 'Empty value',
-          text: 'Please input tutorial content',
+          text: 'Please input all tutorial information',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -342,8 +327,30 @@ export default {
         return
       }
 
-      this.contentPopup = false
-      this.detailPopup = true
+      let tutorial = new FormData()
+      tutorial.append('name', this.name)
+      tutorial.append('content', this.content)
+      tutorial.append('description', this.description)
+      tutorial.append('thumbnail', this.thumbnail)
+      tutorial.append('active', true)
+
+      if (this.isCreating) {
+        await this.handleCallAPI(this.createTutorial, tutorial)
+      } else {
+        const req = {
+          id: this.id,
+          tutorial: tutorial
+        }
+        await this.handleCallAPI(this.updateTutorial, req)
+      }
+
+      this.$vs.notify({
+        title: 'Information',
+        text: `Tutorial ${this.isCreating ? 'created' : 'upadted'} sucessfully`,
+        color: 'success',
+        position: 'top-right'
+      })
+      this.popup = false
     },
     handleStatus(tutorial) {
       const actionMsg = tutorial.active ? 'lock' : 'unlock'
@@ -365,57 +372,34 @@ export default {
         position: 'top-right'
       })
     },
-    async handleContent(id) {
-      if (id != null) {
-        this.isCreating = false
-        const tutorial = await this.getTutorial(id)
-        this.id = id
-        this.content = tutorial.content
-        this.name = tutorial.name
-        this.description = tutorial.description
-      }
-      this.contentPopup = true
-    },
-    async handleSubmit() {
-      if (!this.name || !this.description) {
+    handleUpload() {
+      const selectedFiles = this.$refs.uploader.files[0]
+      if (/image.*/.test(selectedFiles.type)) {
+        this.thumbnail = selectedFiles
+      } else {
         this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please input tutorial name and description',
+          title: 'File not supported',
+          text: `Can't upload ${selectedFiles.name}`,
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+      }
+      console.log(this.thumbnail)
+    },
+    handlePreview() {
+      if (!this.content) {
+        this.$vs.notify({
+          title: 'Empty tutorial',
+          text: 'Please enter tutorial before previewing',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
         })
         return
       }
-
-      const contentNode = document.getElementById('content')
-      this.thumbnail = await this.html2Image(contentNode)
-
-      let tutorial = new FormData()
-      tutorial.append('name', this.name)
-      tutorial.append('content', this.content)
-      tutorial.append('description', this.description)
-      tutorial.append('thumbnail', this.base64ImageToBlob(this.thumbnail))
-      tutorial.append('active', true)
-
-      if (this.isCreating) {
-        await this.handleCallAPI(this.createTutorial, tutorial)
-      } else {
-        const req = {
-          id: this.id,
-          tutorial: tutorial
-        }
-        await this.handleCallAPI(this.updateTutorial, req)
-      }
-
-      this.$vs.notify({
-        title: 'Information',
-        text: `Tutorial ${this.isCreating ? 'created' : 'upadted'} sucessfully`,
-        color: 'success',
-        position: 'top-right'
-      })
-      this.contentPopup = false
-      this.detailPopup = false
+      const preview = window.open('', '_blank')
+      preview.document.write(this.content)
     }
   },
   async created() {
@@ -439,5 +423,77 @@ export default {
 
 #custom-popup {
   z-index: 51100;
+}
+
+#file-uploader {
+  [type='file'] {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    margin-left: auto;
+    margin-top: auto;
+  }
+
+  [type='file'] + label {
+    background: #725de1;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: inherit;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    outline: none;
+    padding: 1rem 50px;
+    position: relative;
+    transition: all 0.3s;
+    vertical-align: middle;
+
+    &:hover {
+      background-color: darken(#6d41b9, 10%);
+    }
+
+    &.btn-upload {
+      background-color: #725de1;
+      border-radius: 25px;
+      overflow: hidden;
+      margin-bottom: auto;
+
+      span {
+        display: inline-block;
+        height: 100%;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      &::before {
+        color: #fff;
+        content: '\e2c3';
+        font-family: 'Material Icons';
+        font-size: 130%;
+        height: 100%;
+        left: 45%;
+        line-height: 2.6;
+        position: absolute;
+        top: -180%;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      &:hover {
+        background-color: darken(#725de1, 30%);
+
+        span {
+          transform: translateY(300%);
+        }
+
+        &::before {
+          top: 0;
+        }
+      }
+    }
+  }
 }
 </style>
