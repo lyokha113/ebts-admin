@@ -1,4 +1,5 @@
-import { login } from '@/service/user'
+/* eslint-disable no-unused-vars */
+import { login, loginGoogle } from '@/service/user'
 import { getAccounts, createAccount, updateAccount } from '@/service/account'
 import {
   getCategories,
@@ -48,14 +49,6 @@ const actions = {
     commit('UPDATE_STARRED_PAGE', payload)
   },
 
-  //  The Navbar
-  arrangeStarredPagesLimited({ commit }, list) {
-    commit('ARRANGE_STARRED_PAGES_LIMITED', list)
-  },
-  arrangeStarredPagesMore({ commit }, list) {
-    commit('ARRANGE_STARRED_PAGES_MORE', list)
-  },
-
   // ////////////////////////////////////////////
   // USER
   // ////////////////////////////////////////////
@@ -65,13 +58,49 @@ const actions = {
     if (data.success) {
       const token = data.data.accessToken.substring(7)
       const user = decodeToken(token)
-      if (user.roleId == 1) {
-        commit('SET_ACCESS_TOKEN', token)
-        setToken(token)
-      }
-    } else {
-      dispatch('logout')
+      commit('SET_ACCESS_TOKEN', token)
+      setToken(token)
+      return user.roleId
     }
+
+    dispatch('logout')
+  },
+
+  async loginGoogle({ commit, getters }) {
+    let windowObjectReference = null
+    let previousUrl = null
+    const receiveMessage = event => {
+      console.log(event)
+    }
+    const openSignInWindow = (url, name) => {
+      window.removeEventListener('message', receiveMessage)
+
+      const strWindowFeatures =
+        'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
+
+      if (windowObjectReference === null || windowObjectReference.closed) {
+        windowObjectReference = window.open(url, name, strWindowFeatures)
+      } else if (previousUrl !== url) {
+        windowObjectReference = window.open(url, name, strWindowFeatures)
+        windowObjectReference.focus()
+      } else {
+        windowObjectReference.focus()
+      }
+
+      window.addEventListener('message', event => receiveMessage(event), false)
+      previousUrl = url
+
+      const params = window.location.search
+      if (window.opener) {
+        console.log(params)
+        window.opener.postMessage(params)
+        window.close()
+      }
+      console.log(params)
+    }
+
+    const url = getters.api_local + loginGoogle()
+    openSignInWindow(url, 'Google')
   },
 
   async getInfo({ commit, state }) {
@@ -99,12 +128,14 @@ const actions = {
     if (data.success) {
       commit('CREATE_ACCOUNT', data.data)
     }
+    return data.success
   },
   async updateAccount({ commit }, account) {
     const { data } = await updateAccount(account)
     if (data.success) {
       commit('UPDATE_ACCOUNT', data.data)
     }
+    return data.success
   },
 
   // ////////////////////////////////////////////
@@ -121,12 +152,14 @@ const actions = {
     if (data.success) {
       commit('CREATE_CATEGORY', data.data)
     }
+    return data.success
   },
   async updateCategory({ commit }, category) {
     const { data } = await updateCategory(category)
     if (data.success) {
       commit('UPDATE_CATEGORY', data.data)
     }
+    return data.success
   },
 
   // ////////////////////////////////////////////
@@ -143,12 +176,14 @@ const actions = {
     if (data.success) {
       commit('CREATE_FILE', data.data)
     }
+    return data.success
   },
   async changeStatusFile({ commit }, file) {
     const { data } = await changeStatusFile(file.id, file.active)
     if (data.success) {
       commit('CHANGE_STATUS_FILE', file)
     }
+    return data.success
   },
 
   // ////////////////////////////////////////////
@@ -171,18 +206,21 @@ const actions = {
     if (data.success) {
       commit('CREATE_TUTORIAL', data.data)
     }
+    return data.success
   },
   async updateTutorial({ commit }, req) {
     const { data } = await updateTutorial(req.id, req.tutorial)
     if (data.success) {
       commit('UPDATE_TUTORIALS', data.data)
     }
+    return data.success
   },
   async updateStatusTutorial({ commit }, tutorial) {
     const { data } = await updateStatusTutorial(tutorial.id, tutorial.active)
     if (data.success) {
       commit('UPDATE_TUTORIALS', data.data)
     }
+    return data.success
   }
 }
 

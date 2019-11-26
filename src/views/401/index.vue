@@ -4,16 +4,16 @@
       class="vx-col flex items-center justify-center flex-col sm:w-1/2 md:w-3/5 lg:w-3/4 xl:w-1/2 mx-auto text-center"
     >
       <img
-        src="../../assets/images/pages/404.png"
+        src="../../assets/images/pages/not-authorized.png"
         alt="graphic-404"
         class="mx-auto mb-4 max-w-full"
       />
       <h1 class="sm:mx-0 mx-4 mb-12 text-5xl d-theme-heading-color">
-        Page Not Found !!!
+        You are not authorized!
       </h1>
       <p class="sm:mx-0 mx-4 mb-4 sm:mb-16 d-theme-text-inverse">
-        There are something you need to find ? Maybe you went to wrong way !!!
-        Try to find in others path
+        There are something you need to find ? You don't have permission for it.
+        Please check again or contact administrator
       </p>
       <vs-button size="large" :to="back">Back to Home</vs-button>
     </div>

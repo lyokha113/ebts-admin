@@ -1,18 +1,18 @@
 export default [
   {
-    url: '/account',
+    url: '/admin/account',
     name: 'Account',
     slug: 'account',
     icon: 'UsersIcon'
   },
   {
-    url: '/category',
+    url: '/admin/category',
     name: 'Categories',
     slug: 'category',
     icon: 'GridIcon'
   },
   {
-    url: '/tutorial',
+    url: '/admin/tutorial',
     name: 'Tutorial',
     slug: 'tutorial',
     icon: 'FileTextIcon'

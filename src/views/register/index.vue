@@ -17,8 +17,8 @@
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
               <div class="p-8">
                 <div class="vx-card__title mb-8">
-                  <h4 class="mb-4">Login</h4>
-                  <p>Welcome back, please login to your account.</p>
+                  <h4 class="mb-4">Register</h4>
+                  <p>Enter your details and sign-up to be a member</p>
                 </div>
                 <vs-input
                   name="email"
@@ -26,6 +26,7 @@
                   icon-pack="feather"
                   label-placeholder="Email"
                   v-model="email"
+                  :disable="loading"
                   class="w-full no-icon-border"
                 />
 
@@ -36,41 +37,17 @@
                   icon-pack="feather"
                   label-placeholder="Password"
                   v-model="password"
+                  :disable="loading"
                   class="w-full mt-6 no-icon-border"
                 />
 
-                <div class="flex flex-wrap justify-between my-5">
-                  <router-link to="#">Forgot Password?</router-link>
-                </div>
-
-                <vs-button type="border" @click="$router.push('/register')"
-                  >Register</vs-button
-                >
-
-                <vs-button class="float-right" @click="handleLogin"
+                <vs-button type="border" @click="$router.push('/login')"
                   >Login</vs-button
                 >
 
-                <div
-                  class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
-                  @click="handleLoginGoogle"
+                <vs-button class="float-right" @click="handleLogin"
+                  >Register</vs-button
                 >
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="fab"
-                    data-icon="google"
-                    class="text-white h-4 w-4 svg-inline--fa fa-google fa-w-16"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 488 512"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-                    ></path>
-                  </svg>
-                </div>
               </div>
             </div>
           </div>
@@ -86,35 +63,33 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      loading: false
     }
   },
   computed: {
     ...mapGetters(['accessToken'])
   },
   methods: {
-    ...mapActions(['login', 'loginGoogle', 'logout']),
+    ...mapActions(['login', 'logout']),
     async handleLogin() {
-      const req = {
+      this.loading = false
+      await this.handleCallAPI(this.login, {
         email: this.email,
         password: this.password
-      }
-      const res = await this.handleCallAPI(this.login, req)
-      if (res == undefined) {
+      })
+      if (this.accessToken) {
+        this.$router.push('/')
+      } else {
         this.$vs.notify({
           title: 'Warning',
           text: 'Incorrect login information',
           color: 'warning',
           position: 'top-right'
         })
-      } else if (res == 1) {
-        this.$router.push('/admin')
-      } else if (res == 2) {
-        this.$router.push('/user')
       }
-    },
-    async handleLoginGoogle() {
-      await this.loginGoogle()
+
+      this.loading = true
     }
   }
 }

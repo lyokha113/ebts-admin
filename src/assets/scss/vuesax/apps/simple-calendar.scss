@@ -11,7 +11,6 @@
 
 #simple-calendar-app {
   .theme-default {
-
     &.cv-wrapper {
       padding: 20px;
     }
@@ -27,11 +26,10 @@
     }
 
     .cv-day {
-
       cursor: pointer;
 
       &.draghover {
-        box-shadow: inset 0 0 0.2em 0.2em rgba(var(--vs-primary),1);
+        box-shadow: inset 0 0 0.2em 0.2em rgba(var(--vs-primary), 1);
       }
 
       &:not(.outsideOfMonth) {
@@ -52,7 +50,7 @@
 
       &.today {
         .cv-day-number {
-          background-color: rgba(var(--vs-primary),1);
+          background-color: rgba(var(--vs-primary), 1);
           border-radius: 50%;
           display: inline-table;
           padding: 0.6rem;
@@ -67,25 +65,30 @@
           }
         }
       }
-
-
     }
 
     .cv-weeks {
       .cv-week {
-
         min-height: 20%;
 
         .cv-event {
           color: $white;
           border: none;
-          padding-left: .5rem;
-          padding-right: .5rem;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
 
-          &.event-primary { background: rgba(var(--vs-primary), 1) !important; }
-          &.event-warning { background: rgba(var(--vs-warning), 1) !important; }
-          &.event-success { background: rgba(var(--vs-success), 1) !important; }
-          &.event-danger { background: rgba(var(--vs-danger), 1) !important; }
+          &.event-primary {
+            background: rgba(var(--vs-primary), 1) !important;
+          }
+          &.event-warning {
+            background: rgba(var(--vs-warning), 1) !important;
+          }
+          &.event-success {
+            background: rgba(var(--vs-success), 1) !important;
+          }
+          &.event-danger {
+            background: rgba(var(--vs-danger), 1) !important;
+          }
 
           &.toBeContinued:after,
           &.continued:before {
@@ -116,7 +119,6 @@
 
   #simple-calendar-app {
     .theme-default {
-
       .cv-day,
       .cv-event,
       .cv-header-day,
@@ -132,7 +134,6 @@
         }
       }
       .cv-day {
-
         // .cv-day-number {
         //   padding: 1rem;
         // }

@@ -191,6 +191,17 @@ export default {
   methods: {
     ...mapActions(['getCategories', 'createCategory', 'updateCategory']),
     handleAdd() {
+      if (!this.name) {
+        this.$vs.notify({
+          title: 'Empty tutorial',
+          text: 'Please enter categoryname',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       this.addPrompt = false
       this.$vs.dialog({
         type: 'confirm',
@@ -201,6 +212,17 @@ export default {
       })
     },
     handleUpdate() {
+      if (!this.name) {
+        this.$vs.notify({
+          title: 'Empty tutorial',
+          text: 'Please enter categoryname',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       this.updatePrompt = false
       this.$vs.dialog({
         type: 'confirm',
@@ -222,33 +244,36 @@ export default {
       })
     },
     async handleAddConfirm() {
-      await this.handleCallAPI(this.createCategory, { name: this.name })
-      this.$vs.notify({
-        title: 'Information',
-        text: 'Category created',
-        color: 'success',
-        position: 'top-right'
-      })
+      if (await this.handleCallAPI(this.createCategory, { name: this.name })) {
+        this.$vs.notify({
+          title: 'Information',
+          text: 'Category created',
+          color: 'success',
+          position: 'top-right'
+        })
+      }
     },
     async handleUpdatedConfirm() {
       this.selected.name = this.updateName
-      await this.handleCallAPI(this.updateCategory, this.selected)
-      this.$vs.notify({
-        title: 'Information',
-        text: 'Category updated',
-        color: 'success',
-        position: 'top-right'
-      })
+      if (await this.handleCallAPI(this.updateCategory, this.selected)) {
+        this.$vs.notify({
+          title: 'Information',
+          text: 'Category updated',
+          color: 'success',
+          position: 'top-right'
+        })
+      }
     },
     async handleStatusConfirm() {
       this.selected.active = !this.selected.active
-      await this.handleCallAPI(this.updateCategory, this.selected)
-      this.$vs.notify({
-        title: 'Information',
-        text: 'Category status updated',
-        color: 'success',
-        position: 'top-right'
-      })
+      if (await this.handleCallAPI(this.updateCategory, this.selected)) {
+        this.$vs.notify({
+          title: 'Information',
+          text: 'Category status updated',
+          color: 'success',
+          position: 'top-right'
+        })
+      }
     }
   },
   async created() {

@@ -13,32 +13,6 @@
           @click.stop="showSidebar"
         ></feather-icon>
 
-        <template v-if="breakpoint != 'md'">
-          <!-- STARRED PAGES - FIRST 10 -->
-          <ul class="vx-navbar__starred-pages">
-            <draggable
-              v-model="starredPagesLimited"
-              :group="{ name: 'pinList' }"
-              class="flex cursor-move"
-            >
-              <li
-                class="starred-page"
-                v-for="page in starredPagesLimited"
-                :key="page.url"
-              >
-                <vx-tooltip :text="page.label" position="bottom" delay=".3s">
-                  <feather-icon
-                    svgClasses="h-6 w-6"
-                    class="p-2 cursor-pointer"
-                    :icon="page.labelIcon"
-                    @click="$router.push(page.url)"
-                  ></feather-icon>
-                </vx-tooltip>
-              </li>
-            </draggable>
-          </ul>
-        </template>
-
         <vs-spacer></vs-spacer>
 
         <!-- SEARCHBAR -->
@@ -70,7 +44,7 @@
         <feather-icon
           icon="SearchIcon"
           @click="showFullSearch = true"
-          class="cursor-pointer navbar-fuzzy-search ml-4"
+          class="cursor-pointer navbar-fuzzy-search mx-4"
         ></feather-icon>
 
         <!-- NOTIFICATIONS -->
@@ -187,8 +161,8 @@
 </template>
 
 <script>
+import navbarSearchAndPinList from '@/layouts/components/navbarSearchAndPinList'
 import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
-import draggable from 'vuedraggable'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -201,7 +175,7 @@ export default {
   },
   data() {
     return {
-      navbarSearchAndPinList: this.$store.state.navbarSearchAndPinList,
+      navbarSearchAndPinList: navbarSearchAndPinList,
       searchQuery: '',
       showFullSearch: false,
       unreadNotifications: [
@@ -277,31 +251,6 @@ export default {
       else if (this.sidebarWidth) return 'navbar-full'
       return 'navbar-default'
     },
-
-    // BOOKMARK & SEARCH
-    data() {
-      return this.$store.state.navbarSearchAndPinList
-    },
-    starredPages() {
-      return this.$store.state.starredPages
-    },
-    starredPagesLimited: {
-      get() {
-        return this.starredPages.slice(0, 10)
-      },
-      set(list) {
-        this.$store.dispatch('arrangeStarredPagesLimited', list)
-      }
-    },
-    starredPagesMore: {
-      get() {
-        return this.starredPages.slice(10)
-      },
-      set(list) {
-        this.$store.dispatch('arrangeStarredPagesMore', list)
-      }
-    },
-
     // PROFILE
     user_displayName() {
       return this.activeUser && this.activeUser.fullName
@@ -317,13 +266,6 @@ export default {
     selected(item) {
       this.$router.push(item.url)
       this.showFullSearch = false
-    },
-    actionClicked(item) {
-      // e.stopPropogation();
-      this.$store.dispatch('updateStarredPage', {
-        index: item.index,
-        val: !item.highlightAction
-      })
     },
     showNavbarSearch() {
       this.showFullSearch = true
@@ -395,8 +337,7 @@ export default {
     }
   },
   components: {
-    VxAutoSuggest,
-    draggable
+    VxAutoSuggest
   }
 }
 </script>

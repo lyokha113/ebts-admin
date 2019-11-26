@@ -1,13 +1,3 @@
-<!-- =========================================================================================
-	File Name: VxSidebarGroup.vue
-	Description: Sidebar Group Component. Extends vuesax framework's 'vs-sidebar-group' component
-	Component Name: VxSidebarGroup
-	----------------------------------------------------------------------------------------
-	Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-	Author: Pixinvent
-	Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 <template>
   <div
     :class="[

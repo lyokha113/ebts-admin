@@ -1,15 +1,40 @@
 import html2canvas from 'html2canvas'
-
+import { mapActions } from 'vuex'
 export default {
   methods: {
+    ...mapActions(['logout']),
     async handleCallAPI(api, args) {
       try {
-        await api(args)
+        return await api(args)
       } catch (error) {
+        if (error.response.status == 400) {
+          this.$vs.notify({
+            title: 'Input error',
+            text: error.response.data.message,
+            color: 'warning',
+            icon: 'error',
+            position: 'top-right'
+          })
+          return
+        }
+
+        if (error.response.status == 401 || error.response.status == 403) {
+          this.$router.push('/login')
+          this.$vs.notify({
+            title: 'Permission error',
+            text: 'Action was denied.',
+            color: 'warning',
+            icon: 'error',
+            position: 'top-right'
+          })
+          return
+        }
+
         this.$vs.notify({
           title: 'Error',
           text: error.response.data.status,
           color: 'danger',
+          icon: 'error',
           position: 'top-right'
         })
       }

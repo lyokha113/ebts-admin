@@ -1,13 +1,3 @@
-<!-- =========================================================================================
-    File Name: VxCard.vue
-    Description: Card Component
-    Component Name: VxCard
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 <template>
   <div
     class="vx-card"
@@ -218,15 +208,15 @@ export default {
     hasAction() {
       return (
         this.$slots.actions ||
-        (this.actionButtons ||
-          this.collapseAction ||
-          this.refreshContentAction ||
-          this.removeCardAction ||
-          this.codeToggler)
+        this.actionButtons ||
+        this.collapseAction ||
+        this.refreshContentAction ||
+        this.removeCardAction ||
+        this.codeToggler
       )
     },
     hasHeader() {
-      return this.hasAction || (this.title || this.subtitle)
+      return this.hasAction || this.title || this.subtitle
     },
     StyleItems() {
       return { maxHeight: this.maxHeight }

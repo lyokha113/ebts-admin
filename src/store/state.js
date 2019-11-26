@@ -1,10 +1,12 @@
-import navbarSearchAndPinList from '@/layouts/components/navbarSearchAndPinList'
 import themeConfig from '@/../themeConfig.js'
 import colors from '@/../themeConfig.js'
 
 import { getToken } from '@/plugin/auth'
 
 const state = {
+  // ////////////////////////////////////////////
+  // APP
+  // ////////////////////////////////////////////
   isSidebarActive: true,
   breakpoint: null,
   sidebarWidth: 'default',
@@ -12,14 +14,16 @@ const state = {
   bodyOverlay: false,
   sidebarItemsMin: false,
   theme: themeConfig.theme || 'semi-dark',
-  navbarSearchAndPinList: navbarSearchAndPinList,
+  themePrimaryColor: colors.primary,
+  windowWidth: null,
+  api_local: 'http://localhost:5000',
+  api_aws: 'http://18.140.138.198/',
+
+  // ////////////////////////////////////////////
+  // USER
+  // ////////////////////////////////////////////
   activeUser: null,
   accessToken: getToken(),
-  themePrimaryColor: colors.primary,
-  starredPages: navbarSearchAndPinList.data.filter(
-    page => page.highlightAction
-  ),
-  windowWidth: null,
 
   // ////////////////////////////////////////////
   // ACCOUNT

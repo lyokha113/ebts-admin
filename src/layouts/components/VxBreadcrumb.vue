@@ -1,18 +1,8 @@
-<!-- =========================================================================================
-    File Name: VxBreadcrumb.vue
-    Description: Breadcrumb component
-    Component Name: VxBreadcrumb
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 <template>
   <div class="vx-breadcrumb">
     <ul class="flex flex-wrap items-center">
       <li class="inline-flex items-end">
-        <router-link to="/">
+        <router-link to="/admin">
           <feather-icon
             icon="HomeIcon"
             svgClasses="h-5 w-5 mb-1 stroke-current text-primary"

@@ -21,7 +21,7 @@
           </div>
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="$router.push('/image/')"
+            @click="$router.push('/admin/image')"
           >
             <span class="ml-2 text-base text-primary">Image Manage</span>
           </div>
@@ -94,15 +94,14 @@
             </vs-td>
 
             <vs-td>
-              <span class="action-icon mx-1" @click="handleContent(tr.id)">
-                <vs-icon size="small" icon="create" />
-              </span>
-
               <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
                 />
+              </span>
+              <span class="action-icon mx-1" @click="handleContent(tr.id)">
+                <vs-icon size="small" icon="create" />
               </span>
             </vs-td>
           </vs-tr>
@@ -142,7 +141,7 @@
               @change="handleUpload"
             />
             <label for="file" class="btn-upload"
-              ><span style="">{{
+              ><span class="thumbnail-file-name">{{
                 thumbnail ? thumbnail.name : 'Thumbnail'
               }}</span></label
             >
@@ -292,17 +291,14 @@ export default {
       'updateTutorial',
       'updateStatusTutorial'
     ]),
-    resetTutorial() {
+    handleCloseContent() {
+      this.popup = false
       this.id = ''
       this.content = ''
       this.name = ''
       this.description = ''
       this.thumbnail = ''
       this.isCreating = true
-    },
-    handleCloseContent() {
-      this.popup = false
-      this.resetTutorial()
     },
     async handleContent(id) {
       if (id != null) {
@@ -331,26 +327,52 @@ export default {
       tutorial.append('name', this.name)
       tutorial.append('content', this.content)
       tutorial.append('description', this.description)
-      tutorial.append('thumbnail', this.thumbnail)
-      tutorial.append('active', true)
+      if (this.thumbnail) {
+        tutorial.append('thumbnail', this.thumbnail)
+      }
 
       if (this.isCreating) {
-        await this.handleCallAPI(this.createTutorial, tutorial)
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'danger',
+          title: `Confirm`,
+          text: `${
+            !this.thumbnail
+              ? "Thumbnail will be set to default if you don't select.\n"
+              : ''
+          } Please check all informations before create new tutorial.`,
+          accept: async () => {
+            if (await this.handleCallAPI(this.createTutorial, tutorial)) {
+              this.handleMessageSuccess()
+            }
+          }
+        })
       } else {
         const req = {
           id: this.id,
           tutorial: tutorial
         }
-        await this.handleCallAPI(this.updateTutorial, req)
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'danger',
+          title: `Confirm`,
+          text: `Please check all informations before update tutorial.`,
+          accept: async () => {
+            if (await this.handleCallAPI(this.updateTutorial, req)) {
+              this.handleMessageSuccess()
+            }
+          }
+        })
       }
-
+    },
+    handleMessageSuccess() {
       this.$vs.notify({
         title: 'Information',
         text: `Tutorial ${this.isCreating ? 'created' : 'upadted'} sucessfully`,
         color: 'success',
         position: 'top-right'
       })
-      this.popup = false
+      this.handleCloseContent()
     },
     handleStatus(tutorial) {
       const actionMsg = tutorial.active ? 'lock' : 'unlock'
@@ -364,13 +386,14 @@ export default {
     },
     async handleStatusConfirm(tutorial) {
       tutorial.active = !tutorial.active
-      await this.handleCallAPI(this.updateStatusTutorial, tutorial)
-      this.$vs.notify({
-        title: 'Information',
-        text: 'Tutorial status updated',
-        color: 'success',
-        position: 'top-right'
-      })
+      if (await this.handleCallAPI(this.updateStatusTutorial, tutorial)) {
+        this.$vs.notify({
+          title: 'Information',
+          text: 'Tutorial status updated',
+          color: 'success',
+          position: 'top-right'
+        })
+      }
     },
     handleUpload() {
       const selectedFiles = this.$refs.uploader.files[0]
@@ -385,7 +408,6 @@ export default {
           position: 'top-right'
         })
       }
-      console.log(this.thumbnail)
     },
     handlePreview() {
       if (!this.content) {
@@ -446,7 +468,7 @@ export default {
     font-weight: 600;
     margin-bottom: 1rem;
     outline: none;
-    padding: 1rem 50px;
+    padding: 0.5rem 20px;
     position: relative;
     transition: all 0.3s;
     vertical-align: middle;
@@ -495,5 +517,12 @@ export default {
       }
     }
   }
+}
+
+.thumbnail-file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 </style>

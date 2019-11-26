@@ -153,35 +153,64 @@ export default {
       this.role = 'ADMINISTRATOR'
     },
     async handleSubmit() {
-      if (this.selected) {
-        const obj = {
-          id: this.selected.id,
-          active: this.selected.active,
-          fullName: this.fullName,
-          password: this.password
-        }
-        await this.handleCallAPI(this.updateAccount, obj)
-        this.$emit('closeSidebar')
+      if (!this.email || !this.fullName || (!this.selected && !this.password)) {
         this.$vs.notify({
-          title: 'Information',
-          text: 'Account updated',
-          color: 'success',
+          title: 'Empty value',
+          text: 'Please enter all account information',
+          color: 'warning',
+          icon: 'error',
           position: 'top-right'
         })
+        return
+      }
+
+      if (this.selected) {
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'danger',
+          title: `Confirm`,
+          text: `Please check all information to create new account`,
+          accept: async () => {
+            const obj = {
+              id: this.selected.id,
+              active: this.selected.active,
+              fullName: this.fullName,
+              password: this.password
+            }
+            if (await this.handleCallAPI(this.updateAccount, obj)) {
+              this.$emit('closeSidebar')
+              this.$vs.notify({
+                title: 'Information',
+                text: 'Account updated',
+                color: 'success',
+                position: 'top-right'
+              })
+            }
+          }
+        })
       } else {
-        const obj = {
-          email: this.email,
-          fullName: this.fullName,
-          password: this.password,
-          roleId: 1
-        }
-        await this.handleCallAPI(this.createAccount, obj)
-        this.$emit('closeSidebar')
-        this.$vs.notify({
-          title: 'Information',
-          text: 'Account created',
-          color: 'success',
-          position: 'top-right'
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'danger',
+          title: `Confirm`,
+          text: `Please check all information to update account`,
+          accept: async () => {
+            const obj = {
+              email: this.email,
+              fullName: this.fullName,
+              password: this.password,
+              roleId: 1
+            }
+            if (await this.handleCallAPI(this.createAccount, obj)) {
+              this.$emit('closeSidebar')
+              this.$vs.notify({
+                title: 'Information',
+                text: 'Account created',
+                color: 'success',
+                position: 'top-right'
+              })
+            }
+          }
         })
       }
     }
@@ -195,11 +224,11 @@ export default {
 <style lang="scss" scoped>
 .add-new-data-sidebar {
   /deep/ .vs-sidebar--background {
-    z-index: 52010;
+    z-index: 52004;
   }
 
   /deep/ .vs-sidebar {
-    z-index: 52010;
+    z-index: 52004;
     width: 400px;
     max-width: 90vw;
 

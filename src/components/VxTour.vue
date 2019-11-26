@@ -1,12 +1,3 @@
-<!-- =========================================================================================
-    File Name: VxTour.vue
-    Description: Tour Component
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 <template>
   <v-tour name="vuesaxTour" :steps="steps">
     <template slot-scope="tour">

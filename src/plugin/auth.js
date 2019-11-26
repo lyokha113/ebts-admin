@@ -3,15 +3,15 @@ var jwtDecode = require('jwt-decode')
 const TOKEN_KEY = 'accessToken'
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY)
+  return sessionStorage.getItem(TOKEN_KEY)
 }
 
 export function setToken(token) {
-  return localStorage.setItem(TOKEN_KEY, token)
+  return sessionStorage.setItem(TOKEN_KEY, token)
 }
 
 export function removeToken() {
-  return localStorage.removeItem(TOKEN_KEY)
+  return sessionStorage.removeItem(TOKEN_KEY)
 }
 
 export function decodeToken(token) {

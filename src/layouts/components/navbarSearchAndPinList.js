@@ -5,21 +5,21 @@ export default {
     {
       index: 0,
       label: 'Account',
-      url: '/account',
+      url: '/admin/account',
       labelIcon: 'UsersIcon',
       highlightAction: false
     },
     {
       index: 1,
       label: 'Category',
-      url: '/category',
+      url: '/admin/category',
       labelIcon: 'GridIcon',
       highlightAction: false
     },
     {
       index: 2,
       label: 'Tutorial',
-      url: '/tutorial',
+      url: '/admin/tutorial',
       labelIcon: 'FileTextIcon',
       highlightAction: false
     }

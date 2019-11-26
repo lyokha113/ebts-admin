@@ -4,7 +4,7 @@
       <vs-col vs-type="flex" vs-align="center" vs-w="4">
         <div
           class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-          @click="$router.push('/tutorial/')"
+          @click="$router.push('/admin/tutorial')"
         >
           <span class="ml-2 text-base text-primary">Back to Tutorial</span>
         </div>
