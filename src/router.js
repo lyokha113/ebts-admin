@@ -27,8 +27,7 @@ const router = new Router({
               { title: 'Home', url: '/admin' },
               { title: 'Account', active: true }
             ],
-            pageTitle: 'Account Management',
-            permission: 1
+            pageTitle: 'Account Management'
           }
         },
         {
@@ -40,8 +39,7 @@ const router = new Router({
               { title: 'Home', url: '/admin' },
               { title: 'Category', active: true }
             ],
-            pageTitle: 'Category Management',
-            permission: 1
+            pageTitle: 'Category Management'
           }
         },
         {
@@ -53,8 +51,7 @@ const router = new Router({
               { title: 'Home', url: '/admin' },
               { title: 'Tutorial', active: true }
             ],
-            pageTitle: 'Tutorial Management',
-            permission: 1
+            pageTitle: 'Tutorial Management'
           }
         },
         {
@@ -67,8 +64,7 @@ const router = new Router({
               { title: 'Tutorial', url: '/admin/tutorial' },
               { title: 'Image Management', active: true }
             ],
-            pageTitle: 'Image Management',
-            permission: 1
+            pageTitle: 'Image Management'
           }
         }
       ],
@@ -83,7 +79,13 @@ const router = new Router({
     {
       path: '/user',
       component: () => import('./layouts/main/User.vue'),
-      children: [],
+      children: [
+        {
+          path: '/user/image',
+          name: 'User Image',
+          component: () => import('@/views/user/userimage/index.vue')
+        }
+      ],
       meta: {
         permission: 2
       }
@@ -94,8 +96,17 @@ const router = new Router({
     // =============================================================================
     {
       path: '',
-      component: () => import('./layouts/main/Guest.vue'),
-      children: []
+      component: () => import('./layouts/main/User.vue'),
+      children: [
+        {
+          path: '/',
+          name: 'Home',
+          component: () => import('@/views/home/index.vue')
+        }
+      ],
+      meta: {
+        guest: true
+      }
     },
 
     // =============================================================================
@@ -105,36 +116,40 @@ const router = new Router({
       path: '',
       component: () => import('@/layouts/full-page/FullPage.vue'),
       children: [
-        // =============================================================================
-        // PAGES
-        // =============================================================================
         {
           path: '/login',
-          name: 'pageLogin',
+          name: 'Login',
           component: () => import('@/views/login/index.vue')
         },
         {
-          path: '/404',
-          name: 'page404',
-          component: () => import('@/views/404/index.vue'),
-          meta: {
-            permitAll: true
-          }
+          path: '/register',
+          name: 'Register',
+          component: () => import('@/views/register/index.vue')
         },
         {
-          path: '401',
-          name: 'page401',
-          component: () => import('@/views/401/index.vue'),
-          meta: {
-            permitAll: true
-          }
+          path: '/404',
+          name: '404',
+          component: () => import('@/views/404/index.vue')
+        },
+        {
+          path: '/401',
+          name: '401',
+          component: () => import('@/views/401/index.vue')
+        },
+        {
+          path: '/oauth2',
+          name: 'oauth2',
+          component: () => import('@/views/oauth2/index.vue')
         }
-      ]
+      ],
+      meta: {
+        permitAll: true
+      }
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
-    // {
-    //   path: '*',
-    //   redirect: '/404'
-    // }
   ]
 })
 
@@ -177,18 +192,23 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.matched.some(record => record.meta.permission == 2)) {
     await validateToken()
+
+    if (store.getters.permission == 1) {
+      return next('/admin')
+    }
+
     if (store.getters.permission == 2) {
       return next()
     }
     return next('/401')
   }
 
-  if (to.matched.some(record => !record.meta.permission)) {
+  if (to.matched.some(record => record.meta.guest)) {
     await validateToken()
-    if (store.getters.permission != 1) {
-      return next()
+    if (store.getters.permission == 1) {
+      return next('/admin')
     }
-    return next('/401')
+    return next()
   }
 })
 

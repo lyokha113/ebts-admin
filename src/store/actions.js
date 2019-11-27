@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { login, loginGoogle } from '@/service/user'
+import { login, googleAuth, register } from '@/service/user'
 import { getAccounts, createAccount, updateAccount } from '@/service/account'
 import {
   getCategories,
@@ -14,7 +14,9 @@ import {
   updateTutorial,
   updateStatusTutorial
 } from '@/service/tutorial'
+import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
+import { messaging } from 'firebase'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -41,15 +43,6 @@ const actions = {
   },
 
   // ////////////////////////////////////////////
-  // COMPONENT
-  // ////////////////////////////////////////////
-
-  // VxAutoSuggest
-  updateStarredPage({ commit }, payload) {
-    commit('UPDATE_STARRED_PAGE', payload)
-  },
-
-  // ////////////////////////////////////////////
   // USER
   // ////////////////////////////////////////////
 
@@ -60,47 +53,71 @@ const actions = {
       const user = decodeToken(token)
       commit('SET_ACCESS_TOKEN', token)
       setToken(token)
+      if (user.roleId == 1) {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
+
       return user.roleId
     }
 
     dispatch('logout')
+    this._vm.$vs.notify({
+      title: 'Warning',
+      text: 'Incorrect login information',
+      color: 'warning',
+      position: 'top-right'
+    })
   },
 
-  async loginGoogle({ commit, getters }) {
-    let windowObjectReference = null
-    let previousUrl = null
-    const receiveMessage = event => {
-      console.log(event)
-    }
-    const openSignInWindow = (url, name) => {
-      window.removeEventListener('message', receiveMessage)
+  async googleAuth({ commit, getters }) {
+    let popup = null
 
+    const reciveMessage = event => {
+      const { data } = event
+      const params = new URLSearchParams(data)
+      const error = params.get('error')
+      if (error) {
+        this._vm.$vs.notify({
+          title: 'Warning',
+          text: error,
+          color: 'warning',
+          position: 'top-right'
+        })
+      } else {
+        const token = params.get('token').substring(7)
+        commit('SET_ACCESS_TOKEN', token)
+        setToken(token)
+        router.push('/user')
+      }
+    }
+
+    window.onmessage = () => {}
+    const openSignInWindow = (url, name) => {
       const strWindowFeatures =
         'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
-
-      if (windowObjectReference === null || windowObjectReference.closed) {
-        windowObjectReference = window.open(url, name, strWindowFeatures)
-      } else if (previousUrl !== url) {
-        windowObjectReference = window.open(url, name, strWindowFeatures)
-        windowObjectReference.focus()
+      if (popup === null || popup.closed) {
+        popup = window.open(url, name, strWindowFeatures)
       } else {
-        windowObjectReference.focus()
+        popup.focus()
       }
-
-      window.addEventListener('message', event => receiveMessage(event), false)
-      previousUrl = url
-
-      const params = window.location.search
-      if (window.opener) {
-        console.log(params)
-        window.opener.postMessage(params)
-        window.close()
-      }
-      console.log(params)
+      window.onmessage = reciveMessage
     }
 
-    const url = getters.api_local + loginGoogle()
+    const url = getters.api_local + googleAuth()
     openSignInWindow(url, 'Google')
+  },
+
+  async register({ dispatch }, registerInfo) {
+    const { data } = await register(registerInfo)
+    if (data.success) {
+      const loginInfo = {
+        email: registerInfo.email,
+        password: registerInfo.password
+      }
+      dispatch('login', loginInfo)
+    }
   },
 
   async getInfo({ commit, state }) {
@@ -123,17 +140,31 @@ const actions = {
       commit('SET_ACCOUNTS', data.data)
     }
   },
+
   async createAccount({ commit }, account) {
     const { data } = await createAccount(account)
     if (data.success) {
       commit('CREATE_ACCOUNT', data.data)
+      this.$vs.notify({
+        title: 'Information',
+        text: 'Account created',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
+
   async updateAccount({ commit }, account) {
     const { data } = await updateAccount(account)
     if (data.success) {
       commit('UPDATE_ACCOUNT', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Account updated',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
@@ -147,17 +178,38 @@ const actions = {
       commit('SET_CATEGORIES', data.data)
     }
   },
+
+  async getHomeCategories({ commit }) {
+    const { data } = await getCategories()
+    if (data.success) {
+      commit('SET_HOME_CATEGORIES', data.data)
+    }
+  },
+
   async createCategory({ commit }, category) {
     const { data } = await createCategory(category)
     if (data.success) {
       commit('CREATE_CATEGORY', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Category created',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
+
   async updateCategory({ commit }, category) {
     const { data } = await updateCategory(category)
     if (data.success) {
       commit('UPDATE_CATEGORY', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Category updated',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
@@ -171,6 +223,7 @@ const actions = {
       commit('SET_FILES', data.data)
     }
   },
+
   async createFile({ commit }, uploader) {
     const { data } = await createFile(uploader.file, uploader.onUploadProgress)
     if (data.success) {
@@ -178,10 +231,17 @@ const actions = {
     }
     return data.success
   },
+
   async changeStatusFile({ commit }, file) {
     const { data } = await changeStatusFile(file.id, file.active)
     if (data.success) {
       commit('CHANGE_STATUS_FILE', file)
+      this._vm.$vs.notify({
+        title: 'Successfully',
+        text: file.active ? 'File restored' : 'File deleted',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
@@ -195,30 +255,52 @@ const actions = {
       commit('SET_TUTORIALS', data.data)
     }
   },
+
   async getTutorial({ commit }, id) {
     const { data } = await getTutorial(id)
     if (data.success) {
       return data.data
     }
   },
+
   async createTutorial({ commit }, tutorial) {
     const { data } = await createTutorial(tutorial)
     if (data.success) {
       commit('CREATE_TUTORIAL', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Tutorial created`,
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
+
   async updateTutorial({ commit }, req) {
     const { data } = await updateTutorial(req.id, req.tutorial)
     if (data.success) {
       commit('UPDATE_TUTORIALS', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Tutorial updated`,
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   },
+
   async updateStatusTutorial({ commit }, tutorial) {
     const { data } = await updateStatusTutorial(tutorial.id, tutorial.active)
     if (data.success) {
       commit('UPDATE_TUTORIALS', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Tutorial status updated',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   }

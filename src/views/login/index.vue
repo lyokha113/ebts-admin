@@ -11,8 +11,12 @@
               <img
                 src="@/assets/images/pages/login.png"
                 alt="login"
-                class="mx-auto"
+                class="mx-auto cursor-pointer mb-5"
+                @click="$router.push('/')"
               />
+              <vs-button class="flex m-auto" @click="$router.push('/')"
+                >Home Page</vs-button
+              >
             </div>
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
               <div class="p-8">
@@ -22,7 +26,7 @@
                 </div>
                 <vs-input
                   name="email"
-                  icon="icon icon-user"
+                  icon="icon icon-mail"
                   icon-pack="feather"
                   label-placeholder="Email"
                   v-model="email"
@@ -53,14 +57,14 @@
 
                 <div
                   class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
-                  @click="handleLoginGoogle"
+                  @click="handleGoogleAuth"
                 >
                   <svg
                     aria-hidden="true"
                     focusable="false"
                     data-prefix="fab"
                     data-icon="google"
-                    class="text-white h-4 w-4 svg-inline--fa fa-google fa-w-16"
+                    class="text-white h-4 w-12 svg-inline--fa fa-google fa-w-16"
                     role="img"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 488 512"
@@ -81,7 +85,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -89,32 +93,29 @@ export default {
       password: ''
     }
   },
-  computed: {
-    ...mapGetters(['accessToken'])
-  },
   methods: {
-    ...mapActions(['login', 'loginGoogle', 'logout']),
+    ...mapActions(['login', 'googleAuth']),
     async handleLogin() {
-      const req = {
-        email: this.email,
-        password: this.password
-      }
-      const res = await this.handleCallAPI(this.login, req)
-      if (res == undefined) {
+      if (!this.email || !this.password) {
         this.$vs.notify({
           title: 'Warning',
-          text: 'Incorrect login information',
+          text: 'Please enter email and password',
           color: 'warning',
           position: 'top-right'
         })
-      } else if (res == 1) {
-        this.$router.push('/admin')
-      } else if (res == 2) {
-        this.$router.push('/user')
+        return
       }
+      this.handleloginConfirm()
     },
-    async handleLoginGoogle() {
-      await this.loginGoogle()
+    async handleloginConfirm() {
+      const loginInfo = {
+        email: this.email,
+        password: this.password
+      }
+      await this.handleCallAPI(this.login, loginInfo)
+    },
+    async handleGoogleAuth() {
+      await this.googleAuth()
     }
   }
 }

@@ -343,7 +343,7 @@ export default {
           } Please check all informations before create new tutorial.`,
           accept: async () => {
             if (await this.handleCallAPI(this.createTutorial, tutorial)) {
-              this.handleMessageSuccess()
+              this.handleCloseContent()
             }
           }
         })
@@ -359,20 +359,11 @@ export default {
           text: `Please check all informations before update tutorial.`,
           accept: async () => {
             if (await this.handleCallAPI(this.updateTutorial, req)) {
-              this.handleMessageSuccess()
+              this.handleCloseContent()
             }
           }
         })
       }
-    },
-    handleMessageSuccess() {
-      this.$vs.notify({
-        title: 'Information',
-        text: `Tutorial ${this.isCreating ? 'created' : 'upadted'} sucessfully`,
-        color: 'success',
-        position: 'top-right'
-      })
-      this.handleCloseContent()
     },
     handleStatus(tutorial) {
       const actionMsg = tutorial.active ? 'lock' : 'unlock'
@@ -381,19 +372,11 @@ export default {
         color: 'danger',
         title: `Confirm`,
         text: `Do you want to ${actionMsg} this tutorial ?`,
-        accept: () => this.handleStatusConfirm(tutorial)
+        accept: async () => {
+          tutorial.active = !tutorial.active
+          await this.handleCallAPI(this.updateStatusTutorial, tutorial)
+        }
       })
-    },
-    async handleStatusConfirm(tutorial) {
-      tutorial.active = !tutorial.active
-      if (await this.handleCallAPI(this.updateStatusTutorial, tutorial)) {
-        this.$vs.notify({
-          title: 'Information',
-          text: 'Tutorial status updated',
-          color: 'success',
-          position: 'top-right'
-        })
-      }
     },
     handleUpload() {
       const selectedFiles = this.$refs.uploader.files[0]

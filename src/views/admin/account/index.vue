@@ -177,14 +177,7 @@ export default {
     },
     async handleStatusConfirm() {
       this.selected.active = !this.selected.active
-      if (await this.handleCallAPI(this.updateAccount, this.selected)) {
-        this.$vs.notify({
-          title: 'Information',
-          text: 'Account status updated',
-          color: 'success',
-          position: 'top-right'
-        })
-      }
+      await this.handleCallAPI(this.updateAccount, this.selected)
     }
   },
   async created() {

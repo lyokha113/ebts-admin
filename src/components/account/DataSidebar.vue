@@ -179,12 +179,6 @@ export default {
             }
             if (await this.handleCallAPI(this.updateAccount, obj)) {
               this.$emit('closeSidebar')
-              this.$vs.notify({
-                title: 'Information',
-                text: 'Account updated',
-                color: 'success',
-                position: 'top-right'
-              })
             }
           }
         })
@@ -203,12 +197,6 @@ export default {
             }
             if (await this.handleCallAPI(this.createAccount, obj)) {
               this.$emit('closeSidebar')
-              this.$vs.notify({
-                title: 'Information',
-                text: 'Account created',
-                color: 'success',
-                position: 'top-right'
-              })
             }
           }
         })

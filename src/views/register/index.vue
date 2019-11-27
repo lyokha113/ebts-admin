@@ -11,8 +11,12 @@
               <img
                 src="@/assets/images/pages/login.png"
                 alt="login"
-                class="mx-auto"
+                class="mx-auto cursor-pointer mb-5"
+                @click="$router.push('/')"
               />
+              <vs-button class="flex m-auto" @click="$router.push('/')"
+                >Home Page</vs-button
+              >
             </div>
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
               <div class="p-8">
@@ -22,11 +26,19 @@
                 </div>
                 <vs-input
                   name="email"
-                  icon="icon icon-user"
+                  icon="icon icon-mail"
                   icon-pack="feather"
                   label-placeholder="Email"
                   v-model="email"
-                  :disable="loading"
+                  class="w-full no-icon-border"
+                />
+
+                <vs-input
+                  name="fullname"
+                  icon="icon icon-user"
+                  icon-pack="feather"
+                  label-placeholder="Fullname"
+                  v-model="name"
                   class="w-full no-icon-border"
                 />
 
@@ -37,17 +49,47 @@
                   icon-pack="feather"
                   label-placeholder="Password"
                   v-model="password"
-                  :disable="loading"
                   class="w-full mt-6 no-icon-border"
+                />
+
+                <vs-input
+                  type="password"
+                  name="confirm"
+                  icon="icon icon-lock"
+                  icon-pack="feather"
+                  label-placeholder="Confirm password"
+                  v-model="confirm"
+                  class="w-full mt-6 mb-6 no-icon-border"
                 />
 
                 <vs-button type="border" @click="$router.push('/login')"
                   >Login</vs-button
                 >
 
-                <vs-button class="float-right" @click="handleLogin"
+                <vs-button class="float-right" @click="handleRegister"
                   >Register</vs-button
                 >
+
+                <div
+                  class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
+                  @click="handleGoogleAuth"
+                >
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    data-prefix="fab"
+                    data-icon="google"
+                    class="text-white h-4 w-12 svg-inline--fa fa-google fa-w-16"
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 488 512"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                    ></path>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -58,38 +100,51 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data() {
     return {
       email: '',
+      name: '',
       password: '',
-      loading: false
+      confirm: ''
     }
   },
-  computed: {
-    ...mapGetters(['accessToken'])
-  },
   methods: {
-    ...mapActions(['login', 'logout']),
-    async handleLogin() {
-      this.loading = false
-      await this.handleCallAPI(this.login, {
-        email: this.email,
-        password: this.password
-      })
-      if (this.accessToken) {
-        this.$router.push('/')
-      } else {
+    ...mapActions(['register', 'googleAuth']),
+    async handleRegister() {
+      if (!this.email || !this.name || !this.password || !this.confirm) {
         this.$vs.notify({
-          title: 'Warning',
-          text: 'Incorrect login information',
+          title: 'Empty value',
+          text: 'Please enter all account information',
           color: 'warning',
+          icon: 'error',
           position: 'top-right'
         })
+        return
       }
 
-      this.loading = true
+      if (this.password != this.confirm) {
+        this.$vs.notify({
+          title: 'Confirm password not matched',
+          text: 'Please re-check confirm password',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      const registerInfo = {
+        email: this.email,
+        fullName: this.name,
+        password: this.password
+      }
+      await this.handleCallAPI(this.register, registerInfo)
+    },
+
+    async handleGoogleAuth() {
+      await this.googleAuth()
     }
   }
 }

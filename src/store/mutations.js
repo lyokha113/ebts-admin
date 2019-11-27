@@ -64,6 +64,9 @@ const mutations = {
   SET_CATEGORIES(state, categories) {
     state.categories = categories
   },
+  SET_HOME_CATEGORIES(state, homeCategories) {
+    state.homeCategories = homeCategories
+  },
   CREATE_CATEGORY(state, category) {
     state.categories.unshift(category)
   },

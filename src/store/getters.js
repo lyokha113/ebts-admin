@@ -1,5 +1,6 @@
 const getters = {
   // APP
+  sidebarWidth: state => state.sidebarWidth,
   api_local: state => state.api_local,
   api_aws: state => state.api_aws,
 
@@ -13,6 +14,7 @@ const getters = {
 
   // CATEGORY
   categories: state => state.categories,
+  homeCategories: state => state.homeCategories,
 
   // FILE
   files: state => state.files,
