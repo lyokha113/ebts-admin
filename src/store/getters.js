@@ -14,13 +14,22 @@ const getters = {
 
   // CATEGORY
   categories: state => state.categories,
-  homeCategories: state => state.homeCategories,
+  categoriesNoTemplate: state => state.categoriesNoTemplate,
+
+  // TEMPLATES
+  templates: state => state.templates,
 
   // FILE
   files: state => state.files,
 
   // TUTORIAL
-  tutorials: state => state.tutorials
+  tutorials: state => state.tutorials,
+
+  // WORKSPACE
+  workspaces: state => state.workspaces,
+
+  // RAW TEMPLATE
+  currentRaw: state => state.currentRaw
 }
 
 export default getters

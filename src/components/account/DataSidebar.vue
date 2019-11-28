@@ -164,6 +164,17 @@ export default {
         return
       }
 
+      if (!this.validateEmail(this.email)) {
+        this.$vs.notify({
+          title: 'Email format incorrect',
+          text: 'Please re-check your email',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       if (this.selected) {
         this.$vs.dialog({
           type: 'confirm',

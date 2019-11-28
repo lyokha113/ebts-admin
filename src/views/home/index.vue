@@ -25,12 +25,14 @@
             svgClasses="h-8 w-8"
             icon="EditIcon"
           ></feather-icon>
-          <div class="text-xl self-center font-medium">Start to design</div>
+          <div class="text-xl self-center font-medium" @click="handleDesign">
+            Start to design
+          </div>
         </div>
       </vs-col>
-      <vs-col vs-type="flex" vs-align="center" vs-w="8">
+      <vs-col vs-type="flex" vs-align="end" vs-w="8">
         <div
-          class="flex py-4 px-4 justify-end"
+          class="flex py-4 px-4 justify-around items-end"
           style="width: 100%; background-color: white; border-radius: 10px"
         >
           <vs-select
@@ -39,30 +41,34 @@
             label="Categories"
             width="300px"
             v-model="filterCategories"
+            @change="handleFilter"
           >
             <vs-select-item
               :key="item.id"
               :value="item.id"
-              :text="`${item.name} - ${item.templates.length} templates`"
-              v-for="item in homeCategories"
+              :text="`${item.name} - ${item.noOfTemplates} templates`"
+              v-for="item in categoriesNoTemplate"
             />
           </vs-select>
+          <vs-input
+            icon="search"
+            label="Search"
+            placeholder="Enter name to search"
+            style="width: 300px"
+            v-model="searchQuery"
+          />
+          <vs-button @click="handleSearch" style="height: 40px" type="gradient"
+            >Search</vs-button
+          >
         </div>
       </vs-col>
     </vs-row>
 
-    <vs-row
-      class="pt-5"
-      vs-type="flex"
-      vs-align="center"
-      vs-justify="center"
-      vs-w="12"
-    >
+    <vs-row class="pt-5" vs-type="flex" vs-align="center" vs-w="12">
       <vs-col
-        v-for="item in templatesToShow"
+        v-for="item in items"
         :key="item.id"
         vs-type="flex"
-        vs-justify="center"
         vs-align="center"
         vs-w="3"
       >
@@ -75,34 +81,72 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import TemplateGridItems from '@/components/home/TemplateGridItems'
+const elasticlunr = require('elasticlunr')
 export default {
   components: {
     TemplateGridItems
   },
   data() {
     return {
-      filterCategories: []
+      filterCategories: [],
+      filtereditems: [],
+      items: [],
+      searchQuery: '',
+      elasticlunrIndex: null
     }
   },
   computed: {
-    ...mapGetters(['homeCategories']),
-    templatesToShow() {
-      let result = this.filterCategories.length
-        ? this.homeCategories.filter(
-            c => this.filterCategories.indexOf(c.id) > -1
-          )
-        : this.homeCategories
-      result = result.map(c => c.templates).flat()
-      return Array.from(new Set(result.map(c => c.id))).map(id => {
-        return result.find(c => c.id === id)
-      })
-    }
+    ...mapGetters(['categoriesNoTemplate', 'templates', 'activeUser'])
   },
   methods: {
-    ...mapActions(['getHomeCategories'])
+    ...mapActions(['getCategoriesNoTemplate', 'getTemplates']),
+    handleFilter() {
+      this.searchQuery = ''
+      if (!this.filterCategories.length) {
+        this.items = this.templates
+      } else {
+        this.items = this.templates.filter(t => {
+          return t.categories.some(
+            c => this.filterCategories.indexOf(c.id) > -1
+          )
+        })
+      }
+
+      this.filtereditems = this.items
+    },
+    handleSearch() {
+      if (!this.searchQuery) {
+        return this.handleFilter()
+      }
+
+      let refs = this.elasticlunrIndex.search(this.searchQuery, {
+        expand: true
+      })
+      refs = refs.map(r => r.ref).map(Number)
+      this.items = this.filtereditems.filter(i => refs.indexOf(i.id) > -1)
+    },
+    handleDesign() {
+      if (this.activeUser) {
+        this.$router.push('/user/workspace')
+      } else {
+        this.$router.push('/login?return=workspace')
+      }
+    }
   },
   async mounted() {
-    await this.handleCallAPI(this.getHomeCategories)
+    await Promise.all([
+      this.handleCallAPI(this.getCategoriesNoTemplate),
+      this.handleCallAPI(this.getTemplates)
+    ])
+
+    this.items = this.templates
+    this.filtereditems = this.templates
+
+    this.elasticlunrIndex = elasticlunr(function() {
+      this.addField('name')
+      this.setRef('id')
+    })
+    this.templates.forEach(c => this.elasticlunrIndex.addDoc(c))
   }
 }
 </script>

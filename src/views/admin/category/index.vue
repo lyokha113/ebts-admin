@@ -1,6 +1,10 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <vs-popup title="CREATE NEW CATEGORY" :active.sync="addPrompt">
+    <vs-popup
+      id="create-popup"
+      title="CREATE NEW CATEGORY"
+      :active.sync="addPrompt"
+    >
       <div>
         Enter category name:
         <vs-input
@@ -19,7 +23,11 @@
       </div>
     </vs-popup>
 
-    <vs-popup title="UPDATE CATEGORY" :active.sync="updatePrompt">
+    <vs-popup
+      id="update-popup"
+      title="UPDATE CATEGORY"
+      :active.sync="updatePrompt"
+    >
       <div>
         Enter category name to update:
         <vs-input
@@ -201,14 +209,18 @@ export default {
         return
       }
 
-      this.addPrompt = false
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
         title: `Confirm`,
         text: `Do you want to create new category ?`,
-        accept: async () =>
-          await this.handleCallAPI(this.createCategory, { name: this.name })
+        accept: async () => {
+          if (
+            await this.handleCallAPI(this.createCategory, { name: this.name })
+          ) {
+            this.addPrompt = false
+          }
+        }
       })
     },
     handleUpdate() {
@@ -223,7 +235,6 @@ export default {
         return
       }
 
-      this.updatePrompt = false
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
@@ -231,7 +242,9 @@ export default {
         text: `Do you want to update this category ?`,
         accept: async () => {
           this.selected.name = this.updateName
-          await this.handleCallAPI(this.updateCategory, this.selected)
+          if (await this.handleCallAPI(this.updateCategory, this.selected)) {
+            this.updatePrompt = false
+          }
         }
       })
     },
@@ -266,5 +279,13 @@ export default {
 
 .action-icon:hover {
   color: mediumslateblue;
+}
+
+#create-popup {
+  z-index: 51100;
+}
+
+#update-popup {
+  z-index: 51100;
 }
 </style>

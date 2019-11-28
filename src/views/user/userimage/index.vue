@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vs-row vs-justify="flex-end">
+    <vs-row class="mb-3" vs-justify="flex-end">
       <vs-col vs-type="flex" vs-align="center" vs-justify="flex-end" vs-w="3">
         <vs-select width="300px" class="ml-3" v-model="type">
           <vs-select-item value="Active" text="Active" />

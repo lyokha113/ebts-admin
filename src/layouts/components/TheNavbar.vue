@@ -6,39 +6,18 @@
         color="white"
         :class="navWidth"
       >
-        <vs-spacer />
+        <img
+          class="cursor-pointer"
+          src="@/assets/images/logo/logo-rec.png"
+          height="40px"
+          @click="$router.push('/')"
+        />
 
-        <!-- SEARCHBAR -->
-        <div
-          class="search-full-container w-full h-full absolute left-0 rounded-lg"
-          :class="{ flex: showFullSearch }"
-          v-show="showFullSearch"
-        >
-          <vx-auto-suggest
-            :autoFocus="showFullSearch"
-            :data="navbarSearchAndPinList"
-            @selected="selected"
-            ref="navbarSearch"
-            @closeSearchbar="showFullSearch = false"
-            placeholder="Search..."
-            class="w-full"
-            inputClassses="w-full vs-input-no-border vs-input-no-shdow-focus no-icon-border"
-            icon="SearchIcon"
-            background-overlay
-          ></vx-auto-suggest>
-          <div class="absolute right-0 h-full z-50">
-            <feather-icon
-              icon="XIcon"
-              class="px-4 cursor-pointer h-full close-search-icon"
-              @click="showFullSearch = false"
-            ></feather-icon>
-          </div>
-        </div>
-        <feather-icon
-          icon="SearchIcon"
-          @click="showFullSearch = true"
-          class="cursor-pointer navbar-fuzzy-search mx-4"
-        ></feather-icon>
+        <!-- <vs-spacer />
+        <span>Home</span>
+        <span>Home</span> -->
+
+        <vs-spacer />
 
         <!-- USER META -->
         <div class="the-navbar__user-meta flex items-center">
@@ -74,8 +53,8 @@
                 class="rounded-full shadow-md cursor-pointer block"
               />
             </div>
-            <vs-dropdown-menu class="vx-navbar-dropdown">
-              <ul style="min-width: 9rem">
+            <vs-dropdown-menu class="vx-navbar-dropdown" style="width: 180px">
+              <ul style="min-width: 10rem">
                 <li
                   v-if="!activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
@@ -85,7 +64,7 @@
                     icon="LogInIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-2">Login</span>
+                  <span class="ml-4">Login</span>
                 </li>
                 <li
                   v-if="!activeUser"
@@ -96,7 +75,7 @@
                     icon="SmileIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-2">Register</span>
+                  <span class="ml-4">Register</span>
                 </li>
                 <li
                   v-if="activeUser"
@@ -107,7 +86,18 @@
                     icon="ImageIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-2">Images</span>
+                  <span class="ml-4">Your Images</span>
+                </li>
+                <li
+                  v-if="activeUser"
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/workspace')"
+                >
+                  <feather-icon
+                    icon="FileMinusIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">Workspace</span>
                 </li>
                 <li
                   v-if="activeUser"
@@ -118,7 +108,7 @@
                     icon="LogOutIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-2">Logout</span>
+                  <span class="ml-4">Logout</span>
                 </li>
               </ul>
             </vs-dropdown-menu>
@@ -130,19 +120,10 @@
 </template>
 
 <script>
-import navbarSearchAndPinList from '@/layouts/components/navbarSearchAndPinList'
-import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'the-navbar',
-  data() {
-    return {
-      navbarSearchAndPinList: navbarSearchAndPinList,
-      searchQuery: '',
-      showFullSearch: false
-    }
-  },
   computed: {
     ...mapGetters(['sidebarWidth', 'activeUser']),
     navWidth() {
@@ -152,25 +133,18 @@ export default {
       return 'navbar-full'
     },
     user_displayName() {
-      return this.activeUser.fullName
+      return this.activeUser && this.activeUser.fullName
     },
     activeUserImg() {
-      return this.activeUser.imageUrl
+      return this.activeUser && this.activeUser.imageUrl
     }
   },
   methods: {
-    selected(item) {
-      this.$router.push(item.url)
-      this.showFullSearch = false
-    },
     ...mapActions(['logout']),
     async handleLogout() {
       await this.logout()
       this.$router.push('/login')
     }
-  },
-  components: {
-    VxAutoSuggest
   }
 }
 </script>

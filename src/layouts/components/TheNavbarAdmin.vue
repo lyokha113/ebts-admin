@@ -232,10 +232,10 @@ export default {
     },
 
     user_displayName() {
-      return this.activeUser.fullName
+      return this.activeUser && this.activeUser.fullName
     },
     activeUserImg() {
-      return this.activeUser.imageUrl
+      return this.activeUser && this.activeUser.imageUrl
     }
   },
   methods: {

@@ -14,7 +14,10 @@
                 class="mx-auto cursor-pointer mb-5"
                 @click="$router.push('/')"
               />
-              <vs-button class="flex m-auto" @click="$router.push('/')"
+              <vs-button
+                class="flex m-auto"
+                @click="$router.push('/')"
+                type="border"
                 >Home Page</vs-button
               >
             </div>
@@ -117,6 +120,17 @@ export default {
         this.$vs.notify({
           title: 'Empty value',
           text: 'Please enter all account information',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      if (!this.validateEmail(this.email)) {
+        this.$vs.notify({
+          title: 'Email format incorrect',
+          text: 'Please re-check your email',
           color: 'warning',
           icon: 'error',
           position: 'top-right'

@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { login, googleAuth, register } from '@/service/user'
 import { getAccounts, createAccount, updateAccount } from '@/service/account'
+
 import {
   getCategories,
   createCategory,
   updateCategory
 } from '@/service/category'
+
+import { getTemplates, getTemplate } from '@/service/template'
 import { getFiles, createFile, changeStatusFile } from '@/service/file'
+
 import {
   getTutorials,
   getTutorial,
@@ -14,6 +18,22 @@ import {
   updateTutorial,
   updateStatusTutorial
 } from '@/service/tutorial'
+
+import {
+  getWorkspaces,
+  createWorkspace,
+  updateWorkspace,
+  deleteWorkspace
+} from '@/service/workspace'
+
+import {
+  getRawTemplate,
+  createRawTemplate,
+  updateRawTemplate,
+  changeVersion,
+  deleteRawTemplate
+} from '@/service/rawtemplate'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 import { messaging } from 'firebase'
@@ -56,7 +76,11 @@ const actions = {
       if (user.roleId == 1) {
         router.push('/admin')
       } else {
-        router.push('/')
+        if (loginInfo.page == 'workspace') {
+          router.push('/user/workspace')
+        } else {
+          router.push('/')
+        }
       }
 
       return user.roleId
@@ -179,10 +203,10 @@ const actions = {
     }
   },
 
-  async getHomeCategories({ commit }) {
+  async getCategoriesNoTemplate({ commit }) {
     const { data } = await getCategories()
     if (data.success) {
-      commit('SET_HOME_CATEGORIES', data.data)
+      commit('SET_CATEGORIES_NO_TEMPLATE', data.data)
     }
   },
 
@@ -212,6 +236,24 @@ const actions = {
       })
     }
     return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // TEMPLATES
+  // ////////////////////////////////////////////
+
+  async getTemplates({ commit }) {
+    const { data } = await getTemplates()
+    if (data.success) {
+      commit('SET_TEMPLATES', data.data)
+    }
+  },
+
+  async getTemplate({ commit }, id) {
+    const { data } = await getTemplate(id)
+    if (data.success) {
+      return data.data
+    }
   },
 
   // ////////////////////////////////////////////
@@ -298,6 +340,124 @@ const actions = {
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Tutorial status updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // WORKSPACE
+  // ////////////////////////////////////////////
+  async getWorkspaces({ commit }) {
+    const { data } = await getWorkspaces()
+    if (data.success) {
+      commit('SET_WORKSPACES', data.data)
+    }
+  },
+
+  async createWorkspace({ commit }, workspace) {
+    const { data } = await createWorkspace(workspace)
+    if (data.success) {
+      commit('CREATE_WORKSPACE', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Workspace created`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.data.id
+  },
+
+  async updateWorkspace({ commit }, workspace) {
+    const { data } = await updateWorkspace(workspace)
+    if (data.success) {
+      commit('UPDATE_WORKSPACE', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Workspace updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async deleteWorkspace({ commit }, workspace) {
+    const { data } = await deleteWorkspace(workspace.id)
+    if (data.success) {
+      commit('DELETE_WORKSPACE', workspace)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Workspace deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // RAW TEMPLATE
+  // ////////////////////////////////////////////
+  async getRawTemplate({ commit }, id) {
+    const { data } = await getRawTemplate(id)
+    if (data.success) {
+      commit('SET_CURRENT_RAW', data.data)
+    }
+  },
+
+  async createRawTemplate({ commit }, raw) {
+    const { data } = await createRawTemplate(raw)
+    if (data.success) {
+      commit('CREATE_RAW', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Template created`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async updateRawTemplate({ commit }, workspace) {
+    // const { data } = await updateWorkspace(workspace)
+    // if (data.success) {
+    //   commit('UPDATE_WORKSPACE', data.data)
+    //   this._vm.$vs.notify({
+    //     title: 'Information',
+    //     text: `Workspace updated`,
+    //     color: 'success',
+    //     position: 'top-right'
+    //   })
+    // }
+    // return data.success
+  },
+
+  async changeVersion({ commit }, id) {
+    // const { data } = await deleteWorkspace(id)
+    // if (data.success) {
+    //   commit('DELETE_WORKSPACE', id)
+    //   this._vm.$vs.notify({
+    //     title: 'Information',
+    //     text: 'Workspace deleted',
+    //     color: 'success',
+    //     position: 'top-right'
+    //   })
+    // }
+    // return data.success
+  },
+
+  async deleteRawTemplate({ commit }, raw) {
+    const { data } = await deleteRawTemplate(raw.id)
+    if (data.success) {
+      commit('DELETE_RAW', raw)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Template deleted',
         color: 'success',
         position: 'top-right'
       })

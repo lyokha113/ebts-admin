@@ -141,7 +141,7 @@
               @change="handleUpload"
             />
             <label for="file" class="btn-upload"
-              ><span class="thumbnail-file-name">{{
+              ><span class="truncate">{{
                 thumbnail ? thumbnail.name : 'Thumbnail'
               }}</span></label
             >
@@ -500,12 +500,5 @@ export default {
       }
     }
   }
-}
-
-.thumbnail-file-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
 }
 </style>

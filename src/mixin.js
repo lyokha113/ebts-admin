@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import html2canvas from 'html2canvas'
 import { mapActions } from 'vuex'
 export default {
@@ -7,6 +8,7 @@ export default {
       try {
         return await api(args)
       } catch (error) {
+        console.log(error)
         if (error.response.status == 400) {
           this.$vs.notify({
             title: 'Input error',
@@ -61,6 +63,10 @@ export default {
       }
 
       return new Blob([buffer], { type: type })
+    },
+    validateEmail(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(String(email).toLowerCase())
     }
   }
 }

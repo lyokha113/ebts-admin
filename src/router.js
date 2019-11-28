@@ -77,36 +77,42 @@ const router = new Router({
     // USER LAYOUT ROUTES
     // =============================================================================
     {
-      path: '/user',
+      path: '',
       component: () => import('./layouts/main/User.vue'),
       children: [
         {
           path: '/user/image',
           name: 'User Image',
-          component: () => import('@/views/user/userimage/index.vue')
-        }
-      ],
-      meta: {
-        permission: 2
-      }
-    },
-
-    // =============================================================================
-    // GUEST LAYOUT ROUTES
-    // =============================================================================
-    {
-      path: '',
-      component: () => import('./layouts/main/User.vue'),
-      children: [
+          component: () => import('@/views/user/userimage/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/workspace',
+          name: 'Workspace',
+          component: () => import('@/views/user/workspace/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
         {
           path: '/',
           name: 'Home',
-          component: () => import('@/views/home/index.vue')
+          component: () => import('@/views/home/index.vue'),
+          meta: {
+            guest: true
+          }
+        },
+        {
+          path: '/detail/:id',
+          name: 'Detail',
+          component: () => import('@/views/detail/index.vue'),
+          meta: {
+            guest: true
+          }
         }
-      ],
-      meta: {
-        guest: true
-      }
+      ]
     },
 
     // =============================================================================

@@ -50,9 +50,16 @@ require('./assets/css/iconfont.css')
 // Mixins
 import mixins from '@/mixin.js'
 
+// Filters
+import filters from '@/filters.js'
+
+// Moment
+Vue.use(require('vue-moment'))
+
 Vue.config.productionTip = false
 
 new Vue({
+  filters,
   router,
   store,
   render: h => h(App)

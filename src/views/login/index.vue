@@ -14,7 +14,10 @@
                 class="mx-auto cursor-pointer mb-5"
                 @click="$router.push('/')"
               />
-              <vs-button class="flex m-auto" @click="$router.push('/')"
+              <vs-button
+                class="flex m-auto"
+                @click="$router.push('/')"
+                type="border"
                 >Home Page</vs-button
               >
             </div>
@@ -43,8 +46,8 @@
                   class="w-full mt-6 no-icon-border"
                 />
 
-                <div class="flex flex-wrap justify-between my-5">
-                  <router-link to="#">Forgot Password?</router-link>
+                <div class="flex flex-wrap justify-between mt-5">
+                  <!-- <router-link to="#">Forgot Password?</router-link> -->
                 </div>
 
                 <vs-button type="border" @click="$router.push('/register')"
@@ -110,7 +113,8 @@ export default {
     async handleloginConfirm() {
       const loginInfo = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        page: this.$route.query.return
       }
       await this.handleCallAPI(this.login, loginInfo)
     },

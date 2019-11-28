@@ -1,7 +1,10 @@
 <template>
   <vx-card class="grid-view-item mb-base overflow-hidden">
     <template slot="no-body">
-      <div class="bg-white flex items-center justify-center">
+      <div
+        class="bg-white flex items-center justify-center cursor-pointer"
+        @click="$router.push(`detail/${template.id}`)"
+      >
         <div
           class="thumbnail mx-3 mt-3"
           :style="{ backgroundImage: `url(${template.thumbnail})` }"
@@ -14,11 +17,13 @@
             <span class="text-sm mr-2">{{ template.upVote }}</span>
             <feather-icon icon="ChevronUpIcon" svgClasses="h-4 w-4" />
           </div>
-          <div class="bg-danger flex text-white py-1 px-2 pl-2 ml-2 rounded">
+          <div class="bg-danger flex text-white py-1 px-2 pl-2 mx-2 rounded">
             <span class="text-sm mr-2">{{ template.downVote }}</span>
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
-          <span style="margin-left: auto"> {{ template.authorName }}</span>
+          <span class="truncate" style="margin-left: auto">
+            {{ template.authorName }}</span
+          >
         </div>
 
         <div class="my-4">

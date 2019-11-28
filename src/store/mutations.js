@@ -27,9 +27,6 @@ const mutations = {
   UPDATE_PRIMARY_COLOR(state, val) {
     state.themePrimaryColor = val
   },
-  // UPDATE_STATUS_CHAT(state, value) {
-  //     state.activeUser.status = value;
-  // },
   UPDATE_WINDOW_WIDTH(state, width) {
     state.windowWidth = width
   },
@@ -64,8 +61,8 @@ const mutations = {
   SET_CATEGORIES(state, categories) {
     state.categories = categories
   },
-  SET_HOME_CATEGORIES(state, homeCategories) {
-    state.homeCategories = homeCategories
+  SET_CATEGORIES_NO_TEMPLATE(state, categoriesNoTemplate) {
+    state.categoriesNoTemplate = categoriesNoTemplate
   },
   CREATE_CATEGORY(state, category) {
     state.categories.unshift(category)
@@ -73,6 +70,13 @@ const mutations = {
   UPDATE_CATEGORY(state, category) {
     const current = state.categories.find(c => c.id === category.id)
     Object.assign(current, category)
+  },
+
+  // ////////////////////////////////////////////
+  // TEMPLATES
+  // ////////////////////////////////////////////
+  SET_TEMPLATES(state, templates) {
+    state.templates = templates
   },
 
   // ////////////////////////////////////////////
@@ -101,6 +105,47 @@ const mutations = {
   UPDATE_TUTORIALS(state, tutorial) {
     const current = state.tutorials.find(t => t.id === tutorial.id)
     Object.assign(current, tutorial)
+  },
+
+  // ////////////////////////////////////////////
+  // WORKSPACE
+  // ////////////////////////////////////////////
+  SET_WORKSPACES(state, workspaces) {
+    state.workspaces = workspaces
+  },
+  CREATE_WORKSPACE(state, workspace) {
+    state.workspaces.push(workspace)
+  },
+  UPDATE_WORKSPACE(state, workspace) {
+    const current = state.workspaces.find(w => w.id === workspace.id)
+    Object.assign(current, workspace)
+  },
+  DELETE_WORKSPACE(state, workspace) {
+    const defaultWs = state.workspaces.find(w => w.name == 'Default workspace')
+    const idx = state.workspaces.findIndex(w => w.id === workspace.id)
+    const current = state.workspaces[idx]
+    defaultWs.rawTemplates = [
+      ...defaultWs.rawTemplates,
+      ...current.rawTemplates
+    ]
+    state.workspaces.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
+  // RAW TEMPLATE
+  // ////////////////////////////////////////////
+  SET_CURRENT_RAW(state, currentRaw) {
+    state.currentRaw = currentRaw
+  },
+  CREATE_RAW(state, raw) {
+    const ws = state.workspaces.find(w => w.id === raw.workspaceId)
+    ws.rawTemplates.unshift(raw)
+    state.currentRaw = raw
+  },
+  DELETE_RAW(state, raw) {
+    const ws = state.workspaces.find(w => w.id === raw.workspaceId)
+    const idx = ws.rawTemplates.findIndex(t => t.id == raw.id)
+    ws.rawTemplates.splice(idx, 1)
   }
 }
 
