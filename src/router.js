@@ -66,6 +66,18 @@ const router = new Router({
             ],
             pageTitle: 'Image Management'
           }
+        },
+        {
+          path: '/admin/template',
+          name: 'Template',
+          component: () => import('./views/admin/template/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: 'Home', url: '/admin' },
+              { title: 'Template', active: true }
+            ],
+            pageTitle: 'Template Management'
+          }
         }
       ],
       meta: {

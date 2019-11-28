@@ -9,3 +9,11 @@ export function getTemplates() {
 export function getTemplate(id) {
   return axios.get(`${URI}/${id}`)
 }
+
+export function updateTemplate(template) {
+  return axios.put(`${URI}/${template.id}`, template)
+}
+
+export function deleteTemplate(id) {
+  return axios.delete(`${URI}/${id}`)
+}

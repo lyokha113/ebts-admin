@@ -13,10 +13,6 @@
           @click="$router.push('/')"
         />
 
-        <!-- <vs-spacer />
-        <span>Home</span>
-        <span>Home</span> -->
-
         <vs-spacer />
 
         <!-- USER META -->

@@ -20,6 +20,13 @@ export default {
       index: 2,
       label: 'Tutorial',
       url: '/admin/tutorial',
+      labelIcon: 'BookOpenIcon',
+      highlightAction: false
+    },
+    {
+      index: 3,
+      label: 'Template',
+      url: '/admin/template',
       labelIcon: 'FileTextIcon',
       highlightAction: false
     }

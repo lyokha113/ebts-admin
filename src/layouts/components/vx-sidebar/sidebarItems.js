@@ -15,6 +15,12 @@ export default [
     url: '/admin/tutorial',
     name: 'Tutorial',
     slug: 'tutorial',
+    icon: 'BookOpenIcon'
+  },
+  {
+    url: '/admin/template',
+    name: 'Template',
+    slug: 'template',
     icon: 'FileTextIcon'
   }
 ]

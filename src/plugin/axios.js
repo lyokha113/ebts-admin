@@ -7,7 +7,7 @@ const api_local = 'http://localhost:5000'
 const api_aws = 'http://18.140.138.198/'
 
 const service = axios.create({
-  baseURL: api_local,
+  baseURL: api_aws,
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': '*',
   'Content-Type': 'application/json'

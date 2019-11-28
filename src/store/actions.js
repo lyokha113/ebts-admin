@@ -9,6 +9,7 @@ import {
 } from '@/service/category'
 
 import { getTemplates, getTemplate } from '@/service/template'
+import { rate } from '@/service/rating'
 import { getFiles, createFile, changeStatusFile } from '@/service/file'
 
 import {
@@ -78,6 +79,8 @@ const actions = {
       } else {
         if (loginInfo.page == 'workspace') {
           router.push('/user/workspace')
+        } else if (loginInfo.page.includes('detail')) {
+          router.push(`/${loginInfo.page.replace('-', '/')}`)
         } else {
           router.push('/')
         }
@@ -252,6 +255,24 @@ const actions = {
   async getTemplate({ commit }, id) {
     const { data } = await getTemplate(id)
     if (data.success) {
+      return data.data
+    }
+  },
+
+  // ////////////////////////////////////////////
+  // RATING
+  // ////////////////////////////////////////////
+
+  async rate({ commit }, req) {
+    const { data } = await rate(req)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Successfully',
+        text: `Rate successfully`,
+        color: 'success',
+        position: 'top-right'
+      })
+
       return data.data
     }
   },
