@@ -139,6 +139,17 @@ export default {
       this.popup = true
     },
     async handleUpdate() {
+      if (!this.id || !this.name || !this.description || !this.categories) {
+        this.$vs.notify({
+          title: 'Empty value',
+          text: 'Please enter all information',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       const template = {
         id: this.id,
         name: this.name,
@@ -146,6 +157,7 @@ export default {
         categoryIds: this.categories,
         active: true
       }
+
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
