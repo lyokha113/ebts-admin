@@ -256,7 +256,7 @@ export default {
         quickInsertTags: [''],
         imageManagerLoadURL: 'http://localhost:5000/editor/file',
         imageManagerPageSize: 100,
-        imageManagerDeleteURL: 'http://localhost:5000/editor/file',
+        imageManagerDeleteURL: `http://localhost:5000/editor/file`,
         imageManagerDeleteMethod: 'DELETE',
         imageUploadURL: 'http://localhost:5000/editor/file',
         requestHeaders: {
@@ -275,7 +275,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'tutorials']),
+    ...mapGetters(['accessToken', 'tutorials', 'api_local']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx

@@ -14,18 +14,20 @@
           </vs-col>
       </vs-row>
       </vs-tab>
-      <vs-tab label="Pending">
-          login
+      <vs-tab label="Publish">
+        <PublishList />
       </vs-tab>
     </vs-tabs>
   </div>
 </template>
 
 <script>
+import PublishList from '@/components/PublishList'
 import AdminTemplateList from '@/components/template/AdminTemplateList'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
+    PublishList,
     AdminTemplateList
   },
   computed: {

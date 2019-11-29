@@ -1,6 +1,11 @@
 const filters = {
-  localizeDateTime: function(date) {
-    return date
+  doubleToPercent: function(data) {
+    return Math.round(num * 100) / 100
+  },
+  publishStatus: function(status) {
+    if (status == 'DENIED') return 'danger'
+    if (status == 'PUBLISHED') return 'success'
+    return 'warning'
   }
 }
 

@@ -8,7 +8,7 @@ import {
   updateCategory
 } from '@/service/category'
 
-import { getTemplates, getTemplate } from '@/service/template'
+import { getTemplates, getTemplate, updateTemplate, deleteTemplate } from '@/service/template'
 import { rate } from '@/service/rating'
 import { getFiles, createFile, changeStatusFile } from '@/service/file'
 
@@ -19,6 +19,11 @@ import {
   updateTutorial,
   updateStatusTutorial
 } from '@/service/tutorial'
+
+import {
+  getPublishes,
+  createPublish,
+} from '@/service/publish'
 
 import {
   getWorkspaces,
@@ -79,7 +84,7 @@ const actions = {
       } else {
         if (loginInfo.page == 'workspace') {
           router.push('/user/workspace')
-        } else if (loginInfo.page.includes('detail')) {
+        } else if (loginInfo.page && loginInfo.page.includes('detail')) {
           router.push(`/${loginInfo.page.replace('-', '/')}`)
         } else {
           router.push('/')
@@ -120,7 +125,7 @@ const actions = {
       }
     }
 
-    window.onmessage = () => {}
+    window.onmessage = () => { }
     const openSignInWindow = (url, name) => {
       const strWindowFeatures =
         'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
@@ -255,8 +260,36 @@ const actions = {
   async getTemplate({ commit }, id) {
     const { data } = await getTemplate(id)
     if (data.success) {
-      return data.data
+      commit('SET_CURRENT_TEMPLATE', data.data)
     }
+  },
+
+  async updateTemplate({ commit }, template) {
+    const { data } = await updateTemplate(template)
+    if (data.success) {
+      commit('UPDATE_TEMPLATE', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Template updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async deleteTemplate({ commit }, id) {
+    const { data } = await deleteTemplate(id)
+    if (data.success) {
+      commit('DELETE_TEMPLATE', id)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Template deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
   },
 
   // ////////////////////////////////////////////
@@ -366,6 +399,30 @@ const actions = {
       })
     }
     return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // PUBLISH
+  // ////////////////////////////////////////////
+  async getPublishes({ commit }) {
+    const { data } = await getPublishes()
+    if (data.success) {
+      commit('SET_PUBLISHES', data.data)
+    }
+  },
+
+
+  async createPublish({ commit }, publish) {
+    const { data } = await createPublish(publish)
+    // if (data.success) {
+    //   this._vm.$vs.notify({
+    //     title: 'Information',
+    //     text: `Request sent`,
+    //     color: 'success',
+    //     position: 'top-right'
+    //   })
+    // }
+    // return data.success
   },
 
   // ////////////////////////////////////////////

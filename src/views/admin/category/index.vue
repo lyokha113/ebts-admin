@@ -115,7 +115,7 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.templates.length }}</p>
+              <p class="product-category">{{ tr.templates ? tr.templates.length : 0 }}</p>
             </vs-td>
 
             <vs-td>
@@ -148,7 +148,7 @@
             </vs-td>
 
             <template class="expand-user" slot="expand">
-              <vs-row v-if="tr.templates.length" appear>
+              <vs-row appear>
                 <vs-col
                   v-for="template in tr.templates"
                   :key="template.id"

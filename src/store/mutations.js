@@ -78,6 +78,17 @@ const mutations = {
   SET_TEMPLATES(state, templates) {
     state.templates = templates
   },
+  SET_CURRENT_TEMPLATE(state, template) {
+    state.currentTemplate = template
+  },
+  UPDATE_TEMPLATE(state, template) {
+    const current = state.templates.find(c => c.id === template.id)
+    Object.assign(current, template)
+  },
+  DELETE_TEMPLATE(state, id) {
+    const idx = state.templates.findIndex(t => t.id == id)
+    state.templates.splice(idx, 1)
+  },
 
   // ////////////////////////////////////////////
   // FILES
@@ -106,6 +117,20 @@ const mutations = {
     const current = state.tutorials.find(t => t.id === tutorial.id)
     Object.assign(current, tutorial)
   },
+
+  // ////////////////////////////////////////////
+  // PUBLISHES
+  // ////////////////////////////////////////////
+  SET_PUBLISHES(state, publishes) {
+    state.publishes = publishes
+  },
+  CREATE_PUBLISH(state, publish) {
+    state.publishes.unshift(publish)
+  },
+  // UPDATE_TUTORIALS(state, tutorial) {
+  //   const current = state.tutorials.find(t => t.id === tutorial.id)
+  //   Object.assign(current, tutorial)
+  // },
 
   // ////////////////////////////////////////////
   // WORKSPACE

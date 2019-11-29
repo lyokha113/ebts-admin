@@ -18,12 +18,16 @@ const getters = {
 
   // TEMPLATES
   templates: state => state.templates,
+  currentTemplate: state => state.currentTemplate,
 
   // FILE
   files: state => state.files,
 
   // TUTORIAL
   tutorials: state => state.tutorials,
+
+  // PUBLISH
+  publishes: state => state.publishes,
 
   // WORKSPACE
   workspaces: state => state.workspaces,

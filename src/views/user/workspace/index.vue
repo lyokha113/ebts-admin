@@ -23,29 +23,19 @@
           icon="edit"
           @click="handlePopupUpdate"
         ></vs-button>
+        <vs-button class="mx-2 mt-6" type="gradient" icon="add" @click="handlePopupAdd"></vs-button>
         <vs-button
           v-if="workspaceName != 'Default workspace'"
           class="mx-2 mt-6"
           type="gradient"
           icon="delete_forever"
+          color="danger"
           @click="handleDelete"
-        ></vs-button>
-        <vs-button
-          class="mx-2 mt-6"
-          type="gradient"
-          icon="add"
-          @click="handlePopupAdd"
         ></vs-button>
       </vs-col>
     </vs-row>
     <vs-row class="mt-5" vs-type="flex" vs-align="center" vs-w="12">
-      <vs-col
-        v-for="item in rawTemplates"
-        :key="item.id"
-        vs-type="flex"
-        vs-align="center"
-        vs-w="2"
-      >
+      <vs-col v-for="item in rawTemplates" :key="item.id" vs-type="flex" vs-align="center" vs-w="2">
         <WorkspaceItem :raw="item" />
       </vs-col>
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
@@ -56,9 +46,7 @@
               @click="handlePopupAddRaw"
             >
               <div style="height: 250px;">
-                <span
-                  style="display: inline-block; height: 23%; vertical-align: middle;"
-                ></span>
+                <span style="display: inline-block; height: 23%; vertical-align: middle;"></span>
                 <img src="@/assets/images/new.png" width="100%" />
               </div>
             </div>
@@ -70,54 +58,27 @@
     <vs-popup id="create-popup" title="CREATE NEW" :active.sync="popupCreate">
       <div>
         Enter workspace name:
-        <vs-input
-          placeholder="Name"
-          v-model="name"
-          style="width: 250px"
-          class="my-2"
-        />
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-2"
-          @click="handleAdd"
-          >Create</vs-button
-        >
+        <vs-input placeholder="Name" v-model="name" style="width: 250px" class="my-2" />
+        <vs-button color="primary" type="filled" class="float-right mt-2" @click="handleAdd">Create</vs-button>
       </div>
     </vs-popup>
 
     <vs-popup id="update-popup" title="UPDATE" :active.sync="popupUpdate">
       <div>
         Enter workspace name:
-        <vs-input
-          placeholder="Name"
-          v-model="name"
-          style="width: 250px"
-          class="my-2"
-        />
+        <vs-input placeholder="Name" v-model="name" style="width: 250px" class="my-2" />
         <vs-button
           color="primary"
           type="filled"
           class="float-right mt-2"
           @click="handleUpdate"
-          >Update</vs-button
-        >
+        >Update</vs-button>
       </div>
     </vs-popup>
-    <vs-popup
-      id="create-template-popup"
-      title="CREATE TEMPLATE"
-      :active.sync="popupCreateTemplate"
-    >
+    <vs-popup id="create-template-popup" title="CREATE TEMPLATE" :active.sync="popupCreateTemplate">
       <div>
         Enter name:
-        <vs-input
-          placeholder="Name"
-          v-model="templateName"
-          style="width: 250px"
-          class="mt-1 mb-4"
-        />
-        Enter description:
+        <vs-input placeholder="Name" v-model="templateName" style="width: 250px" class="mt-1 mb-4" />Enter description:
         <vs-input
           placeholder="Description"
           v-model="templateDescription"
@@ -130,8 +91,7 @@
           type="filled"
           class="float-right mt-2"
           @click="handlePopupTemplate"
-          >Create</vs-button
-        >
+        >Create</vs-button>
       </div>
     </vs-popup>
     <CustomPopup
@@ -184,7 +144,7 @@ export default {
       'createWorkspace',
       'updateWorkspace',
       'deleteWorkspace',
-      'createRawTemplate'
+      'createRawTemplate',
     ]),
     handleChange() {
       this.workspaceName = this.workspaces.find(
