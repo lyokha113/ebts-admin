@@ -8,7 +8,13 @@ import {
   updateCategory
 } from '@/service/category'
 
-import { getTemplates, getTemplate, updateTemplate, deleteTemplate } from '@/service/template'
+import {
+  getTemplates,
+  getTemplate,
+  createTemplate,
+  updateTemplate,
+  deleteTemplate
+} from '@/service/template'
 import { rate } from '@/service/rating'
 import { getFiles, createFile, changeStatusFile } from '@/service/file'
 
@@ -23,6 +29,8 @@ import {
 import {
   getPublishes,
   createPublish,
+  denyPublish,
+  approvePublish
 } from '@/service/publish'
 
 import {
@@ -42,7 +50,7 @@ import {
 
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
-import { messaging } from 'firebase'
+import { _ } from 'core-js'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -110,6 +118,7 @@ const actions = {
       const { data } = event
       const params = new URLSearchParams(data)
       const error = params.get('error')
+      const token = params.get('token')
       if (error) {
         this._vm.$vs.notify({
           title: 'Warning',
@@ -117,15 +126,14 @@ const actions = {
           color: 'warning',
           position: 'top-right'
         })
-      } else {
-        const token = params.get('token').substring(7)
+      } else if (token) {
         commit('SET_ACCESS_TOKEN', token)
         setToken(token)
-        router.push('/user')
+        router.push('/user/workspace/')
       }
     }
 
-    window.onmessage = () => { }
+    window.onmessage = () => {}
     const openSignInWindow = (url, name) => {
       const strWindowFeatures =
         'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
@@ -262,6 +270,20 @@ const actions = {
     if (data.success) {
       commit('SET_CURRENT_TEMPLATE', data.data)
     }
+  },
+
+  async createTemplate({ commit }, template) {
+    const { data } = await createTemplate(template)
+    if (data.success) {
+      commit('CREATE_TEMPLATE', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Template created`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
   },
 
   async updateTemplate({ commit }, template) {
@@ -411,18 +433,44 @@ const actions = {
     }
   },
 
+  async createPublish({ commit }, content) {
+    const { data } = await createPublish(content)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Request Sent',
+        text: `Your publish request will be check and approve later`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+  },
 
-  async createPublish({ commit }, publish) {
-    const { data } = await createPublish(publish)
-    // if (data.success) {
-    //   this._vm.$vs.notify({
-    //     title: 'Information',
-    //     text: `Request sent`,
-    //     color: 'success',
-    //     position: 'top-right'
-    //   })
-    // }
-    // return data.success
+  async denyPublish({ commit }, id) {
+    const { data } = await denyPublish(id)
+    if (data.success) {
+      commit('UPDATE_PUBLISH', data.data)
+      this._vm.$vs.notify({
+        title: 'Request Sent',
+        text: `Pulish denied`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async approvePublish({ commit }, publish) {
+    const { data } = await approvePublish(publish)
+    if (data.success) {
+      commit('UPDATE_PUBLISH', data.data)
+      this._vm.$vs.notify({
+        title: 'Approve Request Sent',
+        text: `Proccesing could be take some time to re-calculate duplication rate. Please wait until it done to get newest infromation.`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
   },
 
   // ////////////////////////////////////////////

@@ -81,6 +81,9 @@ const mutations = {
   SET_CURRENT_TEMPLATE(state, template) {
     state.currentTemplate = template
   },
+  CREATE_TEMPLATE(state, template) {
+    state.templates.unshift(template)
+  },
   UPDATE_TEMPLATE(state, template) {
     const current = state.templates.find(c => c.id === template.id)
     Object.assign(current, template)
@@ -124,13 +127,10 @@ const mutations = {
   SET_PUBLISHES(state, publishes) {
     state.publishes = publishes
   },
-  CREATE_PUBLISH(state, publish) {
-    state.publishes.unshift(publish)
+  UPDATE_PUBLISH(state, publish) {
+    const current = state.publishes.find(p => p.id === publish.id)
+    Object.assign(current, publish)
   },
-  // UPDATE_TUTORIALS(state, tutorial) {
-  //   const current = state.tutorials.find(t => t.id === tutorial.id)
-  //   Object.assign(current, tutorial)
-  // },
 
   // ////////////////////////////////////////////
   // WORKSPACE

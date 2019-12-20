@@ -1,5 +1,5 @@
 const filters = {
-  doubleToPercent: function(data) {
+  doubleToPercent: function(num) {
     return Math.round(num * 100) / 100
   },
   publishStatus: function(status) {

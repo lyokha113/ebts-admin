@@ -2,26 +2,41 @@
   <vx-card class="grid-view-item mb-base overflow-hidden">
     <template slot="no-body">
       <div class="bg-white flex items-center justify-center">
-        <div class="thumbnail mx-3 mt-3" :style="{ backgroundImage: `url(${raw.thumbnail})` }" />
+        <div
+          class="thumbnail mx-3 mt-3"
+          :style="{ backgroundImage: `url(${raw.thumbnail})` }"
+        />
       </div>
       <vs-divider border-style="dashed" class="my-3" />
       <vs-row class="mb-3" vs-align="center" vs-justify="center">
         <vs-col vs-type="flex" vs-align="center" vs-w="12">
-          <feather-icon icon="FileIcon" svgClasses="h-4 w-4" class="mr-2"></feather-icon>
+          <feather-icon
+            icon="FileIcon"
+            svgClasses="h-4 w-4"
+            class="mr-2"
+          ></feather-icon>
           <span class="truncate font-semibold text-lg">{{ raw.name }}</span>
         </vs-col>
         <vs-col class="my-1" vs-type="flex" vs-align="center" vs-w="12">
-          <feather-icon icon="ClockIcon" svgClasses="h-4 w-4" class="mr-2"></feather-icon>
+          <feather-icon
+            icon="ClockIcon"
+            svgClasses="h-4 w-4"
+            class="mr-2"
+          ></feather-icon>
           <span class="text-sm">
-            {{
-            raw.date | moment('DD-MM-YYYY, HH:mm:ss')
-            }}
+            {{ raw.date | moment('DD-MM-YYYY, HH:mm:ss') }}
           </span>
         </vs-col>
         <vs-col vs-type="flex" vs-align="center" vs-w="12">
           <span class="truncate text-base">{{ raw.description }}</span>
         </vs-col>
-        <vs-col class="mt-3" vs-justify="center" vs-type="flex" vs-align="center" vs-w="12">
+        <vs-col
+          class="mt-3"
+          vs-justify="center"
+          vs-type="flex"
+          vs-align="center"
+          vs-w="12"
+        >
           <vs-button
             class="mr-2"
             type="gradient"
@@ -36,7 +51,7 @@
             icon="publish"
             radius
             color="success"
-            @click="handlePulish(raw.id)"
+            @click="handlePublish(raw.id)"
           />
           <vs-button
             class="ml-2"
@@ -84,7 +99,7 @@ export default {
           await this.handleCallAPI(this.deleteRawTemplate, raw)
       })
     },
-    async handlePulish(id) {
+    async handlePublish(id) {
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',

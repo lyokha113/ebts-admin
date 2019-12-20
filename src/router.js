@@ -109,6 +109,14 @@ const router = new Router({
           }
         },
         {
+          path: '/user/editor',
+          name: 'Editor',
+          component: () => import('@/views/user/editor/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),
@@ -120,6 +128,12 @@ const router = new Router({
           path: '/detail/:id',
           name: 'Detail',
           component: () => import('@/views/detail/index.vue'),
+          props: true,
+          beforeEnter(to, from, next) {
+            const isValidId = Number.isInteger(Number(to.params.id))
+            if (isValidId) next()
+            else next('/')
+          },
           meta: {
             guest: true
           }

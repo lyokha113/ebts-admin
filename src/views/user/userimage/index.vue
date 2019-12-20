@@ -9,7 +9,7 @@
         <Uploader />
       </vs-col>
     </vs-row>
-    <vs-row>
+    <vs-row v-if="files.length">
       <vs-col
         v-for="file in type == 'Active'
           ? files.filter(f => f.active)
@@ -67,6 +67,13 @@
         </vx-card>
       </vs-col>
     </vs-row>
+    <vs-row v-else>
+      <vs-col vs-w="12">
+        <p class="text-center text-xl font-semibold mt-10">
+          You haven't upload any image. Upload to use them in editor
+        </p>
+      </vs-col>
+    </vs-row>
     <ViewImage v-if="viewSrc" :src="viewSrc" />
   </div>
 </template>
@@ -95,7 +102,7 @@ export default {
       }
       const message = active
         ? 'Do you want to restore this file ?'
-        : 'This action could be affect to tutorials which using it. File will be temporary moved to "Deleted" and permanently delete at every midnight.'
+        : 'This action could be affect to tutorials which using it. File will be temporary moved to "Deleted" and permanently delete later.'
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',

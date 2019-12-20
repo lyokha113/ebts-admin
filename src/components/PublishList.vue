@@ -1,7 +1,15 @@
 <template>
-  <div id="data-list-list-view" class="data-list-container">
-    <vs-table ref="table" pagination search :max-items="itemsPerPage" :data="publishes">
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+  <div id="data-list-list-view" class="data-list-container mt-3">
+    <vs-table
+      ref="table"
+      pagination
+      :max-items="itemsPerPage"
+      :data="publishes"
+    >
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <!-- ITEMS PER PAGE -->
         <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4">
           <div
@@ -10,9 +18,9 @@
             <span class="mr-2">
               {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
               {{
-              publishes.length - currentPage * itemsPerPage > 0
-              ? currentPage * itemsPerPage
-              : publishes.length
+                publishes.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : publishes.length
               }}
               of {{ publishes.length }}
             </span>
@@ -37,7 +45,8 @@
 
       <template slot="thead">
         <vs-th sort-key="authorName">Author Name</vs-th>
-        <vs-th sort-key="duplicateRate">Duplicated Percent</vs-th>
+        <vs-th sort-key="authorName">Template Name</vs-th>
+        <vs-th sort-key="duplicateRate">Duplication Rate</vs-th>
         <vs-th sort-key="Status">Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
@@ -45,27 +54,54 @@
       <template slot-scope="{ data }">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td style="width: 800px">
-              <p class="product-name font-medium">{{ tr.authorName }}</p>
+            <vs-td style="width: 300px">
+              <p class="product-name">{{ tr.authorName }}</p>
+            </vs-td>
+
+            <vs-td style="width: 600px">
+              <p
+                class="font-medium duplicate-name"
+                @click="handlePreview(tr.duplicateContent)"
+              >
+                {{ tr.duplicateName }}
+              </p>
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.duplicateRate | doubleToPercent }}</p>
+              <ProgressBar
+                text-position="top"
+                size="small"
+                :val="tr.duplicateRate"
+                :bar-color="tr.duplicateRate | duplicationRate"
+                :text="`${tr.duplicateRate} %`"
+              />
             </vs-td>
 
             <vs-td>
               <vs-chip
                 :color="tr.status | publishStatus"
                 class="product-order-status"
-              >{{tr.status }}</vs-chip>
+                >{{ tr.status }}</vs-chip
+              >
             </vs-td>
 
-            <vs-td>
+            <vs-td style="padding: 10px">
+              <span class="action-icon mr-2" @click="handlePreview(tr.content)">
+                <vs-icon size="small" icon="search" />
+              </span>
               <span
                 v-if="tr.status == 'PENDING'"
-                class="action-icon mx-1"
+                class="action-icon mx-2"
+                @click="handlePopup(tr.id)"
               >
-                <vs-icon size="small" icon="create" />
+                <vs-icon size="small" icon="publish" />
+              </span>
+              <span
+                v-if="tr.status == 'PENDING'"
+                class="action-icon ml-2"
+                @click="handleCancel(tr.id)"
+              >
+                <vs-icon size="small" icon="cancel" />
               </span>
             </vs-td>
           </vs-tr>
@@ -73,17 +109,28 @@
       </template>
     </vs-table>
 
-    <CustomPopup id="create-popup" title="PUBLISH" :active.sync="popup">
+    <CustomPopup id="create-popup" title="Publish info" :active.sync="popup">
       <div>
         Enter name:
-        <vs-input placeholder="Name" v-model="name" style="width: 250px" class="mt-1 mb-4" />Enter description:
+        <vs-input
+          placeholder="Name"
+          v-model="name"
+          style="width: 250px"
+          class="mt-1 mb-4"
+        />Enter description:
         <vs-input
           placeholder="Description"
           v-model="description"
           style="width: 250px"
           class="mt-1 mb-4"
         />
-        <vs-select class="mb-4" label="Categories" v-model="categories" width="250px" multiple>
+        <vs-select
+          class="mb-4"
+          label="Categories"
+          v-model="categories"
+          width="250px"
+          multiple
+        >
           <vs-select-item
             :key="item.id"
             :value="item.id"
@@ -95,18 +142,23 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
-          @click="handleUpdate"
-        >Update</vs-button>
+          @click="handlePublish"
+          >Publish</vs-button
+        >
       </div>
     </CustomPopup>
   </div>
 </template>
 
 <script>
+import ProgressBar from 'vue-simple-progress'
 import CustomPopup from '@/components/CustomPopup.vue'
-import { mapGetters, mapActions } from 'vuex'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   components: {
+    ProgressBar,
     CustomPopup
   },
   data() {
@@ -116,25 +168,24 @@ export default {
       authorId: '',
       content: '',
       description: '',
-      categories: []
+      popup: false,
+      categories: [],
+      selected: null,
+      itemsPerPage: 10,
+      wsConnected: false,
+      isMounted: false
     }
   },
   filters: {
-    doubleToPercent: function(data) {
-      return (Math.round(data * 10000) / 10000) * 100 + ' %'
+    duplicationRate(rate) {
+      if (rate <= 60) return '#28c76f'
+      if (rate <= 89) return '#fe9f43'
+      return '#fe485a'
     },
-    publishStatus: function(status) {
+    publishStatus(status) {
       if (status == 'DENIED') return 'danger'
       if (status == 'PUBLISHED') return 'success'
       return 'warning'
-    }
-  },
-  data() {
-    return {
-      selected: null,
-      itemsPerPage: 10,
-      categories: [],
-      isMounted: false
     }
   },
   computed: {
@@ -147,9 +198,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPublishes', 'getCategoriesNoTemplate']),
-    async handleCreate() {
-      if (!this.id || !this.name || !this.description || !this.categories) {
+    ...mapActions(['getPublishes', 'denyPublish', 'approvePublish']),
+    ...mapMutations(['SET_PUBLISHES']),
+    handlePopup(id) {
+      this.id = id
+      this.name = ''
+      this.description = ''
+      this.categories = []
+      this.popup = true
+    },
+    async handlePublish() {
+      if (
+        !this.id ||
+        !this.name ||
+        !this.description ||
+        !this.categories.length
+      ) {
         this.$vs.notify({
           title: 'Empty value',
           text: 'Please enter all information',
@@ -160,42 +224,85 @@ export default {
         return
       }
 
-      const template = {
+      const request = {
         id: this.id,
         name: this.name,
-        authorId: this.authorId,
         content: this.content,
         description: this.description,
-        categoryIds: this.categories,
-        status: true
+        categoryIds: this.categories
       }
 
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',
         title: `Confirm`,
-        text: `Do you want to update this template ?`,
+        text: `Do you want to approve this publish request ?`,
         accept: async () => {
-          if (await this.handleCallAPI(this.updateTemplate, template)) {
+          if (await this.handleCallAPI(this.approvePublish, request)) {
             this.popup = false
           }
         }
       })
+    },
+    async handleCancel(id) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to deny this publish request ?`,
+        accept: async () => await this.handleCallAPI(this.denyPublish, id)
+      })
+    },
+    handlePreview(content) {
+      const preview = window.open('', '_blank')
+      preview.document.write(content)
+    },
+    connectWs() {
+      this.socket = new SockJS('http://localhost:5000/ws-publish')
+      this.stompClient = Stomp.over(this.socket, { debug: false })
+      this.stompClient.connect(
+        {},
+        // eslint-disable-next-line no-unused-vars
+        frame => {
+          this.wsConnected = true
+          this.stompClient.subscribe('/topic/get-publish', data => {
+            this.SET_PUBLISHES(JSON.parse(data.body))
+          })
+        },
+        error => {
+          console.log(error)
+          this.wsConnected = false
+        }
+      )
+    },
+    disconnectWs() {
+      if (this.stompClient) {
+        this.stompClient.disconnect()
+      }
+      this.wsConnected = false
     }
   },
   async created() {
     await this.handleCallAPI(this.getPublishes)
-    await this.handleCallAPI(this.getCategoriesNoTemplate)
+    this.connectWs()
   },
   mounted() {
     this.isMounted = true
+  },
+  destroyed() {
+    this.disconnectWs()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/ .vs-popup {
-  width: 300px;
+  width: 285px;
+}
+
+.duplicate-name {
+  color: mediumslateblue;
+  text-decoration: underline;
 }
 
 .action-icon:hover {

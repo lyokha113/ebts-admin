@@ -1,43 +1,26 @@
 <template lang="html">
   <div>
     <vs-tabs>
-      <vs-tab label="Active">
-        <vs-row>
-          <vs-col
-            v-for="template in templates"
-              :key="template.id"
-              vs-type="flex"
-              vs-justify="center"
-              vs-align="center"
-              vs-w="3">
-            <AdminTemplateList :template="template" />
-          </vs-col>
-      </vs-row>
-      </vs-tab>
-      <vs-tab label="Publish">
-        <PublishList />
-      </vs-tab>
+      <vs-tab label="Available"> <AvailableTemplate /> </vs-tab>
+      <vs-tab label="Publish"> <PublishList /> </vs-tab>
     </vs-tabs>
   </div>
 </template>
 
 <script>
 import PublishList from '@/components/PublishList'
-import AdminTemplateList from '@/components/template/AdminTemplateList'
-import { mapGetters, mapActions } from 'vuex'
+import AvailableTemplate from '@/components/template/AvailableTemplate'
+import { mapActions } from 'vuex'
 export default {
   components: {
     PublishList,
-    AdminTemplateList
-  },
-  computed: {
-    ...mapGetters(['templates'])
+    AvailableTemplate
   },
   methods: {
-    ...mapActions(['getTemplates'])
+    ...mapActions(['getCategoriesNoTemplate'])
   },
-  async mounted() {
-    await this.handleCallAPI(this.getTemplates)
+  async created() {
+    await this.handleCallAPI(this.getCategoriesNoTemplate)
   }
 }
 </script>

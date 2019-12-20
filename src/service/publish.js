@@ -10,6 +10,10 @@ export function createPublish(publish) {
   return axios.post(`${URI}`, publish)
 }
 
-export function updatePublish(id, status) {
-  return axios.put(`${URI}/${id}?status=${status}`)
+export function approvePublish(publish) {
+  return axios.put(`${URI}/approve/${publish.id}`, publish)
+}
+
+export function denyPublish(id) {
+  return axios.put(`${URI}/deny/${id}`)
 }

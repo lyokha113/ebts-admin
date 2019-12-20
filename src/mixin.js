@@ -8,7 +8,6 @@ export default {
       try {
         return await api(args)
       } catch (error) {
-        console.log(error)
         if (error.response.status == 400) {
           this.$vs.notify({
             title: 'Input error',

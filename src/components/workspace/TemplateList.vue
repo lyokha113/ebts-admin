@@ -77,7 +77,6 @@ export default {
       }
     },
     handleTemplate(id) {
-      console.log(id)
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',

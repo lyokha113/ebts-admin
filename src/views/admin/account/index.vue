@@ -94,7 +94,9 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.roleName.toUpperCase() }}</p>
+              <p class="product-name font-medium">
+                {{ tr.roleName.toUpperCase() }}
+              </p>
             </vs-td>
 
             <vs-td>

@@ -51,12 +51,12 @@ export default {
 <style lang="scss" scoped>
 .grid-view-item {
   .thumbnail {
-    height: 400px;
+    height: 350px;
     width: 100%;
     background-position: top;
     background-repeat: no-repeat;
     background-size: 100%;
-    transition: ease-in-out 3s;
+    transition: ease-in-out 2s;
 
     &:hover {
       background-position: bottom;

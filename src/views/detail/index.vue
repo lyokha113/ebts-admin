@@ -123,6 +123,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  props: ['id'],
   data() {
     return {
       template: null,
@@ -151,7 +152,7 @@ export default {
     }
   },
   async mounted() {
-    this.template = await this.getTemplate(this.$route.params.id)
+    this.template = await this.getTemplate(this.id)
   }
 }
 </script>

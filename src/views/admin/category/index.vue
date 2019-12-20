@@ -115,7 +115,9 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.templates ? tr.templates.length : 0 }}</p>
+              <p class="product-category">
+                {{ tr.templates ? tr.templates.length : 0 }}
+              </p>
             </vs-td>
 
             <vs-td>
@@ -128,15 +130,15 @@
               </vs-chip>
             </vs-td>
 
-            <vs-td>
-              <span class="action-icon mx-1" @click.stop="handleStatus(tr)">
+            <vs-td style="padding: 10px">
+              <span class="action-icon mr-2" @click.stop="handleStatus(tr)">
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
                 />
               </span>
               <span
-                class="action-icon mx-1"
+                class="action-icon ml-2"
                 @click.stop="
                   ;(selected = JSON.parse(JSON.stringify(tr))),
                     (updateName = selected.name),
@@ -147,8 +149,8 @@
               </span>
             </vs-td>
 
-            <template class="expand-user" slot="expand">
-              <vs-row appear>
+            <template slot="expand">
+              <vs-row>
                 <vs-col
                   v-for="template in tr.templates"
                   :key="template.id"
