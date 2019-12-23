@@ -51,7 +51,7 @@
       pagination
       search
       :max-items="itemsPerPage"
-      :data="categories"
+      :data="categoriesWithTemplates"
     >
       <div
         slot="header"
@@ -75,11 +75,11 @@
             <span class="mr-2">
               {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
               {{
-                categories.length - currentPage * itemsPerPage > 0
+                categoriesWithTemplates.length - currentPage * itemsPerPage > 0
                   ? currentPage * itemsPerPage
-                  : categories.length
+                  : categoriesWithTemplates.length
               }}
-              of {{ categories.length }}
+              of {{ categoriesWithTemplates.length }}
             </span>
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
@@ -189,7 +189,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categories']),
+    ...mapGetters(['categoriesWithTemplates']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
@@ -198,7 +198,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getCategories', 'createCategory', 'updateCategory']),
+    ...mapActions([
+      'getCategoriesWithTemplates',
+      'createCategory',
+      'updateCategory'
+    ]),
     handleAdd() {
       if (!this.name) {
         this.$vs.notify({
@@ -266,7 +270,7 @@ export default {
     }
   },
   async created() {
-    await this.handleCallAPI(this.getCategories)
+    await this.handleCallAPI(this.getCategoriesWithTemplates)
   },
   mounted() {
     this.isMounted = true

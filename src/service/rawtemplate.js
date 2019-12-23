@@ -15,7 +15,9 @@ export function updateRawTemplate(raw) {
 }
 
 export function changeVersion(id, versionId) {
-  return axios.patch(`${URI}/${id}?versionId=${versionId}`)
+  return axios.patch(`${URI}/${id}`, null, {
+    params: { versionId }
+  })
 }
 
 export function deleteRawTemplate(id) {

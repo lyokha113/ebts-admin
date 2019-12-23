@@ -17,10 +17,10 @@ export default {
     AvailableTemplate
   },
   methods: {
-    ...mapActions(['getCategoriesNoTemplate'])
+    ...mapActions(['getCategories'])
   },
   async created() {
-    await this.handleCallAPI(this.getCategoriesNoTemplate)
+    await this.handleCallAPI(this.getCategories)
   }
 }
 </script>

@@ -4,6 +4,7 @@ import { getAccounts, createAccount, updateAccount } from '@/service/account'
 
 import {
   getCategories,
+  getCategoriesWithTemplates,
   createCategory,
   updateCategory
 } from '@/service/category'
@@ -219,10 +220,10 @@ const actions = {
     }
   },
 
-  async getCategoriesNoTemplate({ commit }) {
-    const { data } = await getCategories()
+  async getCategoriesWithTemplates({ commit }) {
+    const { data } = await getCategoriesWithTemplates()
     if (data.success) {
-      commit('SET_CATEGORIES_NO_TEMPLATE', data.data)
+      commit('SET_CATEGORIES_WITH_TEMPLATES', data.data)
     }
   },
 

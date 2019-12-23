@@ -58,17 +58,19 @@ const mutations = {
   // ////////////////////////////////////////////
   // CATEGORY
   // ////////////////////////////////////////////
-  SET_CATEGORIES(state, categories) {
-    state.categories = categories
-  },
-  SET_CATEGORIES_NO_TEMPLATE(state, categoriesNoTemplate) {
+  SET_CATEGORIES(state, categoriesNoTemplate) {
     state.categoriesNoTemplate = categoriesNoTemplate
   },
+  SET_CATEGORIES_WITH_TEMPLATES(state, categoriesWithTemplates) {
+    state.categoriesWithTemplates = categoriesWithTemplates
+  },
   CREATE_CATEGORY(state, category) {
-    state.categories.unshift(category)
+    state.categoriesNoTemplate.unshift(category)
   },
   UPDATE_CATEGORY(state, category) {
-    const current = state.categories.find(c => c.id === category.id)
+    const current = state.categoriesWithTemplates.find(
+      c => c.id === category.id
+    )
     Object.assign(current, category)
   },
 
@@ -165,7 +167,6 @@ const mutations = {
   CREATE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     ws.rawTemplates.unshift(raw)
-    state.currentRaw = raw
   },
   DELETE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)

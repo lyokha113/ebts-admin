@@ -19,5 +19,7 @@ export function updateTutorial(id, tutorial) {
 }
 
 export function updateStatusTutorial(id, active) {
-  return axios.patch(`${URI}/${id}?active=${active}`)
+  return axios.patch(`${URI}/${id}`, null, {
+    params: { active }
+  })
 }

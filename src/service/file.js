@@ -14,5 +14,7 @@ export function createFile(file, onUploadProgress) {
 }
 
 export function changeStatusFile(id, active) {
-  return axios.put(`${URI}/${id}?active=${active}`)
+  return axios.put(`${URI}/${id}`, null, {
+    params: { active }
+  })
 }

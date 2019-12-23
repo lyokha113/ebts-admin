@@ -6,6 +6,12 @@ export function getCategories() {
   return axios.get(`${URI}`)
 }
 
+export function getCategoriesWithTemplates() {
+  return axios.get(`${URI}`, {
+    params: { withTemplate: true }
+  })
+}
+
 export function createCategory(category) {
   return axios.post(`${URI}`, category)
 }

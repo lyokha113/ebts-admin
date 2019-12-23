@@ -99,7 +99,7 @@ export default {
     ...mapGetters(['categoriesNoTemplate', 'templates', 'activeUser'])
   },
   methods: {
-    ...mapActions(['getCategoriesNoTemplate', 'getTemplates']),
+    ...mapActions(['getCategories', 'getTemplates']),
     handleFilter() {
       this.searchQuery = ''
       if (!this.filterCategories.length) {
@@ -135,7 +135,7 @@ export default {
   },
   async mounted() {
     await Promise.all([
-      this.handleCallAPI(this.getCategoriesNoTemplate),
+      this.handleCallAPI(this.getCategories),
       this.handleCallAPI(this.getTemplates)
     ])
 

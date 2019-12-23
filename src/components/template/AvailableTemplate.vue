@@ -46,12 +46,26 @@
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
             <span>Categories: &nbsp;</span>
             <vs-select v-model="categories" width="400px" multiple>
-              <vs-select-item
-                :key="item.id"
-                :value="item.id"
-                :text="item.name"
-                v-for="item in categoriesNoTemplate"
-              />
+              <div>
+                <vs-select-group title="Active">
+                  <vs-select-item
+                    :key="item.id"
+                    :value="item.id"
+                    :text="item.name"
+                    v-for="item in categoriesNoTemplate.filter(c => c.active)"
+                  />
+                </vs-select-group>
+              </div>
+              <div>
+                <vs-select-group title="Locked">
+                  <vs-select-item
+                    :key="item.id"
+                    :value="item.id"
+                    :text="item.name"
+                    v-for="item in categoriesNoTemplate.filter(c => !c.active)"
+                  />
+                </vs-select-group>
+              </div>
             </vs-select>
           </vs-col>
         </vs-row>
@@ -214,7 +228,7 @@ export default {
         !this.name ||
         !this.description ||
         !this.content ||
-        !this.categories
+        !this.categories.length
       ) {
         this.$vs.notify({
           title: 'Empty value',

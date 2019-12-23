@@ -19,7 +19,7 @@
             :key="item.id"
             :value="item.id"
             :text="`${item.name} - ${item.noOfTemplates} templates`"
-            v-for="item in categoriesNoTemplate"
+            v-for="item in categories"
           />
         </vs-select>
       </vs-col>
@@ -61,10 +61,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categoriesNoTemplate', 'templates'])
+    ...mapGetters(['categories', 'templates'])
   },
   methods: {
-    ...mapActions(['getCategoriesNoTemplate', 'getTemplates']),
+    ...mapActions(['getCategories', 'getTemplates']),
     handleFilter() {
       if (!this.filterCategories.length) {
         this.items = this.templates
@@ -88,7 +88,7 @@ export default {
   },
   async mounted() {
     await Promise.all([
-      this.handleCallAPI(this.getCategoriesNoTemplate),
+      this.handleCallAPI(this.getCategories),
       this.handleCallAPI(this.getTemplates)
     ])
 

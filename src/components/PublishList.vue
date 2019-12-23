@@ -131,12 +131,26 @@
           width="250px"
           multiple
         >
-          <vs-select-item
-            :key="item.id"
-            :value="item.id"
-            :text="item.name"
-            v-for="item in categoriesNoTemplate"
-          />
+          <div>
+            <vs-select-group title="Active">
+              <vs-select-item
+                :key="item.id"
+                :value="item.id"
+                :text="item.name"
+                v-for="item in categoriesNoTemplate.filter(c => c.active)"
+              />
+            </vs-select-group>
+          </div>
+          <div>
+            <vs-select-group title="Locked">
+              <vs-select-item
+                :key="item.id"
+                :value="item.id"
+                :text="item.name"
+                v-for="item in categoriesNoTemplate.filter(c => !c.active)"
+              />
+            </vs-select-group>
+          </div>
         </vs-select>
         <vs-button
           color="primary"

@@ -94,12 +94,26 @@
             width="250px"
             multiple
           >
-            <vs-select-item
-              :key="item.id"
-              :value="item.id"
-              :text="item.name"
-              v-for="item in categoriesNoTemplate"
-            />
+            <div>
+              <vs-select-group title="Active">
+                <vs-select-item
+                  :key="item.id"
+                  :value="item.id"
+                  :text="item.name"
+                  v-for="item in categoriesNoTemplate.filter(c => c.active)"
+                />
+              </vs-select-group>
+            </div>
+            <div>
+              <vs-select-group title="Locked">
+                <vs-select-item
+                  :key="item.id"
+                  :value="item.id"
+                  :text="item.name"
+                  v-for="item in categoriesNoTemplate.filter(c => !c.active)"
+                />
+              </vs-select-group>
+            </div>
           </vs-select>
           <vs-button
             color="primary"
@@ -144,7 +158,7 @@ export default {
       'getTemplate',
       'deleteTemplate',
       'updateTemplate',
-      'getCategoriesNoTemplate'
+      'getCategories'
     ]),
     async handlePreview(id) {
       if (this.currentTemplate == null || this.currentTemplate.id != id) {
@@ -170,7 +184,12 @@ export default {
       this.popup = true
     },
     async handleUpdate() {
-      if (!this.id || !this.name || !this.description || !this.categories) {
+      if (
+        !this.id ||
+        !this.name ||
+        !this.description ||
+        !this.categories.length
+      ) {
         this.$vs.notify({
           title: 'Empty value',
           text: 'Please enter all information',
@@ -203,7 +222,7 @@ export default {
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getCategoriesNoTemplate)
+    await this.handleCallAPI(this.getCategories)
   }
 }
 </script>

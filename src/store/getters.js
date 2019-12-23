@@ -13,8 +13,8 @@ const getters = {
   accounts: state => state.accounts,
 
   // CATEGORY
-  categories: state => state.categories,
   categoriesNoTemplate: state => state.categoriesNoTemplate,
+  categoriesWithTemplates: state => state.categoriesWithTemplates,
 
   // TEMPLATES
   templates: state => state.templates,

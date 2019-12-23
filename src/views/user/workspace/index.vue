@@ -131,7 +131,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
-          @click="handlePopupTemplate"
+          @click="handlePopupCreateTemplate"
           >Create</vs-button
         >
       </div>
@@ -164,6 +164,19 @@
           style="width: 250px"
           class="mt-1 mb-4"
         />
+        <vs-select
+          class="mb-4"
+          label="Workspace"
+          v-model="templateWorkspace"
+          width="250px"
+        >
+          <vs-select-item
+            :key="item.id"
+            :value="item.id"
+            :text="item.name"
+            v-for="item in workspaces"
+          />
+        </vs-select>
         <vs-button color="primary" type="filled" class="float-right mt-2"
           >Update</vs-button
         >
@@ -190,6 +203,7 @@ export default {
       name: '',
       templateName: '',
       templateDescription: '',
+      templateWorkspace: '',
       templateBlank: false,
       popupCreate: false,
       popupUpdate: false,
@@ -233,7 +247,7 @@ export default {
       this.templateBlank = false
       this.popupCreateTemplate = true
     },
-    handlePopupTemplate() {
+    handlePopupCreateTemplate() {
       if (!this.templateName || !this.templateDescription) {
         this.$vs.notify({
           title: 'Empty value',
@@ -251,6 +265,12 @@ export default {
 
       this.popupCreateTemplate = false
       this.popupTemplates = true
+    },
+    handlePopupUpdateTemplate() {
+      this.templateName = ''
+      this.templateDescription = ''
+      this.templateWorkspace = ''
+      this.popupUpdateTemplate = true
     },
     handleBack() {
       this.popupTemplates = false
