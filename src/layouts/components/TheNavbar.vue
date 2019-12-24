@@ -10,7 +10,7 @@
           class="cursor-pointer"
           src="@/assets/images/logo/logo-rec.png"
           height="40px"
-          @click="$router.push('/')"
+          @click="$router.push('/').catch(err => {})"
         />
 
         <vs-spacer />
@@ -54,7 +54,7 @@
                 <li
                   v-if="!activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/login')"
+                  @click="$router.push('/login').catch(err => {})"
                 >
                   <feather-icon
                     icon="LogInIcon"
@@ -65,7 +65,7 @@
                 <li
                   v-if="!activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/register')"
+                  @click="$router.push('/register').catch(err => {})"
                 >
                   <feather-icon
                     icon="SmileIcon"
@@ -76,24 +76,35 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/image')"
+                  @click="$router.push('/user/image').catch(err => {})"
                 >
                   <feather-icon
                     icon="ImageIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-4">Your Images</span>
+                  <span class="ml-4">Images</span>
                 </li>
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/workspace')"
+                  @click="$router.push('/user/workspace').catch(err => {})"
                 >
                   <feather-icon
                     icon="FileMinusIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Workspace</span>
+                </li>
+                <li
+                  v-if="activeUser"
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/publish').catch(err => {})"
+                >
+                  <feather-icon
+                    icon="UploadCloudIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">Publishes</span>
                 </li>
                 <li
                   v-if="activeUser"

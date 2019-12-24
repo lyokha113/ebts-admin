@@ -19,7 +19,7 @@
             :key="item.id"
             :value="item.id"
             :text="`${item.name} - ${item.noOfTemplates} templates`"
-            v-for="item in categories"
+            v-for="item in categoriesNoTemplate"
           />
         </vs-select>
       </vs-col>
@@ -61,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categories', 'templates'])
+    ...mapGetters(['categoriesNoTemplate', 'templates'])
   },
   methods: {
     ...mapActions(['getCategories', 'getTemplates']),

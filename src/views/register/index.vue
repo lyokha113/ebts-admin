@@ -12,11 +12,11 @@
                 src="@/assets/images/pages/login.png"
                 alt="login"
                 class="mx-auto cursor-pointer mb-5"
-                @click="$router.push('/')"
+                @click="$router.push('/').catch(err => {})"
               />
               <vs-button
                 class="flex m-auto"
-                @click="$router.push('/')"
+                @click="$router.push('/').catch(err => {})"
                 type="border"
                 >Home Page</vs-button
               >

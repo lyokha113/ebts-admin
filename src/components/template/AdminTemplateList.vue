@@ -2,7 +2,7 @@
   <vx-card class="grid-view-item mb-base overflow-hidden">
     <template slot="no-body">
       <div
-        class="item-img-container bg-white h-64 flex items-center justify-center my-3 mx-3"
+        class="item-img-container shadow-md bg-white h-64 flex items-center justify-center my-3 mx-3"
       >
         <img
           :src="template.thumbnail"

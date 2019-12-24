@@ -47,7 +47,7 @@
         vs-align="center"
         vs-w="2"
       >
-        <WorkspaceItem :raw="item" />
+        <WorkspaceItem :raw="item" @updateRaw="handlePopupUpdateRaw($event)" />
       </vs-col>
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
         <vx-card class="grid-view-item mb-base overflow-hidden">
@@ -157,11 +157,13 @@
         <vs-input
           placeholder="Name"
           style="width: 250px"
+          v-model="templateName"
           class="mt-1 mb-4"
         />Enter description:
         <vs-input
           placeholder="Description"
           style="width: 250px"
+          v-model="templateDescription"
           class="mt-1 mb-4"
         />
         <vs-select
@@ -177,7 +179,11 @@
             v-for="item in workspaces"
           />
         </vs-select>
-        <vs-button color="primary" type="filled" class="float-right mt-2"
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          @click="handleUpdateRaw"
           >Update</vs-button
         >
       </div>
@@ -205,6 +211,7 @@ export default {
       templateDescription: '',
       templateWorkspace: '',
       templateBlank: false,
+      templateToUpdate: null,
       popupCreate: false,
       popupUpdate: false,
       popupTemplates: false,
@@ -225,7 +232,8 @@ export default {
       'createWorkspace',
       'updateWorkspace',
       'deleteWorkspace',
-      'createRawTemplate'
+      'createRawTemplate',
+      'updateRawTemplate'
     ]),
     handleChange() {
       this.workspaceName = this.workspaces.find(
@@ -247,6 +255,13 @@ export default {
       this.templateBlank = false
       this.popupCreateTemplate = true
     },
+    handlePopupUpdateRaw(raw) {
+      this.templateToUpdate = raw
+      this.templateName = raw.name
+      this.templateDescription = raw.description
+      this.templateWorkspace = raw.workspaceId
+      this.popupUpdateTemplate = true
+    },
     handlePopupCreateTemplate() {
       if (!this.templateName || !this.templateDescription) {
         this.$vs.notify({
@@ -265,12 +280,6 @@ export default {
 
       this.popupCreateTemplate = false
       this.popupTemplates = true
-    },
-    handlePopupUpdateTemplate() {
-      this.templateName = ''
-      this.templateDescription = ''
-      this.templateWorkspace = ''
-      this.popupUpdateTemplate = true
     },
     handleBack() {
       this.popupTemplates = false
@@ -304,6 +313,42 @@ export default {
           }
         })
       }
+    },
+    async handleUpdateRaw() {
+      if (!this.templateName || !this.templateDescription) {
+        this.$vs.notify({
+          title: 'Empty value',
+          text: 'Please enter all information',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      const raw = {
+        id: this.templateToUpdate.id,
+        name: this.templateName,
+        description: this.templateDescription,
+        workspaceId: this.templateWorkspace,
+        currentWS: this.templateToUpdate.workspaceId
+      }
+
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to update this workspace ?`,
+        accept: async () => {
+          if (await this.handleCallAPI(this.updateRawTemplate, raw)) {
+            this.popupUpdateTemplate = false
+            if (raw.currentWS != raw.workspaceId) {
+              this.workspace = raw.workspaceId
+              this.handleChange()
+            }
+          }
+        }
+      })
     },
     async handleAdd() {
       if (!this.name) {
@@ -390,6 +435,7 @@ export default {
 }
 
 #create-template-popup,
+#update-template-popup,
 #template-popup,
 #create-popup,
 #update-popup {

@@ -111,20 +111,17 @@
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td style="width: 800px">
-              <p class="product-name font-medium">{{ tr.name }}</p>
+              <p class="font-medium">{{ tr.name }}</p>
             </vs-td>
 
             <vs-td>
-              <p class="product-category">
+              <p>
                 {{ tr.templates ? tr.templates.length : 0 }}
               </p>
             </vs-td>
 
             <vs-td>
-              <vs-chip
-                :color="tr.active ? 'success' : 'danger'"
-                class="product-order-status"
-              >
+              <vs-chip :color="tr.active ? 'success' : 'danger'">
                 <vs-avatar :icon="tr.active ? 'done' : 'lock'" />
                 {{ tr.active ? 'Active' : 'Locked' }}
               </vs-chip>

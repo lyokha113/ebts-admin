@@ -21,7 +21,7 @@
           </div>
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="$router.push('/admin/image')"
+            @click="$router.push('/admin/image').catch(err => {})"
           >
             <span class="ml-2 text-base text-primary">Image Manage</span>
           </div>
@@ -76,18 +76,15 @@
             </vs-td>
 
             <vs-td style="width: 300px">
-              <p class="product-name font-medium">{{ tr.name }}</p>
+              <p class="font-medium">{{ tr.name }}</p>
             </vs-td>
 
             <vs-td style="width: 400px; padding: 10px">
-              <p class="product-category">{{ tr.description }}</p>
+              <p>{{ tr.description }}</p>
             </vs-td>
 
             <vs-td>
-              <vs-chip
-                :color="tr.active ? 'success' : 'danger'"
-                class="product-order-status"
-              >
+              <vs-chip :color="tr.active ? 'success' : 'danger'">
                 <vs-avatar :icon="tr.active ? 'done' : 'lock'" />
                 {{ tr.active ? 'Active' : 'Locked' }}
               </vs-chip>
@@ -499,6 +496,15 @@ export default {
         }
       }
     }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+/deep/ td.img-container {
+  span {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 }
 </style>

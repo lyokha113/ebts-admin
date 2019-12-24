@@ -109,6 +109,14 @@ const router = new Router({
           }
         },
         {
+          path: '/user/publish',
+          name: 'Publish',
+          component: () => import('@/views/user/publish/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/user/editor',
           name: 'Editor',
           component: () => import('@/views/user/editor/index.vue'),

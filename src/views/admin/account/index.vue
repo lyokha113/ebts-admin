@@ -75,6 +75,7 @@
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
               <vs-avatar
+                class="avatar-thumb shadow-md"
                 size="large"
                 :src="tr.imageUrl"
                 @click="handleSelected(tr)"
@@ -82,30 +83,27 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium">{{ tr.email }}</p>
+              <p class="font-medium">{{ tr.email }}</p>
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.fullName }}</p>
+              <p>{{ tr.fullName }}</p>
             </vs-td>
 
             <vs-td>
-              <p class="product-category">{{ tr.provider.toUpperCase() }}</p>
+              <p>{{ tr.provider.toUpperCase() }}</p>
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium">
+              <p class="font-medium">
                 {{ tr.roleName.toUpperCase() }}
               </p>
             </vs-td>
 
             <vs-td>
-              <vs-chip
-                :color="tr.active ? 'success' : 'danger'"
-                class="product-order-status"
-              >
+              <vs-chip :color="tr.active ? 'success' : 'danger'">
                 <vs-avatar :icon="tr.active ? 'done' : 'lock'" />
-                {{ tr.active ? 'Active' : 'Locked' }}
+                <div>{{ tr.active ? 'Active' : 'Locked' }}</div>
               </vs-chip>
             </vs-td>
 
@@ -190,3 +188,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.con-vs-avatar.avatar-thumb {
+  background: none !important;
+}
+</style>

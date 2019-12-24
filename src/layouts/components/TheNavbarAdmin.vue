@@ -133,7 +133,7 @@
               <ul style="min-width: 9rem">
                 <!-- <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/profile')"
+                  @click="$router.push('/profile').catch(err => {})"
                 >
                   <feather-icon
                     icon="UserIcon"

@@ -168,6 +168,19 @@ const mutations = {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     ws.rawTemplates.unshift(raw)
   },
+  UPDATE_RAW(state, raw) {
+    const curentWS = state.workspaces.find(w => w.id === raw.currentWS)
+    const ws = state.workspaces.find(w => w.id === raw.data.workspaceId)
+
+    if (ws.id == curentWS.id) {
+      const current = ws.rawTemplates.find(r => r.id === raw.data.id)
+      Object.assign(current, raw.data)
+    } else {
+      const idx = curentWS.rawTemplates.findIndex(r => r.id === raw.data.id)
+      curentWS.rawTemplates.splice(idx, 1)
+      ws.rawTemplates.unshift(raw.data)
+    }
+  },
   DELETE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     const idx = ws.rawTemplates.findIndex(t => t.id == raw.id)

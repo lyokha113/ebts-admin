@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import PublishList from '@/components/PublishList'
+import PublishList from '@/components/template/PublishList'
 import AvailableTemplate from '@/components/template/AvailableTemplate'
 import { mapActions } from 'vuex'
 export default {

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="template"
-    style="background-color: white; width: 1400px; margin:auto"
+    style="background-color: white; width: 1500px; min-width: 1500px; margin:auto"
   >
     <vs-row class="mt-5 pb-5">
       <vs-col vs-type="flex" vs-w="8">
@@ -17,24 +17,26 @@
               class="previewIcon mr-5"
               type="gradient"
               icon="laptop_windows"
+              color="success"
               @click="setviewPort('desktop')"
             ></vs-button>
             <vs-button
               class="previewIcon ml-5"
               type="gradient"
               icon="phone_android"
+              color="success"
               @click="setviewPort('mobile')"
             ></vs-button>
-            <span class="text-xl font-semibold ml-5">{{
-              viewport == '400px' ? 'Mobile view' : 'Desktop view'
-            }}</span>
           </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-w="12">
-            <iframe
-              :srcdoc="template.content"
-              :width="viewport"
-              height="1000px"
-            ></iframe>
+            <div :class="viewport">
+              <div class="content">
+                <iframe
+                  :srcdoc="template.content"
+                  style="height: 100%; width: 100%; border:none"
+                />
+              </div>
+            </div>
           </vs-col>
         </vs-row>
       </vs-col>
@@ -127,16 +129,16 @@ export default {
   data() {
     return {
       template: null,
-      viewport: '400px'
+      viewport: 'desktop'
     }
   },
   computed: {
-    ...mapGetters(['activeUser'])
+    ...mapGetters(['activeUser', 'currentTemplate'])
   },
   methods: {
     ...mapActions(['getTemplate', 'rate']),
     setviewPort(view) {
-      this.viewport = view == 'mobile' ? '400px' : '100%'
+      this.viewport = view == 'desktop' ? 'desktop' : 'mobile'
     },
     async handleRate(isVote) {
       if (this.activeUser) {
@@ -158,10 +160,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.viewport {
-  max-height: 300px;
-}
-
 /deep/ .title {
   svg {
     color: cadetblue !important;
@@ -174,6 +172,82 @@ export default {
 
   /deep/ .vs-icon {
     font-size: 2.5rem;
+  }
+}
+
+.desktop {
+  position: relative;
+  width: 700px;
+  height: 520px;
+  margin: auto;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black;
+  border-width: 16px 16px 48px;
+  transition: all 0.5s;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 50%;
+    bottom: -55px;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 50%;
+  }
+
+  .content {
+    width: 668px;
+    height: 440px;
+    overflow: hidden;
+    border: none;
+  }
+}
+
+.mobile {
+  position: relative;
+  width: 360px;
+  height: 640px;
+  margin: auto;
+  border: 16px black solid;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+  transition: all 0.5s;
+
+  &:before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 10px;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 50%;
+    bottom: -65px;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 50%;
+  }
+
+  .content {
+    width: 330px;
+    height: 520px;
+    background: white;
   }
 }
 </style>

@@ -44,9 +44,9 @@
       </div>
 
       <template slot="thead">
-        <vs-th sort-key="authorName">Author Name</vs-th>
-        <vs-th sort-key="authorName">Template Name</vs-th>
-        <vs-th sort-key="duplicateRate">Duplication Rate</vs-th>
+        <vs-th sort-key="requestDate">Request Date</vs-th>
+        <vs-th sort-key="duplicateName">Most Duplication Template</vs-th>
+        <vs-th sort-key="duplicateRate">Most Duplication Rate</vs-th>
         <vs-th sort-key="Status">Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
@@ -55,7 +55,7 @@
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td style="width: 300px">
-              <p class="product-name">{{ tr.authorName }}</p>
+              <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
 
             <vs-td style="width: 600px">
@@ -78,113 +78,34 @@
             </vs-td>
 
             <vs-td>
-              <vs-chip
-                :color="tr.status | publishStatus"
-                class="product-order-status"
-                >{{ tr.status }}</vs-chip
-              >
+              <vs-chip :color="tr.status | publishStatus">{{
+                tr.status
+              }}</vs-chip>
             </vs-td>
 
             <vs-td style="padding: 10px">
               <span class="action-icon mr-2" @click="handlePreview(tr.content)">
                 <vs-icon size="small" icon="search" />
               </span>
-              <span
-                v-if="tr.status == 'PENDING'"
-                class="action-icon mx-2"
-                @click="handlePopup(tr.id)"
-              >
-                <vs-icon size="small" icon="publish" />
-              </span>
-              <span
-                v-if="tr.status == 'PENDING'"
-                class="action-icon ml-2"
-                @click="handleCancel(tr.id)"
-              >
-                <vs-icon size="small" icon="cancel" />
-              </span>
             </vs-td>
           </vs-tr>
         </tbody>
       </template>
     </vs-table>
-
-    <CustomPopup id="create-popup" title="Publish info" :active.sync="popup">
-      <div>
-        Enter name:
-        <vs-input
-          placeholder="Name"
-          v-model="name"
-          style="width: 250px"
-          class="mt-1 mb-4"
-        />Enter description:
-        <vs-input
-          placeholder="Description"
-          v-model="description"
-          style="width: 250px"
-          class="mt-1 mb-4"
-        />
-        <vs-select
-          class="mb-4"
-          label="Categories"
-          v-model="categories"
-          width="250px"
-          multiple
-        >
-          <div>
-            <vs-select-group title="Active">
-              <vs-select-item
-                :key="item.id"
-                :value="item.id"
-                :text="item.name"
-                v-for="item in categoriesNoTemplate.filter(c => c.active)"
-              />
-            </vs-select-group>
-          </div>
-          <div>
-            <vs-select-group title="Locked">
-              <vs-select-item
-                :key="item.id"
-                :value="item.id"
-                :text="item.name"
-                v-for="item in categoriesNoTemplate.filter(c => !c.active)"
-              />
-            </vs-select-group>
-          </div>
-        </vs-select>
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-2"
-          @click="handlePublish"
-          >Publish</vs-button
-        >
-      </div>
-    </CustomPopup>
   </div>
 </template>
 
 <script>
 import ProgressBar from 'vue-simple-progress'
-import CustomPopup from '@/components/CustomPopup.vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   components: {
-    ProgressBar,
-    CustomPopup
+    ProgressBar
   },
   data() {
     return {
-      id: '',
-      name: '',
-      authorId: '',
-      content: '',
-      description: '',
-      popup: false,
-      categories: [],
-      selected: null,
       itemsPerPage: 10,
       wsConnected: false,
       isMounted: false
@@ -204,6 +125,7 @@ export default {
   },
   computed: {
     ...mapGetters(['publishes', 'categoriesNoTemplate']),
+    ...mapMutations(['SET_PUBLISHES']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
@@ -212,61 +134,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPublishes', 'denyPublish', 'approvePublish']),
-    ...mapMutations(['SET_PUBLISHES']),
-    handlePopup(id) {
-      this.id = id
-      this.name = ''
-      this.description = ''
-      this.categories = []
-      this.popup = true
-    },
-    async handlePublish() {
-      if (
-        !this.id ||
-        !this.name ||
-        !this.description ||
-        !this.categories.length
-      ) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
-
-      const request = {
-        id: this.id,
-        name: this.name,
-        content: this.content,
-        description: this.description,
-        categoryIds: this.categories
-      }
-
-      this.$vs.dialog({
-        type: 'confirm',
-        color: 'danger',
-        title: `Confirm`,
-        text: `Do you want to approve this publish request ?`,
-        accept: async () => {
-          if (await this.handleCallAPI(this.approvePublish, request)) {
-            this.popup = false
-          }
-        }
-      })
-    },
-    async handleCancel(id) {
-      this.$vs.dialog({
-        type: 'confirm',
-        color: 'danger',
-        title: `Confirm`,
-        text: `Do you want to deny this publish request ?`,
-        accept: async () => await this.handleCallAPI(this.denyPublish, id)
-      })
-    },
+    ...mapActions(['getPublishes']),
     handlePreview(content) {
       const preview = window.open('', '_blank')
       preview.document.write(content)
@@ -310,10 +178,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .vs-popup {
-  width: 285px;
-}
-
 .duplicate-name {
   color: mediumslateblue;
   text-decoration: underline;
@@ -321,13 +185,5 @@ export default {
 
 .action-icon:hover {
   color: mediumslateblue;
-}
-
-#create-popup {
-  z-index: 51100;
-}
-
-#update-popup {
-  z-index: 51100;
 }
 </style>

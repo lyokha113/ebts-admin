@@ -270,6 +270,7 @@ const actions = {
     const { data } = await getTemplate(id)
     if (data.success) {
       commit('SET_CURRENT_TEMPLATE', data.data)
+      return data.data
     }
   },
 
@@ -438,11 +439,12 @@ const actions = {
     const { data } = await createPublish(content)
     if (data.success) {
       this._vm.$vs.notify({
-        title: 'Request Sent',
-        text: `Your publish request will be check and approve later`,
+        title: 'Request has been sent',
+        text: `Processing could be take some time. Your publish request will approve later`,
         color: 'success',
         position: 'top-right'
       })
+      router.push('/user/publish/')
     }
   },
 
@@ -451,7 +453,7 @@ const actions = {
     if (data.success) {
       commit('UPDATE_PUBLISH', data.data)
       this._vm.$vs.notify({
-        title: 'Request Sent',
+        title: 'Request has been sent',
         text: `Pulish denied`,
         color: 'success',
         position: 'top-right'
@@ -465,7 +467,7 @@ const actions = {
     if (data.success) {
       commit('UPDATE_PUBLISH', data.data)
       this._vm.$vs.notify({
-        title: 'Approve Request Sent',
+        title: 'Request has been sent',
         text: `Proccesing could be take some time to re-calculate duplication rate. Please wait until it done to get newest infromation.`,
         color: 'success',
         position: 'top-right'
@@ -550,18 +552,18 @@ const actions = {
     return data.success
   },
 
-  async updateRawTemplate({ commit }, workspace) {
-    // const { data } = await updateWorkspace(workspace)
-    // if (data.success) {
-    //   commit('UPDATE_WORKSPACE', data.data)
-    //   this._vm.$vs.notify({
-    //     title: 'Information',
-    //     text: `Workspace updated`,
-    //     color: 'success',
-    //     position: 'top-right'
-    //   })
-    // }
-    // return data.success
+  async updateRawTemplate({ commit }, raw) {
+    const { data } = await updateRawTemplate(raw)
+    if (data.success) {
+      commit('UPDATE_RAW', { data: data.data, currentWS: raw.currentWS })
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Template updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
   },
 
   async changeVersion({ commit }, id) {

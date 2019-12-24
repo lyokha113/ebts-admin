@@ -19,10 +19,7 @@ const themeConfig = {
   navbarType: 'floating', // options[String]: floating(default) / static / sticky / hidden
   footerType: 'static', // options[String]: static(default) / sticky / hidden
   routerTransition: 'zoom-fade', // options[String]: zoom-fade / slide-fade / fade-bottom / fade / zoom-out / none(default)
-  disableCustomizer: false, // options[Boolean]: true, false(default)
-  hideScrollToTop: false, // options[Boolean]: true, false(default)
-  disableThemeTour: false // options[Boolean]: true, false(default)
-  // NOTE: themeTour will be disabled in screens < 1200. Please refer docs for more info.
+  hideScrollToTop: false // options[Boolean]: true, false(default)
 }
 
 export default themeConfig

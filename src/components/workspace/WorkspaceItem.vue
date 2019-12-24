@@ -44,7 +44,13 @@
             radius
             @click="handlePreview(raw.id)"
           />
-          <vs-button class="mx-2" type="gradient" icon="edit" radius />
+          <vs-button
+            class="mx-2"
+            type="gradient"
+            icon="edit"
+            radius
+            @click="handleUpdate(raw)"
+          />
           <vs-button
             class="mx-2"
             type="gradient"
@@ -114,6 +120,9 @@ export default {
           })
         }
       })
+    },
+    handleUpdate(raw) {
+      this.$emit('updateRaw', raw)
     }
   }
 }

@@ -3,7 +3,7 @@
     <template slot="no-body">
       <div
         class="bg-white flex items-center justify-center cursor-pointer"
-        @click="$router.push(`detail/${template.id}`)"
+        @click="$router.push(`detail/${template.id}`).catch(err => {})"
       >
         <div
           class="thumbnail mx-3 mt-3"
