@@ -1,4 +1,4 @@
-z<template>
+<template>
   <div class="layout--main navbar-sticky footer-static app-page">
     <div
       id="content-area"

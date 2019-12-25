@@ -3,6 +3,7 @@ import axios from 'axios'
 import store from '@/store/store'
 import { getToken } from '@/plugin/auth'
 
+// const api_local = 'http://192.168.20.240:5000'
 const api_local = 'http://localhost:5000'
 const api_aws = 'http://18.140.138.198/'
 

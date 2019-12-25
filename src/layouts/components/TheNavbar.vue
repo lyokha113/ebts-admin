@@ -76,7 +76,18 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/image').catch(err => {})"
+                  @click="$router.push('/user/profile')"
+                >
+                  <feather-icon
+                    icon="UserIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">Profiles</span>
+                </li>
+                <li
+                  v-if="activeUser"
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/image')"
                 >
                   <feather-icon
                     icon="ImageIcon"

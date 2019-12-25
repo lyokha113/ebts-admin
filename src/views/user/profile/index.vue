@@ -1,0 +1,89 @@
+<template>
+  <div>
+    <h1>Profile</h1>
+    <div class="parentDiv">
+      <vs-row class="justify-center align-center text-medium">Personal data</vs-row>
+      <vs-row class="justify-center align-center">
+        <div class="con-input-upload">
+          <img :src="imageUrl" name="imageUrl" width="100%" />
+          <button type="button" title="Upload" class="btn-upload-all vs-upload--button-upload">
+            <i translate="no" class="material-icons notranslate">cloud_upload</i>
+            <input ref="uploader" type="file" @change="uploadImage" />
+          </button>
+        </div>
+      </vs-row>
+      <vs-row class="justify-center align-center">
+        <vs-input icon="info" label="Fullname" v-model="name" name="name" />
+      </vs-row>
+      <vs-row class="justify-center align-center">
+        <vs-input icon="email" label="Email" v-model="email" name="email" />
+      </vs-row>
+      <vs-row class="justify-center align-center mt-4">
+        <vs-button class="float-right" @click="handleUpdate">Update</vs-button>
+      </vs-row>
+    </div>
+  </div>
+</template>
+<script>
+import { mapActions } from 'vuex'
+export default {
+  name: 'userProfile',
+  components: {},
+  data: () => ({
+    email: '',
+    name: '',
+    imageUrl: '',
+    file: ''
+  }),
+  methods: {
+    ...mapActions(['getUser', 'updateUser']),
+    async handleUpdate() {
+      if (!this.email || !this.name) {
+        this.$vs.notify({
+          title: 'Warning',
+          text: 'Please enter email and name',
+          color: 'warning',
+          position: 'top-right'
+        })
+        return
+      }
+      this.handleUpdateConfirm()
+    },
+    async handleUpdateConfirm() {
+      const account = {
+        email: this.email,
+        fullName: this.name,
+        imageUrl: this.imageUrl
+      }
+      await this.handleCallAPI(this.updateUser, account)
+    },
+    handleOnUploaddProgress(progressEvent) {
+      this.uploadPercent = parseInt(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      )
+    },
+    uploadImage(e) {
+      const image = e.target.files[0]
+      const reader = new FileReader()
+      reader.readAsDataURL(image)
+      reader.onload = e => {
+        this.imageUrl = e.target.result
+      }
+    }
+  },
+  async mounted() {
+    this.user = await this.handleCallAPI(this.getUser)
+    this.email = this.user.email
+    this.name = this.user.fullName
+    this.imageUrl = this.user.imageUrl
+  }
+}
+</script>
+<style>
+.parentDiv {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+</style>

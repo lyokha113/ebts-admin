@@ -40,7 +40,9 @@ const mutations = {
   SET_ACTIVE_USER(state, user) {
     state.activeUser = user
   },
-
+  UPDATE_USER(state, user) {
+    state.user = user
+  },
   // ////////////////////////////////////////////
   // ACCOUNT
   // ////////////////////////////////////////////

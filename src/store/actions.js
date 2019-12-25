@@ -49,6 +49,11 @@ import {
   deleteRawTemplate
 } from '@/service/rawtemplate'
 
+import {
+  getUser,
+  updateUser
+} from '@/service/user'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 import { _ } from 'core-js'
@@ -592,7 +597,31 @@ const actions = {
       })
     }
     return data.success
-  }
+  },
+
+  // ////////////////////////////////////////////
+  // USER
+  // ////////////////////////////////////////////
+  async getUser({ commit }) {
+    const { data } = await getUser()
+    if (data.success) {
+      return data.data
+    }
+  },
+  
+  async updateUser({ commit }, user) {
+    const { data } = await updateUser(user)
+    if (data.success) {
+      commit('UPDATE_USER', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Account updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
 }
 
 export default actions

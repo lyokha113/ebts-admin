@@ -93,6 +93,14 @@ const router = new Router({
       component: () => import('./layouts/main/User.vue'),
       children: [
         {
+          path: '/user/profile',
+          name: 'User Profile',
+          component: () => import('@/views/user/profile/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/user/image',
           name: 'User Image',
           component: () => import('@/views/user/userimage/index.vue'),

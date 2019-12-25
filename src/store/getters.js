@@ -8,6 +8,7 @@ const getters = {
   accessToken: state => state.accessToken,
   activeUser: state => state.activeUser,
   permission: state => state.activeUser && state.activeUser.roleId,
+  user: state => state.user,
 
   // ACCOUNT
   accounts: state => state.accounts,
