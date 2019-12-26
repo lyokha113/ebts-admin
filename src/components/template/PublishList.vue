@@ -48,7 +48,7 @@
         <vs-th sort-key="authorName">Author Name</vs-th>
         <vs-th sort-key="duplicateName">Most Duplication Template</vs-th>
         <vs-th sort-key="duplicateRate">Most Duplication Rate</vs-th>
-        <vs-th sort-key="Status">Status</vs-th>
+        <vs-th sort-key="status">Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
 
@@ -172,7 +172,7 @@ import ProgressBar from 'vue-simple-progress'
 import CustomPopup from '@/components/CustomPopup.vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     ProgressBar,
@@ -215,8 +215,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPublishes', 'denyPublish', 'approvePublish']),
-    ...mapMutations(['SET_PUBLISHES']),
+    ...mapActions([
+      'getPublishes',
+      'denyPublish',
+      'approvePublish',
+      'setPublish'
+    ]),
     handlePopup(id) {
       this.id = id
       this.name = ''
@@ -283,7 +287,7 @@ export default {
         frame => {
           this.wsConnected = true
           this.stompClient.subscribe('/topic/get-publish', data => {
-            this.SET_PUBLISHES(JSON.parse(data.body))
+            this.setPublish(JSON.parse(data.body))
           })
         },
         error => {

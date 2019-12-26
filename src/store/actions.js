@@ -1,6 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { login, googleAuth, register } from '@/service/user'
-import { getAccounts, createAccount, updateAccount } from '@/service/account'
+import {
+  getAccounts,
+  createAccount,
+  updateAccount,
+  updateAccountStatus
+} from '@/service/account'
 
 import {
   getCategories,
@@ -51,7 +56,6 @@ import {
 
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
-import { _ } from 'core-js'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -203,6 +207,20 @@ const actions = {
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Account updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async updateAccountStatus({ commit }, account) {
+    const { data } = await updateAccountStatus(account.id, account.active)
+    if (data.success) {
+      commit('UPDATE_ACCOUNT', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Account status updated',
         color: 'success',
         position: 'top-right'
       })
@@ -474,6 +492,10 @@ const actions = {
       })
     }
     return data.success
+  },
+
+  async setPublish({ commit }, publish) {
+    commit('SET_PUBLISHES', publish)
   },
 
   // ////////////////////////////////////////////

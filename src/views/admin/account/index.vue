@@ -159,7 +159,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAccounts', 'updateAccount']),
+    ...mapActions(['getAccounts', 'updateAccount', 'updateAccountStatus']),
     handleStatus(account) {
       this.selected = JSON.parse(JSON.stringify(account))
       const actionMsg = account.active ? 'lock' : 'unlock'
@@ -177,7 +177,7 @@ export default {
     },
     async handleStatusConfirm() {
       this.selected.active = !this.selected.active
-      await this.handleCallAPI(this.updateAccount, this.selected)
+      await this.handleCallAPI(this.updateAccountStatus, this.selected)
     }
   },
   async created() {

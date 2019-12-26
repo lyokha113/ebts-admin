@@ -1,7 +1,10 @@
 <template>
   <vx-card class="grid-view-item mb-base overflow-hidden">
     <template slot="no-body">
-      <div class="bg-white flex items-center justify-center">
+      <div
+        class="bg-white flex items-center justify-center cursor-pointer"
+        @click="handleEdit(raw.id)"
+      >
         <div
           class="thumbnail mx-3 mt-3"
           :style="{ backgroundImage: `url(${raw.thumbnail})` }"
@@ -123,6 +126,20 @@ export default {
     },
     handleUpdate(raw) {
       this.$emit('updateRaw', raw)
+    },
+    handleEdit(id) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to design with this template ?`,
+        accept: async () => {
+          if (this.currentRaw == null || this.currentRaw.id != id) {
+            await this.handleCallAPI(this.getRawTemplate, id)
+          }
+          this.$router.push(`/user/editor/`)
+        }
+      })
     }
   }
 }

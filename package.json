@@ -21,7 +21,6 @@
     "elasticlunr": "^0.9.5",
     "firebase": "^6.0.4",
     "grapesjs": "^0.15.9",
-    "grapesjs-plugin-export": "^1.0.7",
     "grapesjs-preset-newsletter": "^0.2.20",
     "html2canvas": "1.0.0-rc.1",
     "instantsearch.css": "^7.3.1",

@@ -47,7 +47,7 @@
         <vs-th sort-key="requestDate">Request Date</vs-th>
         <vs-th sort-key="duplicateName">Most Duplication Template</vs-th>
         <vs-th sort-key="duplicateRate">Most Duplication Rate</vs-th>
-        <vs-th sort-key="Status">Status</vs-th>
+        <vs-th sort-key="status">Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
 
@@ -58,7 +58,7 @@
               <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
 
-            <vs-td style="width: 600px">
+            <vs-td style="width: 400px">
               <p
                 class="font-medium duplicate-name"
                 @click="handlePreview(tr.duplicateContent)"
@@ -78,9 +78,9 @@
             </vs-td>
 
             <vs-td>
-              <vs-chip :color="tr.status | publishStatus">{{
-                tr.status
-              }}</vs-chip>
+              <vs-chip :color="tr.status | publishStatus">
+                {{ tr.status }}
+              </vs-chip>
             </vs-td>
 
             <vs-td style="padding: 10px">
@@ -99,7 +99,7 @@
 import ProgressBar from 'vue-simple-progress'
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     ProgressBar
@@ -124,8 +124,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['publishes', 'categoriesNoTemplate']),
-    ...mapMutations(['SET_PUBLISHES']),
+    ...mapGetters(['publishes']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
@@ -134,7 +133,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPublishes']),
+    ...mapActions(['getPublishes', 'setPublish']),
     handlePreview(content) {
       const preview = window.open('', '_blank')
       preview.document.write(content)
@@ -148,7 +147,7 @@ export default {
         frame => {
           this.wsConnected = true
           this.stompClient.subscribe('/topic/get-publish', data => {
-            this.SET_PUBLISHES(JSON.parse(data.body))
+            this.setPublish(JSON.parse(data.body))
           })
         },
         error => {
