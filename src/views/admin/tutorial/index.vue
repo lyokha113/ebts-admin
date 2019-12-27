@@ -251,11 +251,14 @@ export default {
           'imageSize'
         ],
         quickInsertTags: [''],
-        imageManagerLoadURL: 'http://localhost:5000/editor/file',
+        imageManagerLoadURL:
+          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
         imageManagerPageSize: 100,
-        imageManagerDeleteURL: `http://localhost:5000/editor/file`,
+        imageManagerDeleteURL:
+          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
         imageManagerDeleteMethod: 'DELETE',
-        imageUploadURL: 'http://localhost:5000/editor/file',
+        imageUploadURL: process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageUploadParam: 'files',
         requestHeaders: {
           AUTHORIZATION: ''
         },
@@ -272,7 +275,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'tutorials', 'api_local']),
+    ...mapGetters(['accessToken', 'tutorials']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx

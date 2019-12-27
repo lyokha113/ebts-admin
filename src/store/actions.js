@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { login, googleAuth, register } from '@/service/user'
+import { rate } from '@/service/rating'
+
 import {
   getAccounts,
   createAccount,
@@ -21,7 +23,7 @@ import {
   updateTemplate,
   deleteTemplate
 } from '@/service/template'
-import { rate } from '@/service/rating'
+
 import { getFiles, createFile, changeStatusFile } from '@/service/file'
 
 import {
@@ -150,7 +152,7 @@ const actions = {
       window.onmessage = reciveMessage
     }
 
-    const url = getters.api_local + googleAuth()
+    const url = process.env.VUE_APP_API_DOMAIN_LOCAL + googleAuth()
     openSignInWindow(url, 'Google')
   },
 

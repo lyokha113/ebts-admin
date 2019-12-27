@@ -31,7 +31,10 @@ export default function(editor) {
 
   const addDynamicTypes = () => {
     domComponents.addType('dynamic text', {
-      isComponent: el => el.getAttribute('datatype') === 'dynamic text',
+      isComponent: el => {
+        el instanceof HTMLElement &&
+          el.getAttribute('datatype') === 'dynamic text'
+      },
       model: {
         defaults: {
           traits: [
@@ -40,25 +43,20 @@ export default function(editor) {
           ],
           attributes: { dataType: 'dynamic text' }
         }
-      },
-      view: {
-        onRender() {
-          const { $el } = this
-          $el.empty()
-          $el.append(
-            '<div style="color: lightgrey; padding: 10px">Dynamic Text</div>'
-          )
-        }
       }
     })
 
     domComponents.addType('dynamic link', {
-      isComponent: el => el.getAttribute('datatype') === 'dynamic link',
+      isComponent: el => {
+        el instanceof HTMLElement &&
+          el.getAttribute('datatype') === 'dynamic link'
+      },
       model: {
         defaults: {
           tagName: 'a',
           traits: [
             { name: 'name', placeholder: 'Field name' },
+            { name: 'text', placeholder: 'Text to show' },
             { name: 'href', placeholder: 'Default link' },
             {
               type: 'select',
@@ -71,18 +69,10 @@ export default function(editor) {
           ],
           attributes: {
             dataType: 'dynamic link',
+            text: 'Dynamic link',
             href: 'about:blank',
             target: '_blank'
           }
-        }
-      },
-      view: {
-        onRender() {
-          const { $el } = this
-          $el.empty()
-          $el.append(
-            '<a href="about:blank" style="color: #3b97e3;padding: 5px">Dynamic Link</a>'
-          )
         }
       }
     })
@@ -93,7 +83,11 @@ export default function(editor) {
       label: 'Dynamic Text',
       category: 'Dynamic Content',
       attributes: { class: 'gjs-fonts gjs-f-text' },
-      content: { type: 'dynamic text' }
+      content: {
+        type: 'dynamic text',
+        content: 'Dynamic Text',
+        style: { color: 'lightgrey', padding: '10px' }
+      }
     })
 
     blockManager.add('dynamic link', {
@@ -102,8 +96,8 @@ export default function(editor) {
       attributes: { class: 'fa fa-link' },
       content: {
         type: 'dynamic link',
-        content: 'Link',
-        style: { color: '#3b97e3' }
+        content: 'Dynamic Link',
+        style: { color: '#3b97e3', padding: '5px' }
       }
     })
   }
@@ -112,19 +106,10 @@ export default function(editor) {
     panelManager.addButton('options', {
       id: 'myNewButton',
       className: 'someClass',
-      attributes: { title: 'Some title' },
+      attributes: { title: 'Export' },
       active: false,
       command: () => {
-        // const components = domComponents.getComponents()
-        // components.forEach(c => {
-        //   if (c.get('type') == 'dynamic-text') {
-        //     console.log(c.props())
-        //     console.log(c.getAttributes())
-        //     console.log(c.getTrait('Name'))
-        //   }
-        // })
-        // <div datatype="dynamic text" name="hhh" id="iaqu" style="box-sizing: border-box;"></div>
-        console.log(this.editor.runCommand('gjs-get-inlined-html'))
+        console.log(blockManager.getCategories())
       }
     })
   }

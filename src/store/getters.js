@@ -1,8 +1,6 @@
 const getters = {
   // APP
   sidebarWidth: state => state.sidebarWidth,
-  api_local: state => state.api_local,
-  api_aws: state => state.api_aws,
 
   // USER
   accessToken: state => state.accessToken,
@@ -22,6 +20,17 @@ const getters = {
 
   // FILE
   files: state => state.files,
+  editorFiles: state =>
+    state.files
+      .filter(f => f.active)
+      .map(f => {
+        return {
+          id: f.id,
+          name: f.name,
+          src: f.link,
+          type: 'image'
+        }
+      }),
 
   // TUTORIAL
   tutorials: state => state.tutorials,

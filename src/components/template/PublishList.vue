@@ -279,7 +279,9 @@ export default {
       preview.document.write(content)
     },
     connectWs() {
-      this.socket = new SockJS('http://localhost:5000/ws-publish')
+      this.socket = new SockJS(
+        process.env.VUE_APP_API_DOMAIN_LOCAL + '/ws-publish'
+      )
       this.stompClient = Stomp.over(this.socket, { debug: false })
       this.stompClient.connect(
         {},

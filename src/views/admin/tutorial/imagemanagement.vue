@@ -17,11 +17,9 @@
         <Uploader />
       </vs-col>
     </vs-row>
-    <vs-row>
+    <vs-row v-if="filteredFiles.length">
       <vs-col
-        v-for="file in type == 'Active'
-          ? files.filter(f => f.active)
-          : files.filter(f => !f.active)"
+        v-for="file in filteredFiles"
         :key="file.id"
         vs-type="flex"
         vs-justify="center"
@@ -75,6 +73,17 @@
         </vx-card>
       </vs-col>
     </vs-row>
+    <vs-row v-else>
+      <vs-col vs-w="12">
+        <p class="text-center text-xl font-semibold mt-10">
+          {{
+            type == 'Active'
+              ? `You haven't upload any image. Upload to use them in editor`
+              : `No temporary deleted image`
+          }}
+        </p>
+      </vs-col>
+    </vs-row>
     <ViewImage v-if="viewSrc" :src="viewSrc" />
   </div>
 </template>
@@ -115,7 +124,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'files'])
+    ...mapGetters(['accessToken', 'files']),
+    filteredFiles() {
+      return this.type == 'Active'
+        ? this.files.filter(f => f.active)
+        : this.files.filter(f => !f.active)
+    }
   },
   mounted() {
     this.handleCallAPI(this.getFiles)

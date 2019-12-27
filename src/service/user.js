@@ -9,5 +9,5 @@ export function register(req) {
 }
 
 export function googleAuth() {
-  return '/oauth2/authorize/google?redirect_uri=http://localhost:8080/oauth2'
+  return `/oauth2/authorize/google?redirect_uri=${process.env.VUE_APP_DOMAIN_LOCAL}/oauth2`
 }

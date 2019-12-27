@@ -16,8 +16,6 @@ const state = {
   theme: themeConfig.theme || 'semi-dark',
   themePrimaryColor: colors.primary,
   windowWidth: null,
-  api_local: 'http://localhost:5000',
-  api_aws: 'http://18.140.138.198/',
 
   // ////////////////////////////////////////////
   // USER
