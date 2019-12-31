@@ -185,6 +185,13 @@ const mutations = {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     const idx = ws.rawTemplates.findIndex(t => t.id == raw.id)
     ws.rawTemplates.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
+  // VERSION
+  // ////////////////////////////////////////////
+  SAVE_CONTENT(state, content) {
+    state.currentRaw.content = content
   }
 }
 

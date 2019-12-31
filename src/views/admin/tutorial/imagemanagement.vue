@@ -112,7 +112,7 @@ export default {
       }
       const message = active
         ? 'Do you want to restore this file ?'
-        : 'This action could be affect to tutorials which using it. File will be temporary moved to "Deleted" and permanently delete later.'
+        : 'This action could be affect to others which using it. File will be temporary moved to "Deleted" and permanently delete later.'
       this.$vs.dialog({
         type: 'confirm',
         color: 'danger',

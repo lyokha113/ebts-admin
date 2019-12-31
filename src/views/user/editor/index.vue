@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="editor"></div>
+
     <CustomPopup :active.sync="customPopup" />
 
     <CustomPopup
@@ -28,10 +29,15 @@ import tUIImageEditor from 'grapesjs-tui-image-editor'
 import CustomPopup from '@/components/CustomPopup.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import { mapGetters, mapActions } from 'vuex'
+
+import 'grapesjs/dist/css/grapes.min.css'
+import 'grapesjs-preset-newsletter/dist/grapesjs-preset-newsletter.css'
 export default {
   data() {
     return {
       editor: null,
+      saved: false,
+      countChange: 0,
       uploadPopup: false,
       uploadPercent: 0,
       customPopup: false
@@ -51,15 +57,18 @@ export default {
   async mounted() {
     await this.handleCallAPI(this.getFiles)
     this.editor = grapesjs.init({
+      components: this.currentRaw && this.currentRaw.content,
       container: '#editor',
       height: '780px',
       plugins: [
-        editor =>
-          grapesjsPresetNewsletter(editor, {
-            modalTitleImport: 'Import template haha'
-          }),
+        editor => grapesjsPresetNewsletter(editor, {}),
+        editor => configEditor(editor, {}),
         editor =>
           tUIImageEditor(editor, {
+            includeUI: {
+              useDefaultUI: true,
+              initMenu: 'filter'
+            },
             icons: {
               'menu.normalIcon.path': require('@/assets/images/editor/icon-d.svg'),
               'menu.activeIcon.path': require('@/assets/images/editor/icon-b.svg'),
@@ -67,14 +76,15 @@ export default {
               'menu.hoverIcon.path': require('@/assets/images/editor/icon-c.svg'),
               'submenu.normalIcon.path': require('@/assets/images/editor/icon-d.svg'),
               'submenu.activeIcon.path': require('@/assets/images/editor/icon-c.svg')
-            }
+            },
+            onApply: this.handleApplyEditconfirm
           })
       ],
-
-      components: this.currentRaw && this.currentRaw.content,
       assetManager: {
         assets: [...this.editorFiles],
         noAssets: `<div class="no-image">You haven't upload any image.</div>`,
+        dropzone: false,
+        openAssetsOnDrop: false,
         uploadFile: event => {
           var files = event.dataTransfer
             ? event.dataTransfer.files
@@ -83,32 +93,93 @@ export default {
         },
         handleAdd: () => {}
       },
-      storageManager: {
-        id: '',
-        type: 'remote',
-        autosave: false,
-        autoload: false,
-        storeComponents: 1,
-        storeStyles: 1,
-        storeHtml: 1,
-        storeCss: 1,
-        urlStore: '',
-        urlLoad: '',
-        params: { param: '123' },
-        headers: { Authorization: `Bearer ${this.accessToken}` },
-        contentTypeJson: true
+      storageManager: { type: null },
+      richTextEditor: {
+        actions: ['bold', 'italic', 'underline', 'strikethrough']
       }
     })
 
-    configEditor(this.editor)
+    this.editor.on('change:changesCount', async () => {
+      this.countChange += 1
+      this.save = false
+      if (this.countChange == 10) {
+        const content = this.editor.runCommand('gjs-get-inlined-html')
+        await this.handleCallAPI(this.updateVersionContent, {
+          rawId: this.currentRaw.id,
+          content
+        })
+        this.save = true
+        this.countChange = 0
+      }
+    })
   },
   methods: {
-    ...mapActions(['getFiles', 'createFile']),
+    ...mapActions(['getFiles', 'createFile', 'updateVersionContent']),
+
     handleOnUploaddProgress(progressEvent) {
       this.uploadPercent = parseInt(
         Math.round((progressEvent.loaded * 100) / progressEvent.total)
       )
     },
+
+    getFileNameFromAM(src, assetManager) {
+      let files = assetManager.getAll()
+      files = [...files.models]
+      const file = files.find(f => f.attributes.src == src)
+      return file && file.attributes.name
+    },
+
+    handleApplyEditconfirm(imageEditor, imageModel) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: 'Do you want to apply these changes ?',
+        accept: () => {
+          const assetManager = this.editor.AssetManager
+          const name = this.getFileNameFromAM(
+            imageModel.attributes.src,
+            assetManager
+          )
+          const file = this.base64ImageToBlob(imageEditor.toDataURL())
+          this.handleApplyEditFile(
+            file,
+            name,
+            imageModel,
+            this.editor.AssetManager
+          )
+        }
+      })
+    },
+
+    async handleApplyEditFile(file, name, imageModel, assetManager) {
+      this.uploadPopup = true
+      this.uploadPercent = 0
+
+      if (name) {
+        const dot = name.lastIndexOf('.')
+        name =
+          dot != -1
+            ? name.substring(0, dot) + '-edited' + name.substring(dot)
+            : name + '-edited'
+      } else {
+        name = 'edited'
+      }
+
+      let formData = new FormData()
+      formData.append('files', file, name)
+      const uploader = {
+        file: formData,
+        onUploadProgress: this.handleOnUploaddProgress
+      }
+      const uploaded = await this.handleCallAPI(this.createFile, uploader)
+      assetManager.add([...this.editorFiles])
+      imageModel.set('src', uploaded[0].link)
+      this.uploadPercent = 0
+      this.uploadPopup = false
+      this.editor.Modal.close()
+    },
+
     async handleUploadFile(files, assetManager) {
       this.uploadPopup = true
       this.uploadPercent = 0
@@ -145,9 +216,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~grapesjs/dist/css/grapes.min.css';
-@import '~grapesjs-preset-newsletter/dist/grapesjs-preset-newsletter.css';
-
 /deep/ .gjs-one-bg {
   background-color: #373d49;
 }
@@ -194,7 +262,6 @@ export default {
         display: none;
       }
     }
-
     .gjs-am-preview-cont {
       height: 100px;
       width: 100%;
@@ -216,6 +283,12 @@ export default {
     width: 100%;
     text-align: center;
     top: 40%;
+  }
+}
+
+/deep/ .gjs-dropzone-active {
+  .gjs-dropzone {
+    display: none !important;
   }
 }
 </style>

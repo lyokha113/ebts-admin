@@ -56,6 +56,8 @@ import {
   deleteRawTemplate
 } from '@/service/rawtemplate'
 
+import { updateVersionContent } from '@/service/version'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
@@ -369,7 +371,7 @@ const actions = {
     if (data.success) {
       commit('CREATE_FILE', data.data)
     }
-    return data.success
+    return data.data
   },
 
   async changeStatusFile({ commit }, file) {
@@ -611,6 +613,23 @@ const actions = {
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Template deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // VERSION
+  // ////////////////////////////////////////////
+  async updateVersionContent({ commit }, version) {
+    const { data } = await updateVersionContent(version)
+    if (data.success) {
+      commit('SAVE_CONTENT', version.content)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Template saved',
         color: 'success',
         position: 'top-right'
       })
