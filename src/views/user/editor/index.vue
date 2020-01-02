@@ -62,7 +62,7 @@ export default {
       height: '780px',
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
-        editor => configEditor(editor, {}),
+        editor => configEditor(editor, { vueInstance: this }),
         editor =>
           tUIImageEditor(editor, {
             includeUI: {
@@ -102,9 +102,9 @@ export default {
     this.editor.on('change:changesCount', async () => {
       this.countChange += 1
       this.save = false
-      if (this.countChange == 10) {
+      if (this.countChange == 50) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
-        await this.handleCallAPI(this.updateVersionContent, {
+        await this.handleCallAPI(this.autoUpdateVersionContent, {
           rawId: this.currentRaw.id,
           content
         })
@@ -114,19 +114,24 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['getFiles', 'createFile', 'updateVersionContent']),
-
-    handleOnUploaddProgress(progressEvent) {
-      this.uploadPercent = parseInt(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      )
-    },
+    ...mapActions([
+      'getFiles',
+      'createFile',
+      'updateVersionContent',
+      'autoUpdateVersionContent'
+    ]),
 
     getFileNameFromAM(src, assetManager) {
       let files = assetManager.getAll()
       files = [...files.models]
       const file = files.find(f => f.attributes.src == src)
       return file && file.attributes.name
+    },
+
+    handleOnUploaddProgress(progressEvent) {
+      this.uploadPercent = parseInt(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      )
     },
 
     handleApplyEditconfirm(imageEditor, imageModel) {
@@ -150,6 +155,14 @@ export default {
           )
         }
       })
+    },
+
+    handleExportPopup() {
+      console.log('saved')
+    },
+
+    async handleSaveContent() {
+      console.log('saved')
     },
 
     async handleApplyEditFile(file, name, imageModel, assetManager) {
@@ -283,6 +296,27 @@ export default {
     width: 100%;
     text-align: center;
     top: 40%;
+  }
+}
+
+/deep/ .gjs-blocks-c {
+  .gjs-block[title='Text'] {
+    order: 1;
+  }
+  .gjs-block[title='Link'] {
+    order: 2;
+  }
+
+  .gjs-block[title='Image'] {
+    order: 3;
+  }
+
+  .gjs-block[title='Button'] {
+    order: 4;
+  }
+
+  .gjs-block[title='Divider'] {
+    order: 5;
   }
 }
 

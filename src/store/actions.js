@@ -635,6 +635,14 @@ const actions = {
       })
     }
     return data.success
+  },
+
+  async autoUpdateVersionContent({ commit }, version) {
+    const { data } = await updateVersionContent(version)
+    if (data.success) {
+      commit('SAVE_CONTENT', version.content)
+    }
+    return data.success
   }
 }
 

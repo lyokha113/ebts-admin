@@ -16,7 +16,8 @@ function rgbToHex(rgb) {
   )
 }
 
-export default function(editor) {
+export default function(editor, options) {
+  const vueInstance = options.vueInstance
   const panelManager = editor.Panels
   const blockManager = editor.BlockManager
   const commands = editor.Commands
@@ -24,35 +25,26 @@ export default function(editor) {
   const rte = editor.RichTextEditor
 
   const sectionBlocksIds = ['sect100', 'sect50', 'sect30', 'sect37']
-  const listBlocksIds = ['text-sect', 'grid-items', 'list-items']
-  const basicBlocksIds = [
-    'button',
-    'text',
-    'divider',
-    'image',
-    'quote',
-    'link',
-    'link-block'
-  ]
+  const basicBlocksIds = ['text', 'divider', 'image', 'link']
+  const structuredBlocksIds = ['text-sect']
 
   const setDefaultBlocks = () => {
-    blockManager.remove('grid-items')
+    blockManager.remove('quote')
+    blockManager.remove('button')
+    blockManager.remove('link-block')
     blockManager.remove('list-items')
+    blockManager.remove('grid-items')
 
-    const textBlock = blockManager.get('text')
-    textBlock.set('label', 'Paragraph')
-    textBlock.set('attributes', { class: 'fa fa-paragraph' })
-  }
+    blockManager.get('text').set('attributes', { class: 'fa fa-paragraph' })
 
-  const setBlockCategories = () => {
     blockManager.getAll().forEach(b => {
       if (sectionBlocksIds.includes(b.id)) b.set('category', 'Section')
-      if (listBlocksIds.includes(b.id)) b.set('category', 'List Section')
       if (basicBlocksIds.includes(b.id)) b.set('category', 'Basic')
+      if (structuredBlocksIds.includes(b.id)) b.set('category', 'Structured')
     })
   }
 
-  const addDynamicTypes = () => {
+  const addTypes = () => {
     domComponents.addType('dynamic text', {
       isComponent: el => {
         el instanceof HTMLElement &&
@@ -117,6 +109,29 @@ export default function(editor) {
   }
 
   const addBlocks = () => {
+    blockManager.add('button', {
+      label: 'Button',
+      category: 'Basic',
+      content: {
+        content: '<a>Button</a>',
+        style: {
+          margin: '15px',
+          padding: '10px',
+          width: '130px',
+          color: 'white',
+          cursor: 'pointer',
+          'min-height': '30px',
+          'font-size': '18px',
+          'text-align': 'center',
+          'letter-spacing': '3px',
+          'line-heighth:': '30px',
+          'background-color': '#7367f0',
+          'border-radius': '5px'
+        }
+      },
+      attributes: { class: 'gjs-fonts gjs-f-button' }
+    })
+
     blockManager.add('dynamic text', {
       label: 'Dynamic Text',
       category: 'Dynamic Content',
@@ -124,74 +139,21 @@ export default function(editor) {
       content: {
         type: 'dynamic text',
         content: 'Dynamic Text',
-        style: { color: 'lightgrey', padding: '10px' }
+        style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
+        droppable: false
       }
     })
 
     blockManager.add('dynamic link', {
       label: 'Dynamic Link',
       category: 'Dynamic Content',
-      attributes: { class: 'fa fa-link' },
+      attributes: { class: 'fa fa-external-link' },
       content: {
         type: 'dynamic link',
         content: 'Dynamic Link',
-        style: { color: '#3b97e3', padding: '5px' }
+        style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
+        droppable: false
       }
-    })
-
-    let gridItem = `
-    <table class="grid-item-card">
-      <tr>
-        <td class="grid-item-card-cell">
-          <img class="grid-item-image" src="https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F250x150.png?alt=media&token=d0729b42-ce9d-46a3-be05-f16c9773e58d" alt="Image"/>
-          <table class="grid-item-card-body">
-            <tr>
-              <td class="grid-item-card-content">
-                <h1 class="card-title">Title here</h1>
-                <p class="card-text">Card item content here</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>`
-    blockManager.add('grid-items', {
-      label: 'Grid Items',
-      category: 'List Section',
-      content: `
-      <table class="grid-item-row">
-        <tr>
-          <td class="grid-item">${gridItem}</td>
-          <td class="grid-item">${gridItem}</td>
-          <td class="grid-item">${gridItem}</td>
-        </tr>
-     </table>`,
-      attributes: { class: 'fa fa-th' }
-    })
-
-    let listItem = `
-    <table class="list-item">
-      <tr>
-        <td class="list-item-cell">
-          <table class="list-item-content">
-            <tr class="list-item-row">
-              <td class="list-cell-left">
-                <img class="list-item-image" src="https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F150x150.png?alt=media&token=cff3bdca-5273-4f58-87a2-af7e175de7c8" alt="Image"/>
-              </td>
-              <td class="list-cell-right">
-                <h1 class="card-title">Title here</h1>
-                <p class="card-text">Some description card content item should be here.</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>`
-    blockManager.add('list-items', {
-      label: 'List Items',
-      category: 'List Section',
-      content: listItem + listItem + listItem,
-      attributes: { class: 'fa fa-th-list' }
     })
 
     let productItem = `
@@ -205,8 +167,63 @@ export default function(editor) {
     </div>`
     blockManager.add('prodcut-item', {
       label: 'Product Item',
-      category: 'List Section',
+      category: 'Structured',
       content: productItem,
+      attributes: { class: 'fa fa-newspaper-o' }
+    })
+
+    let gridItem = `
+    <table style="padding:10px">
+      <tr>
+        <td style="box-shadow:0 1px 2px 0 rgba(0, 0, 0, 0.2);border-radius:2px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F250x150.png?alt=media&token=d0729b42-ce9d-46a3-be05-f16c9773e58d" alt="Image"/>
+          <table>
+            <tr>
+              <td style="width: 100%">
+                <h1 style="max-width:245px">Title here</h1>
+                <p style="padding:0 3px 5px 3px;max-width:245px">Item content here</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`
+    blockManager.add('grid-items', {
+      label: 'Grid Items',
+      category: 'Structured',
+      content: `
+      <table style="margin: auto;">
+        <tr>
+          <td>${gridItem}</td>
+          <td>${gridItem}</td>
+          <td>${gridItem}</td>
+        </tr>
+     </table>`,
+      attributes: { class: 'fa fa-th' }
+    })
+
+    let listItem = `
+    <table style="margin:5px auto 5px auto;box-shadow:0 1px 2px 0 rgba(0, 0, 0, 0.2);border-radius:2px;">
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <td>
+                <img src="https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F150x150.png?alt=media&token=cff3bdca-5273-4f58-87a2-af7e175de7c8" alt="Image"/>
+              </td>
+              <td>
+                <h1>Title here</h1>
+                <p>Some description about item should be here.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`
+    blockManager.add('list-items', {
+      label: 'List Items',
+      category: 'Structured',
+      content: listItem + listItem + listItem,
       attributes: { class: 'fa fa-th-list' }
     })
   }
@@ -377,19 +394,17 @@ export default function(editor) {
 
   const addButtons = () => {
     panelManager.addButton('options', {
-      id: 'myNewButton',
-      className: 'someClass',
+      id: 'export',
+      label: ' Export',
+      className: 'fa fa-cloud-download',
       attributes: { title: 'Export' },
       active: false,
-      command: () => {
-        console.log(editor.store())
-      }
+      command: () => vueInstance.handleExportPopup()
     })
   }
 
   setDefaultBlocks()
-  setBlockCategories()
-  addDynamicTypes()
+  addTypes()
   addBlocks()
   addCommands()
   addRTE()

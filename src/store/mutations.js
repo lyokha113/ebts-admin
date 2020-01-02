@@ -191,7 +191,7 @@ const mutations = {
   // VERSION
   // ////////////////////////////////////////////
   SAVE_CONTENT(state, content) {
-    state.currentRaw.content = content
+    state.currentRaw = content
   }
 }
 
