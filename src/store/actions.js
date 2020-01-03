@@ -58,6 +58,8 @@ import {
 
 import { updateVersionContent } from '@/service/version'
 
+import { makeDraftEmail } from '@/service/email'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
 
@@ -641,6 +643,47 @@ const actions = {
     const { data } = await updateVersionContent(version)
     if (data.success) {
       commit('SAVE_CONTENT', version.content)
+    }
+    return data.success
+  },
+
+  async countEditorChange({ commit, getters }) {
+    const count = getters.editorChange + 1
+    commit('SET_EDITOR_CHANGE', count)
+  },
+
+  async resetEditorChange({ commit }) {
+    commit('SET_EDITOR_CHANGE', 0)
+  },
+
+  // ////////////////////////////////////////////
+  // EMAIL
+  // ////////////////////////////////////////////
+
+  async makeOutlookDraft({ commit }, request) {
+    request.provider = 'OUTLOOK'
+    const { data } = await makeDraftEmail(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Outlook draft was created',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async makeYahooDraft({ commit }, request) {
+    request.provider = 'YAHOO'
+    const { data } = await makeDraftEmail(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Yahoo draft was created',
+        color: 'success',
+        position: 'top-right'
+      })
     }
     return data.success
   }

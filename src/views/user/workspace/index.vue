@@ -54,14 +54,16 @@
           <template slot="no-body">
             <div
               class="flex items-center justify-center align-center cursor-pointer"
+              style="height: 250px"
               @click="handlePopupAddRaw"
             >
-              <div style="height: 250px;">
-                <span
-                  style="display: inline-block; height: 23%; vertical-align: middle;"
-                ></span>
-                <img src="@/assets/images/new.png" width="100%" />
-              </div>
+              <div
+                id="new-box"
+                :style="{
+                  backgroundImage:
+                    'url(' + require('@/assets/images/new.png') + ')'
+                }"
+              />
             </div>
           </template>
         </vx-card>
@@ -440,5 +442,14 @@ export default {
 #create-popup,
 #update-popup {
   z-index: 51100;
+}
+
+#new-box {
+  height: 50%;
+  width: 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/img/new.cdb0a76b.png);
 }
 </style>

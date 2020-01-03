@@ -27,7 +27,12 @@
         </div>
 
         <div class="my-4">
-          <h6 class="truncate font-semibold mb-1">{{ template.name }}</h6>
+          <h6 class="truncate font-semibold mb-1">
+            <span>
+              <feather-icon icon="FileIcon" svgClasses="h-4 w-4" />
+              {{ template.name }}
+            </span>
+          </h6>
           <p class="item-description truncate text-sm">
             {{ template.description }}
           </p>

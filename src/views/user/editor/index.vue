@@ -2,7 +2,7 @@
   <div>
     <div id="editor"></div>
 
-    <CustomPopup :active.sync="customPopup" />
+    <ExportPopup :open.sync="exportPopup" :editor="editor" />
 
     <CustomPopup
       button-close-hidden
@@ -27,6 +27,7 @@ import grapesjs from 'grapesjs'
 import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import CustomPopup from '@/components/CustomPopup.vue'
+import ExportPopup from '@/components/editor/ExportPopup.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -35,19 +36,19 @@ import 'grapesjs-preset-newsletter/dist/grapesjs-preset-newsletter.css'
 export default {
   data() {
     return {
-      editor: null,
+      editor: {},
       saved: false,
-      countChange: 0,
       uploadPopup: false,
       uploadPercent: 0,
-      customPopup: false
+      exportPopup: false
     }
   },
   components: {
-    CustomPopup
+    CustomPopup,
+    ExportPopup
   },
   computed: {
-    ...mapGetters(['accessToken', 'currentRaw', 'editorFiles'])
+    ...mapGetters(['accessToken', 'currentRaw', 'editorFiles', 'editorChange'])
   },
   created() {
     if (!this.currentRaw) {
@@ -56,6 +57,8 @@ export default {
   },
   async mounted() {
     await this.handleCallAPI(this.getFiles)
+    this.resetEditorChange()
+
     this.editor = grapesjs.init({
       components: this.currentRaw && this.currentRaw.content,
       container: '#editor',
@@ -100,16 +103,16 @@ export default {
     })
 
     this.editor.on('change:changesCount', async () => {
-      this.countChange += 1
+      this.countEditorChange()
       this.save = false
-      if (this.countChange == 50) {
+      if (this.editorChange == 50) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         await this.handleCallAPI(this.autoUpdateVersionContent, {
           rawId: this.currentRaw.id,
           content
         })
         this.save = true
-        this.countChange = 0
+        this.resetEditorChange()
       }
     })
   },
@@ -118,7 +121,9 @@ export default {
       'getFiles',
       'createFile',
       'updateVersionContent',
-      'autoUpdateVersionContent'
+      'autoUpdateVersionContent',
+      'countEditorChange',
+      'resetEditorChange'
     ]),
 
     getFileNameFromAM(src, assetManager) {
@@ -158,11 +163,15 @@ export default {
     },
 
     handleExportPopup() {
-      console.log('saved')
+      this.exportPopup = true
     },
 
     async handleSaveContent() {
-      console.log('saved')
+      const content = this.editor.runCommand('gjs-get-inlined-html')
+      await this.handleCallAPI(this.updateVersionContent, {
+        rawId: this.currentRaw.id,
+        content
+      })
     },
 
     async handleApplyEditFile(file, name, imageModel, assetManager) {
