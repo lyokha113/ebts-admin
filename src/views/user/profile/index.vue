@@ -19,16 +19,27 @@
         <vs-input icon="email" label="Email" v-model="email" name="email" />
       </vs-row>
       <vs-row class="justify-center align-center mt-4">
-        <vs-button class="float-right" @click="handleUpdate">Update</vs-button>
+        <vs-button @click="handleUpdate">Update</vs-button>
       </vs-row>
     </div>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userProfile',
-  components: {},
+  computed: {
+    ...mapGetters(['activeUser']),
+    user_displayName() {
+      return this.activeUser && this.activeUser.fullName
+    },
+    user_displayImage() {
+      return this.activeUser && this.activeUser.imageUrl
+    },
+    user_displayEmail() {
+      return this.activeUser && this.activeUser.email
+    }
+  },
   data: () => ({
     email: '',
     name: '',
@@ -36,7 +47,7 @@ export default {
     file: ''
   }),
   methods: {
-    ...mapActions(['getUser', 'updateUser']),
+    ...mapActions(['updateUser']),
     async handleUpdate() {
       if (!this.email || !this.name) {
         this.$vs.notify({
@@ -72,10 +83,9 @@ export default {
     }
   },
   async mounted() {
-    this.user = await this.handleCallAPI(this.getUser)
-    this.email = this.user.email
-    this.name = this.user.fullName
-    this.imageUrl = this.user.imageUrl
+    this.email = this.user_displayEmail
+    this.name = this.user_displayName
+    this.imageUrl = this.user_displayImage
   }
 }
 </script>

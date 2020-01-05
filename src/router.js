@@ -133,6 +133,22 @@ const router = new Router({
           }
         },
         {
+          path: '/user/email',
+          name: 'Email',
+          component: () => import('@/views/user/email/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/password',
+          name: 'Password',
+          component: () => import('@/views/user/password/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),
@@ -188,6 +204,11 @@ const router = new Router({
           path: '/oauth2',
           name: 'oauth2',
           component: () => import('@/views/oauth2/index.vue')
+        },
+        {
+          path: '/confirm',
+          name: 'confirm',
+          component: () => import('@/views/confirm/index.vue')
         }
       ],
       meta: {
@@ -203,9 +224,9 @@ const router = new Router({
 
 const validateToken = async () => {
   try {
-    if (store.getters.accessToken) {
+    if (store.getters.accessToken && !store.getters.activeUser) {
       await store.dispatch('getInfo')
-    } else {
+    } else if (!store.getters.accessToken) {
       await store.dispatch('logout')
     }
   } catch (error) {

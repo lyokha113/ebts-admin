@@ -8,7 +8,6 @@ const getters = {
   accessToken: state => state.accessToken,
   activeUser: state => state.activeUser,
   permission: state => state.activeUser && state.activeUser.roleId,
-  user: state => state.user,
 
   // ACCOUNT
   accounts: state => state.accounts,
@@ -34,7 +33,10 @@ const getters = {
   workspaces: state => state.workspaces,
 
   // RAW TEMPLATE
-  currentRaw: state => state.currentRaw
+  currentRaw: state => state.currentRaw,
+
+  //USER EMAIL
+  userEmails: state => state.userEmails
 }
 
 export default getters

@@ -2,10 +2,6 @@ import axios from '@/plugin/axios'
 
 const URI = '/user'
 
-export function getUser() {
-  return axios.get(`${URI}`)
-}
-
 export function updateUser(account){
   return axios.put(`${URI}`, account)
 }

@@ -50,9 +50,16 @@ import {
 } from '@/service/rawtemplate'
 
 import {
-  getUser,
   updateUser
 } from '@/service/user'
+
+import {
+  getUserEmails,
+  addUserEmail,
+  updateUserEmail,
+  deleteUserEmail,
+  confirmUserEmail
+} from '@/service/useremail'
 
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugin/auth'
@@ -139,7 +146,7 @@ const actions = {
       }
     }
 
-    window.onmessage = () => {}
+    window.onmessage = () => { }
     const openSignInWindow = (url, name) => {
       const strWindowFeatures =
         'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
@@ -602,17 +609,11 @@ const actions = {
   // ////////////////////////////////////////////
   // USER
   // ////////////////////////////////////////////
-  async getUser({ commit }) {
-    const { data } = await getUser()
-    if (data.success) {
-      return data.data
-    }
-  },
-  
+
   async updateUser({ commit }, user) {
     const { data } = await updateUser(user)
     if (data.success) {
-      commit('UPDATE_USER', data.data)
+      commit('SET_ACTIVE_USER', data.data)
       this._vm.$vs.notify({
         title: 'Information',
         text: `Account updated`,
@@ -622,6 +623,68 @@ const actions = {
     }
     return data.success
   },
-}
 
+  // ////////////////////////////////////////////
+  // USER EMAIL
+  // ////////////////////////////////////////////
+  async getUserEmails({ commit }) {
+    const { data } = await getUserEmails()
+    if (data.success) {
+      commit('SET_USER_EMAILS', data.data)
+    }
+  },
+
+  async addUserEmail({ commit }, userEmail) {
+    const { data } = await addUserEmail(userEmail)
+    if (data.success) {
+      commit('CREATE_USER_EMAIL', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `User email created`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+  },
+
+  async updateUserEmail({ commit }, userEmail) {
+    const { data } = await updateUserEmail(userEmail)
+    if (data.success) {
+      commit('UPDATE_USER_EMAIL', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `User email updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async deleteUserEmail({ commit }, id) {
+    const { data } = await deleteUserEmail(id)
+    if (data.success) {
+      commit('DELETE_USER_EMAIL', id)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'User email deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async confirmUserEmail({ commit }, token) {
+    const { data } = await confirmUserEmail(token)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'User email updated',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+  }
+}
 export default actions
