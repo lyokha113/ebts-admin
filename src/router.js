@@ -93,6 +93,14 @@ const router = new Router({
       component: () => import('./layouts/main/User.vue'),
       children: [
         {
+          path: '/user/profile',
+          name: 'User Profile',
+          component: () => import('@/views/user/profile/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/user/image',
           name: 'User Image',
           component: () => import('@/views/user/userimage/index.vue'),
@@ -120,6 +128,22 @@ const router = new Router({
           path: '/user/editor',
           name: 'Editor',
           component: () => import('@/views/user/editor/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/email',
+          name: 'Email',
+          component: () => import('@/views/user/email/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/password',
+          name: 'Password',
+          component: () => import('@/views/user/password/index.vue'),
           meta: {
             permission: 2
           }
@@ -175,6 +199,16 @@ const router = new Router({
           path: '/401',
           name: '401',
           component: () => import('@/views/401/index.vue')
+        },
+        {
+          path: '/confirm/useremail',
+          name: 'Confirm Useremail',
+          component: () => import('@/views/confirm/useremail/index.vue')
+        },
+        {
+          path: '/confirm/account',
+          name: 'Confirm Account',
+          component: () => import('@/views/confirm/account/index.vue')
         }
       ],
       meta: {
@@ -190,9 +224,9 @@ const router = new Router({
 
 const validateToken = async () => {
   try {
-    if (store.getters.accessToken) {
+    if (store.getters.accessToken && !store.getters.activeUser) {
       await store.dispatch('getInfo')
-    } else {
+    } else if (!store.getters.accessToken) {
       await store.dispatch('logout')
     }
   } catch (error) {

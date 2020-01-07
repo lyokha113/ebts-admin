@@ -40,7 +40,6 @@ const mutations = {
   SET_ACTIVE_USER(state, user) {
     state.activeUser = user
   },
-
   // ////////////////////////////////////////////
   // ACCOUNT
   // ////////////////////////////////////////////
@@ -195,6 +194,24 @@ const mutations = {
   },
   SET_EDITOR_CHANGE(state, count) {
     state.editorChange = count
+  },
+  
+  // ////////////////////////////////////////////
+  // USER EMAILS
+  // ////////////////////////////////////////////
+  SET_USER_EMAILS(state, userEmails) {
+    state.userEmails = userEmails
+  },
+  CREATE_USER_EMAIL(state, userEmail) {
+    state.userEmails.push(userEmail)
+  },
+  UPDATE_USER_EMAIL(state, userEmail) {
+    const current = state.userEmails.find(e => e.id === userEmail.id)
+    Object.assign(current, userEmail)
+  },
+  DELETE_USER_EMAIL(state, id) {
+    const idx = state.userEmails.findIndex(e => e.id == id)
+    state.userEmails.splice(idx, 1)
   }
 }
 

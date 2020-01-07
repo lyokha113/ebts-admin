@@ -67,7 +67,10 @@ const getters = {
   // ////////////////////////////////////////////
   // VERSION
   // ////////////////////////////////////////////
-  editorChange: state => state.editorChange
+  editorChange: state => state.editorChange,
+
+  //USER EMAIL
+  userEmails: state => state.userEmails
 }
 
 export default getters

@@ -82,6 +82,9 @@
   background-color: rgba(var(--vs-dark), 1) !important;
 }
 
+.bg-light {
+  background-color: rgba($color: #FFF, $alpha: 1);
+}
 // border classes
 
 .border-primary {
@@ -169,43 +172,23 @@
 
 // Gradient colors
 .bg-primary-gradient {
-  background: linear-gradient(
-    118deg,
-    rgba(var(--vs-primary), 1),
-    rgba(var(--vs-primary), 0.7)
-  ) !important;
+  background: linear-gradient(118deg, rgba(var(--vs-primary), 1), rgba(var(--vs-primary), 0.7)) !important;
 }
 
 .bg-success-gradient {
-  background: linear-gradient(
-    118deg,
-    rgba(var(--vs-success), 1),
-    rgba(var(--vs-success), 0.7)
-  ) !important;
+  background: linear-gradient(118deg, rgba(var(--vs-success), 1), rgba(var(--vs-success), 0.7)) !important;
 }
 
 .bg-danger-gradient {
-  background: linear-gradient(
-    118deg,
-    rgba(var(--vs-danger), 1),
-    rgba(var(--vs-danger), 0.7)
-  ) !important;
+  background: linear-gradient(118deg, rgba(var(--vs-danger), 1), rgba(var(--vs-danger), 0.7)) !important;
 }
 
 .bg-warning-gradient {
-  background: linear-gradient(
-    118deg,
-    rgba(var(--vs-warning), 1),
-    rgba(var(--vs-warning), 0.7)
-  ) !important;
+  background: linear-gradient(118deg, rgba(var(--vs-warning), 1), rgba(var(--vs-warning), 0.7)) !important;
 }
 
 .bg-dark-gradient {
-  background: linear-gradient(
-    118deg,
-    rgba(var(--vs-dark), 1),
-    rgba(var(--vs-dark), 0.7)
-  ) !important;
+  background: linear-gradient(118deg, rgba(var(--vs-dark), 1), rgba(var(--vs-dark), 0.7)) !important;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -259,6 +242,10 @@
 
 .text-big {
   font-size: 4rem;
+}
+
+.text-medium {
+  font-size: 2rem;
 }
 
 .text-color-base {
@@ -367,7 +354,7 @@
 }
 
 ul.bordered-items {
-  & > li:not(:last-of-type):not([class*='shadow']) {
+  & > li:not(:last-of-type):not([class*="shadow"]) {
     border-bottom: 1px solid $grey-light;
   }
 }
@@ -397,8 +384,7 @@ ul.bordered-items {
     border: 0;
     overflow: hidden;
     border-radius: 0.5rem;
-    box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11),
-      0 5px 15px 0 rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08) !important;
     // @apply shadow-lg;
   }
   .vs-dropdown--menu--after {
