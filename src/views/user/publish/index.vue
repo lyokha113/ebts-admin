@@ -1,15 +1,7 @@
 <template>
   <div id="data-list-list-view" class="data-list-container mt-3">
-    <vs-table
-      ref="table"
-      pagination
-      :max-items="itemsPerPage"
-      :data="publishes"
-    >
-      <div
-        slot="header"
-        class="flex flex-wrap-reverse items-center flex-grow justify-between"
-      >
+    <vs-table ref="table" pagination :max-items="itemsPerPage" :data="publishes">
+      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <!-- ITEMS PER PAGE -->
         <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4">
           <div
@@ -18,9 +10,9 @@
             <span class="mr-2">
               {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
               {{
-                publishes.length - currentPage * itemsPerPage > 0
-                  ? currentPage * itemsPerPage
-                  : publishes.length
+              publishes.length - currentPage * itemsPerPage > 0
+              ? currentPage * itemsPerPage
+              : publishes.length
               }}
               of {{ publishes.length }}
             </span>
@@ -62,9 +54,7 @@
               <p
                 class="font-medium duplicate-name"
                 @click="handlePreview(tr.duplicateContent)"
-              >
-                {{ tr.duplicateName }}
-              </p>
+              >{{ tr.duplicateName }}</p>
             </vs-td>
 
             <vs-td>
@@ -78,9 +68,11 @@
             </vs-td>
 
             <vs-td>
-              <vs-chip :color="tr.status | publishStatus">{{
+              <vs-chip :color="tr.status | publishStatus">
+                {{
                 tr.status
-              }}</vs-chip>
+                }}
+              </vs-chip>
             </vs-td>
 
             <vs-td style="padding: 10px">

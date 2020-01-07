@@ -206,9 +206,14 @@ const router = new Router({
           component: () => import('@/views/oauth2/index.vue')
         },
         {
-          path: '/confirm',
-          name: 'confirm',
-          component: () => import('@/views/confirm/index.vue')
+          path: '/confirm/useremail',
+          name: 'Confirm Useremail',
+          component: () => import('@/views/confirm/useremail/index.vue')
+        },
+        {
+          path: '/confirm/account',
+          name: 'Confirm Account',
+          component: () => import('@/views/confirm/account/index.vue')
         }
       ],
       meta: {
