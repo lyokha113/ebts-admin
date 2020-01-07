@@ -115,6 +115,10 @@ export default {
         this.resetEditorChange()
       }
     })
+
+    this.editor.on('load', async () => {
+      this.resetEditorChange()
+    })
   },
   methods: {
     ...mapActions([

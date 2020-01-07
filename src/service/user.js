@@ -8,6 +8,7 @@ export function register(req) {
   return axios.post(`/register`, req)
 }
 
-export function googleAuth() {
-  return `/oauth2/authorize/google?redirect_uri=${process.env.VUE_APP_DOMAIN_LOCAL}/oauth2`
+export function googleAuth(token) {
+  return axios.post(`/google-login`, token)
+  // return `/oauth2/authorization/google`
 }

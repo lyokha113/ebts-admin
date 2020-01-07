@@ -114,50 +114,24 @@ const actions = {
     }
 
     dispatch('logout')
-    this._vm.$vs.notify({
-      title: 'Warning',
-      text: 'Incorrect login information',
-      color: 'warning',
-      position: 'top-right'
-    })
   },
 
-  async googleAuth({ commit, getters }) {
-    let popup = null
-
-    const reciveMessage = event => {
-      const { data } = event
-      const params = new URLSearchParams(data)
-      const error = params.get('error')
-      const token = params.get('token')
-      if (error) {
-        this._vm.$vs.notify({
-          title: 'Warning',
-          text: error,
-          color: 'warning',
-          position: 'top-right'
-        })
-      } else if (token) {
-        commit('SET_ACCESS_TOKEN', token)
-        setToken(token)
-        router.push('/user/workspace/')
-      }
-    }
-
-    window.onmessage = () => {}
-    const openSignInWindow = (url, name) => {
-      const strWindowFeatures =
-        'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
-      if (popup === null || popup.closed) {
-        popup = window.open(url, name, strWindowFeatures)
+  async googleAuth({ commit, dispatch }, loginInfo) {
+    const { data } = await googleAuth(loginInfo)
+    if (data.success) {
+      const token = data.data.accessToken.substring(7)
+      commit('SET_ACCESS_TOKEN', token)
+      setToken(token)
+      if (loginInfo.page == 'workspace') {
+        router.push('/user/workspace')
+      } else if (loginInfo.page && loginInfo.page.includes('detail')) {
+        router.push(`/${loginInfo.page.replace('-', '/')}`)
       } else {
-        popup.focus()
+        router.push('/')
       }
-      window.onmessage = reciveMessage
+    } else {
+      dispatch('logout')
     }
-
-    const url = process.env.VUE_APP_API_DOMAIN_LOCAL + googleAuth()
-    openSignInWindow(url, 'Google')
   },
 
   async register({ dispatch }, registerInfo) {
@@ -675,7 +649,7 @@ const actions = {
   },
 
   async makeYahooDraft({ commit }, request) {
-    request.provider = 'YAHOO'
+    request.provider = 'GMAIL'
     const { data } = await makeDraftEmail(request)
     if (data.success) {
       this._vm.$vs.notify({

@@ -128,18 +128,18 @@
             placeholder="Email"
             class="m-3"
             style="width: 100%;"
-            v-model="outlookEmail"
+            v-model="yahooEmail"
           />
           <vs-input
             type="password"
             placeholder="Pasword"
             class="m-3"
             style="width: 100%"
-            v-model="outlookPassword"
+            v-model="yahooPassword"
           />
         </div>
         <div style="display: flex; justify-content: flex-end">
-          <vs-button class="m-3" @click="handleOutlookDraft">
+          <vs-button class="m-3" @click="handleYahooDraft">
             Submit
           </vs-button>
         </div>
@@ -185,7 +185,8 @@ export default {
     ...mapActions([
       'autoUpdateVersionContent',
       'resetEditorChange',
-      'makeOutlookDraft'
+      'makeOutlookDraft',
+      'makeYahooDraft'
     ]),
     close() {
       this.$emit('update:open', false)
@@ -235,6 +236,18 @@ export default {
       }
       if (await this.handleCallAPI(this.makeOutlookDraft, request)) {
         this.outlookPopup = false
+      }
+    },
+
+    async handleYahooDraft() {
+      await this.fetchInlineContent()
+      const request = {
+        rawTemplateId: this.currentRaw.id,
+        email: this.yahooEmail,
+        password: this.yahooPassword
+      }
+      if (await this.handleCallAPI(this.makeYahooDraft, request)) {
+        this.yahooPopup = false
       }
     }
   }

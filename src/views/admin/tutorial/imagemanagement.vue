@@ -33,7 +33,7 @@
             <img :src="file.link" class="grid-view-img" />
           </div>
           <vs-divider border-style="dashed" />
-          <div class="item-details px-3 text-center">
+          <div class="px-3 text-center">
             <div>
               <h6 class="truncate font-semibold mb-1">{{ file.name }}</h6>
             </div>

@@ -175,11 +175,6 @@ const router = new Router({
           path: '/401',
           name: '401',
           component: () => import('@/views/401/index.vue')
-        },
-        {
-          path: '/oauth2',
-          name: 'oauth2',
-          component: () => import('@/views/oauth2/index.vue')
         }
       ],
       meta: {

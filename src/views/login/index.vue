@@ -60,7 +60,7 @@
 
                 <div
                   class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
-                  @click="handleGoogleAuth"
+                  v-google-signin-button="googleClientId"
                 >
                   <svg
                     aria-hidden="true"
@@ -88,16 +88,34 @@
 </template>
 
 <script>
+import GoogleSignInButton from 'vue-google-signin-button-directive'
 import { mapActions } from 'vuex'
 export default {
+  directives: {
+    GoogleSignInButton
+  },
   data() {
     return {
+      googleClientId: process.env.VUE_APP_GOOGLE_CLIENT_ID,
       email: '',
       password: ''
     }
   },
   methods: {
     ...mapActions(['login', 'googleAuth']),
+    async OnGoogleAuthSuccess(token) {
+      const loginInfo = { string: token, page: this.$route.query.return }
+      await this.handleCallAPI(this.googleAuth, loginInfo)
+    },
+    OnGoogleAuthFail(error) {
+      this.$vs.notify({
+        title: 'Login Error',
+        text: error.error.toUpperCase(),
+        color: 'warning',
+        icon: 'error',
+        position: 'top-right'
+      })
+    },
     async handleLogin() {
       if (!this.email || !this.password) {
         this.$vs.notify({
@@ -117,9 +135,6 @@ export default {
         page: this.$route.query.return
       }
       await this.handleCallAPI(this.login, loginInfo)
-    },
-    async handleGoogleAuth() {
-      await this.googleAuth()
     }
   }
 }
