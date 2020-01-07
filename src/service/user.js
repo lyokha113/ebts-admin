@@ -9,6 +9,6 @@ export function register(req) {
 }
 
 export function googleAuth(token) {
-  return axios.post(`/google-login`, token)
+  return axios.post(`/google/login`, token)
   // return `/oauth2/authorization/google`
 }

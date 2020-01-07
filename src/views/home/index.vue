@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1400px; margin:auto">
+  <div style="width: 1400px; margin:auto;">
     <vs-row vs-align="center">
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
         <img src="@/assets/images/logo/logo-rec.png" />

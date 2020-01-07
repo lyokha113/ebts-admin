@@ -1,5 +1,10 @@
 z<template>
-  <div class="layout--main navbar-sticky footer-static app-page">
+  <div
+    class="layout--main navbar-sticky footer-static app-page"
+    :style="{
+      backgroundImage: 'url(' + require('@/assets/images/home-bg.png') + ')'
+    }"
+  >
     <div
       id="content-area"
       class="content-area-no-sidebar"
