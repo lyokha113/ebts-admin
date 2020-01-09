@@ -58,10 +58,12 @@ import {
 
 import { updateVersionContent } from '@/service/version'
 
-import { makeDraftEmail } from '@/service/email'
 import {
-  updateUser
-} from '@/service/user'
+  makeDraftGMail,
+  makeDraftYahoo,
+  makeDraftOutlook
+} from '@/service/email'
+import { updateUser } from '@/service/user'
 
 import {
   getUserEmails,
@@ -179,9 +181,10 @@ const actions = {
 
   async createAccount({ commit }, account) {
     const { data } = await createAccount(account)
+    console.log(data)
     if (data.success) {
       commit('CREATE_ACCOUNT', data.data)
-      this.$vs.notify({
+      this._vm.$vs.notify({
         title: 'Information',
         text: 'Account created',
         color: 'success',
@@ -663,23 +666,8 @@ const actions = {
   // EMAIL
   // ////////////////////////////////////////////
 
-  async makeOutlookDraft({ commit }, request) {
-    request.provider = 'OUTLOOK'
-    const { data } = await makeDraftEmail(request)
-    if (data.success) {
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: 'Outlook draft was created',
-        color: 'success',
-        position: 'top-right'
-      })
-    }
-    return data.success
-  },
-
-  async makeYahooDraft({ commit }, request) {
-    request.provider = 'GMAIL'
-    const { data } = await makeDraftEmail(request)
+  async makeDraftGMail({ commit }, request) {
+    const { data } = await makeDraftGMail(request)
     if (data.success) {
       this._vm.$vs.notify({
         title: 'Information',
@@ -691,6 +679,31 @@ const actions = {
     return data.success
   },
 
+  async makeDraftYahoo({ commit }, request) {
+    const { data } = await makeDraftYahoo(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Yahoo draft was created',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async makeDraftOutlook({ commit }, request) {
+    const { data } = await makeDraftOutlook(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Outlook draft was created',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
 
   // ////////////////////////////////////////////
   // USER EMAIL

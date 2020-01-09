@@ -167,12 +167,22 @@ export default {
         return
       }
 
-      const registerInfo = {
-        email: this.email,
-        fullName: this.name,
-        password: this.password
-      }
-      await this.handleCallAPI(this.register, registerInfo)
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Please check all information to create new account`,
+        accept: async () => {
+          const registerInfo = {
+            email: this.email,
+            fullName: this.name,
+            password: this.password
+          }
+          if (await this.handleCallAPI(this.register, registerInfo)) {
+            this.$emit('closeSidebar')
+          }
+        }
+      })
     },
 
     async handleGoogleAuth() {

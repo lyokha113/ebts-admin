@@ -4,7 +4,11 @@
       <div
         class="item-img-container shadow-md bg-white h-64 flex items-center justify-center my-3 mx-3"
       >
-        <img :src="template.thumbnail" :alt="template.name" class="grid-view-img" />
+        <img
+          :src="template.thumbnail"
+          :alt="template.name"
+          class="grid-view-img"
+        />
       </div>
       <vs-divider border-style="dashed" class="my-3" />
 
@@ -50,7 +54,12 @@
       <div class="px-3">
         <div class="my-4">
           <vs-row class="my-2">
-            <vs-col vs-type="flex" vs-align="center" vs-justify="center" vs-w="12">
+            <vs-col
+              vs-type="flex"
+              vs-align="center"
+              vs-justify="center"
+              vs-w="12"
+            >
               <vs-button
                 class="mx-2"
                 type="gradient"
@@ -78,17 +87,31 @@
         </div>
       </div>
 
-      <CustomPopup id="update-popup" title="UPDATE TEMPLATE" :active.sync="popup">
+      <CustomPopup
+        id="update-popup"
+        title="UPDATE TEMPLATE"
+        :active.sync="popup"
+      >
         <div>
           Enter name:
-          <vs-input placeholder="Name" v-model="name" style="width: 250px" class="mt-1 mb-4" />Enter description:
+          <vs-input
+            placeholder="Name"
+            v-model="name"
+            style="width: 250px"
+            class="mt-1 mb-4"
+          />Enter description:
           <vs-input
             placeholder="Description"
             v-model="description"
             style="width: 250px"
             class="mt-1 mb-4"
           />
-          <vs-select class="mb-4" label="Categories" v-model="categories" width="250px">
+          <vs-select
+            class="mb-4"
+            label="Categories"
+            v-model="categories"
+            width="250px"
+          >
             <div>
               <vs-select-group title="Active">
                 <vs-select-item
@@ -115,7 +138,8 @@
             type="filled"
             class="float-right mt-2"
             @click="handleUpdate"
-          >Update</vs-button>
+            >Update</vs-button
+          >
         </div>
       </CustomPopup>
     </template>
@@ -217,6 +241,9 @@ export default {
   },
   async mounted() {
     await this.handleCallAPI(this.getCategories)
+  },
+  destroyed() {
+    this.popup = false
   }
 }
 </script>

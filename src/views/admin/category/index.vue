@@ -271,6 +271,10 @@ export default {
   },
   mounted() {
     this.isMounted = true
+  },
+  destroyed() {
+    this.addPrompt = false
+    this.updatePrompt = false
   }
 }
 </script>

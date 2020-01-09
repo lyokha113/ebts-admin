@@ -2,10 +2,6 @@ import axios from '@/plugin/axios'
 
 const URI = '/user'
 
-export function updateUser(account){
-  return axios.put(`${URI}`, account)
-}
-
 export function login(req) {
   return axios.post(`/login`, req)
 }
@@ -16,5 +12,8 @@ export function register(req) {
 
 export function googleAuth(token) {
   return axios.post(`/google/login`, token)
-  // return `/oauth2/authorization/google`
+}
+
+export function updateUser(account) {
+  return axios.put(`${URI}`, account)
 }

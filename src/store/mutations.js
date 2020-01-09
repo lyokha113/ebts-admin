@@ -195,7 +195,7 @@ const mutations = {
   SET_EDITOR_CHANGE(state, count) {
     state.editorChange = count
   },
-  
+
   // ////////////////////////////////////////////
   // USER EMAILS
   // ////////////////////////////////////////////

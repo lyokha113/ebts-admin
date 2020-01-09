@@ -314,6 +314,7 @@ export default {
   },
   destroyed() {
     this.disconnectWs()
+    this.popup = false
   }
 }
 </script>

@@ -20,6 +20,7 @@
             />
             <div
               class="shadow-md cursor-pointer export"
+              @click="handleGMailDraft"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-gmail.png') + ')'
@@ -185,8 +186,8 @@ export default {
     ...mapActions([
       'autoUpdateVersionContent',
       'resetEditorChange',
-      'makeOutlookDraft',
-      'makeYahooDraft'
+      'makeDraftOutlook',
+      'makeDraftYahoo'
     ]),
     close() {
       this.$emit('update:open', false)
@@ -227,26 +228,50 @@ export default {
       FileSaver.saveAs(file)
     },
 
+    async handleGMailDraft() {},
+
     async handleOutlookDraft() {
+      if (!this.validateEmail(this.outlookEmail)) {
+        this.$vs.notify({
+          title: 'Email format incorrect',
+          text: 'Please re-check email format',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       await this.fetchInlineContent()
       const request = {
         rawTemplateId: this.currentRaw.id,
         email: this.outlookEmail,
         password: this.outlookPassword
       }
-      if (await this.handleCallAPI(this.makeOutlookDraft, request)) {
+      if (await this.handleCallAPI(this.makeDraftOutlook, request)) {
         this.outlookPopup = false
       }
     },
 
     async handleYahooDraft() {
+      if (!this.validateEmail(this.yahooEmail)) {
+        this.$vs.notify({
+          title: 'Email format incorrect',
+          text: 'Please re-check email format',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       await this.fetchInlineContent()
       const request = {
         rawTemplateId: this.currentRaw.id,
         email: this.yahooEmail,
         password: this.yahooPassword
       }
-      if (await this.handleCallAPI(this.makeYahooDraft, request)) {
+      if (await this.handleCallAPI(this.makeDraftYahoo, request)) {
         this.yahooPopup = false
       }
     }

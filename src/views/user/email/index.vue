@@ -2,7 +2,9 @@
   <div>
     <span>
       <h1>Email</h1>
-      <vs-button class="flex mx-2" type="gradient" @click="handleOpenPopup">+ Add new email</vs-button>
+      <vs-button class="flex mx-2" type="gradient" @click="handleOpenPopup"
+        >+ Add new email</vs-button
+      >
     </span>
     <div id="data-list-list-view" class="data-list-container mt-3">
       <vs-table ref="table" :data="userEmails">
@@ -75,13 +77,15 @@
           type="gradient"
           @click="handleAddEmail"
           v-if="type == 0"
-        >Add</vs-button>
+          >Add</vs-button
+        >
         <vs-button
           class="justify-center align-center text-medium"
           type="gradient"
           @click="handleUpdateEmail"
           v-if="type == 1"
-        >Update</vs-button>
+          >Update</vs-button
+        >
       </div>
     </CustomPopup>
   </div>
@@ -177,7 +181,7 @@ export default {
     async handleUpdateEmailConfirm() {
       const userEmail = {
         id: this.id,
-        email: this.email,
+        email: this.email
       }
       await this.handleCallAPI(this.updateUserEmail, userEmail)
       this.popup = false
@@ -209,6 +213,9 @@ export default {
   },
   mounted() {
     this.handleCallAPI(this.getUserEmails)
+  },
+  destroyed() {
+    this.popup = false
   }
 }
 </script>

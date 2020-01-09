@@ -427,6 +427,13 @@ export default {
   async mounted() {
     await this.handleCallAPI(this.getWorkspaces)
     this.workspace = this.workspaces.find(w => w.name == 'Default workspace').id
+  },
+  destroyed() {
+    this.popupCreate = false
+    this.popupUpdate = false
+    this.popupTemplates = false
+    this.popupCreateTemplate = false
+    this.popupUpdateTemplate = false
   }
 }
 </script>

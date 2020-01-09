@@ -413,6 +413,9 @@ export default {
   mounted() {
     this.isMounted = true
     this.config.requestHeaders.AUTHORIZATION = `Bearer ${this.accessToken}`
+  },
+  destroyed() {
+    this.popup = false
   }
 }
 </script>

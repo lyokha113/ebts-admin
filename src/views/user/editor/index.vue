@@ -117,7 +117,7 @@ export default {
     })
 
     this.editor.on('load', async () => {
-      this.resetEditorChange()
+      window.setTimeout(() => this.resetEditorChange(), 1000)
     })
   },
   methods: {
@@ -237,6 +237,10 @@ export default {
         this.uploadPopup = false
       }
     }
+  },
+  destroyed() {
+    this.uploadPopup = false
+    this.exportPopup = false
   }
 }
 </script>
