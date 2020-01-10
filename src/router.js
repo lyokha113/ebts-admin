@@ -133,22 +133,6 @@ const router = new Router({
           }
         },
         {
-          path: '/user/email',
-          name: 'Email',
-          component: () => import('@/views/user/email/index.vue'),
-          meta: {
-            permission: 2
-          }
-        },
-        {
-          path: '/user/password',
-          name: 'Password',
-          component: () => import('@/views/user/password/index.vue'),
-          meta: {
-            permission: 2
-          }
-        },
-        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),
