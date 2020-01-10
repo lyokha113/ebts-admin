@@ -55,11 +55,14 @@
     </div>
     <div class="parentDiv">
       <vs-row class="justify-center align-center text-medium">Checklist</vs-row>
+      <vs-row class="justify-center align-center mt-4">
+        <vs-input class="mr-4" icon="email" label="Email" v-model="emailTest" name="emailTest" />
+        <vs-button class="mt-6" type="gradient" @click="handleAddEmail">+ Add new email</vs-button>
+      </vs-row>
       <div id="data-list-list-view" class="data-list-container mt-3">
         <vs-table ref="table" :data="userEmails">
           <template slot="thead">
             <vs-th>Email</vs-th>
-            <vs-th>Name</vs-th>
             <vs-th>Status</vs-th>
             <vs-th>Action</vs-th>
           </template>
@@ -70,20 +73,10 @@
                 <vs-td style="width: 30%">
                   <p>{{ tr.email }}</p>
                 </vs-td>
-                <vs-td style="width: 30%">
-                  <p>{{ tr.name }}</p>
-                </vs-td>
                 <vs-td style="width: 20%">
                   <p>{{ tr.status }}</p>
                 </vs-td>
                 <vs-td style="width: 20%;">
-                  <vs-button
-                    icon="edit"
-                    v-if="tr.status != 'Default'"
-                    color="green"
-                    radius
-                    @click="handleOpenPopupSelected(tr)"
-                  />
                   <vs-button
                     icon="delete"
                     v-if="tr.status != 'Default'"
@@ -96,55 +89,14 @@
             </tbody>
           </template>
         </vs-table>
-        <vs-row class="justify-center align-center mt-4">
-          <vs-button class="flex mx-2" type="gradient" @click="handleOpenPopup">+ Add new email</vs-button>
-        </vs-row>
       </div>
-      <CustomPopup title="Email details" :active.sync="popup">
-        <div>
-          <div v-if="type == 0">
-            Enter email:
-            <vs-input
-              placeholder="emailuser@email.com"
-              v-model="email"
-              style="width: 250px"
-              class="mt-1 mb-4"
-            />
-          </div>
-          <div>
-            Enter fullname:
-            <vs-input
-              placeholder="ex: Tran Duc Thai"
-              v-model="name"
-              style="width: 250px"
-              class="mt-1 mb-4"
-            />
-          </div>
-          <vs-button
-            class="justify-center align-center text-medium"
-            type="gradient"
-            @click="handleAddEmail"
-            v-if="type == 0"
-          >Add</vs-button>
-          <vs-button
-            class="justify-center align-center text-medium"
-            type="gradient"
-            @click="handleUpdateEmail"
-            v-if="type == 1"
-          >Update</vs-button>
-        </div>
-      </CustomPopup>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import CustomPopup from '@/components/CustomPopup.vue'
 export default {
   name: 'userProfile',
-  components: {
-    CustomPopup
-  },
   computed: {
     ...mapGetters(['activeUser', 'userEmails']),
     user_displayName() {
@@ -162,17 +114,16 @@ export default {
     name: '',
     imageUrl: '',
     file: '',
-    popup: false,
     password: '',
     confirm: '',
-    type: 0
+    status: '',
+    emailTest: ''
   }),
   methods: {
     ...mapActions([
       'updateUser',
       'getUserEmails',
       'addUserEmail',
-      'updateUserEmail',
       'deleteUserEmail'
     ]),
     async handleChangePassword() {
@@ -203,27 +154,24 @@ export default {
         password: this.password
       }
       await this.handleCallAPI(this.updateUser, account)
+      this.password = ''
+      this.confirm = ''
     },
-    async handleOpenPopup() {
-      if (this.userEmails.length < 5) {
-        this.popup = true
-        this.type = 0
-      } else {
+    async handleAddEmail() {
+      if (!this.emailTest) {
         this.$vs.notify({
-          title: 'Your test email list should be less than 5',
-          text: 'Please delete some email to add another',
+          title: 'Email should not be empty',
+          text: 'Please re-check email textfield',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
         })
         return
       }
-    },
-    async handleAddEmail() {
-      if (!this.email) {
+      if (this.userEmails.length > 5) {
         this.$vs.notify({
-          title: 'Email should not be empty',
-          text: 'Please re-check email textfield',
+          title: 'Your test email list should be less than 5',
+          text: 'Please delete some email to add another',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -237,47 +185,17 @@ export default {
     },
     async handleAddEmailConfirm() {
       const userEmail = {
-        name: this.name,
-        email: this.email
+        email: this.emailTest
       }
       await this.handleCallAPI(this.addUserEmail, userEmail)
-      this.popup = false
-    },
-    async handleOpenPopupSelected(selected) {
-      this.popup = true
-      this.type = 1
-      this.email = selected.email
-      this.name = selected.name
-      this.id = selected.id
-    },
-    async handleUpdateEmail() {
-      if (!this.email) {
-        this.$vs.notify({
-          title: 'Email should not be empty',
-          text: 'Please re-check email textfield',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
-      this.handleUpdateEmailConfirm()
-    },
-    async handleUpdateEmailConfirm() {
-      const userEmail = {
-        id: this.id,
-        email: this.email
-      }
-      await this.handleCallAPI(this.updateUserEmail, userEmail)
-      this.popup = false
     },
     async handleCheckDuplicate() {
       this.duplicate = false
       this.userEmails.forEach(list => {
-        if (list.email == this.email) {
+        if (list.email == this.emailTest) {
           this.duplicate = true
           this.$vs.notify({
-            title: 'Email is existed',
+            title: 'Email is existed in your list',
             text: 'Please re-check email textfield',
             color: 'warning',
             icon: 'error',
@@ -315,11 +233,6 @@ export default {
       }
       await this.handleCallAPI(this.updateUser, account)
     },
-    handleOnUploaddProgress(progressEvent) {
-      this.uploadPercent = parseInt(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      )
-    },
     uploadImage(e) {
       const image = e.target.files[0]
       const reader = new FileReader()
@@ -349,10 +262,5 @@ export default {
   border-color: #e4e8ec;
   border-style: solid;
   border-width: 1px;
-}
-</style>
-<style lang="scss" scoped>
-/deep/ .vs-popup {
-  width: 280px;
 }
 </style>
