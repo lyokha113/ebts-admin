@@ -91,22 +91,6 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/email').catch(err => {})"
-                >
-                  <feather-icon icon="MailIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-4">Email</span>
-                </li>
-                <li
-                  v-if="activeUser"
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/password').catch(err => {})"
-                >
-                  <feather-icon icon="LockIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-4">Password</span>
-                </li>
-                <li
-                  v-if="activeUser"
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="handleLogout"
                 >
                   <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4"></feather-icon>
