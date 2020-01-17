@@ -118,6 +118,16 @@
                   <span class="ml-4">Publishes</span>
                 </li>
                 <li
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/tutorial').catch(err => {})"
+                >
+                  <feather-icon
+                    icon="HelpCircleIcon"
+                    svgClasses="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">Tutorial</span>
+                </li>
+                <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="handleLogout"
