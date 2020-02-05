@@ -133,6 +133,14 @@ const router = new Router({
           }
         },
         {
+          path: '/user/tutorial',
+          name: 'UserTutorial',
+          component: () => import('@/views/user/tutorial/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),
