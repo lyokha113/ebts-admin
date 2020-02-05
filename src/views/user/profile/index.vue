@@ -1,12 +1,20 @@
 <template>
   <div>
     <div class="parentDiv">
-      <vs-row class="justify-center align-center text-medium">Personal data</vs-row>
+      <vs-row class="justify-center align-center text-medium"
+        >Personal data</vs-row
+      >
       <vs-row class="justify-center align-center">
         <div class="con-input-upload">
           <img :src="imageUrl" name="imageUrl" width="100%" />
-          <button type="button" title="Upload" class="btn-upload-all vs-upload--button-upload">
-            <i translate="no" class="material-icons notranslate">cloud_upload</i>
+          <button
+            type="button"
+            title="Upload"
+            class="btn-upload-all vs-upload--button-upload"
+          >
+            <i translate="no" class="material-icons notranslate"
+              >cloud_upload</i
+            >
             <input ref="uploader" type="file" @change="uploadImage" />
           </button>
         </div>
@@ -31,7 +39,7 @@
         <vs-button @click="handleUpdate">Update</vs-button>
       </vs-row>
     </div>
-    <div class="parentDiv" v-if="this.activeUser.provider=='local'">
+    <div class="parentDiv" v-if="this.activeUser.provider == 'local'">
       <vs-row class="justify-center align-center text-medium">Password</vs-row>
       <vs-row class="justify-center align-center">
         <vs-input
@@ -132,12 +140,7 @@ export default {
     emailTest: ''
   }),
   methods: {
-    ...mapActions([
-      'updateUser',
-      'get  ',
-      'addUserEmail',
-      'deleteUserEmail'
-    ]),
+    ...mapActions(['updateUser', 'get  ', 'addUserEmail', 'deleteUserEmail']),
     async handleChangePassword() {
       if (!this.password || !this.confirm) {
         this.$vs.notify({

@@ -1,9 +1,32 @@
 export default {
   methods: {
-    async handleCallAPI(api, args) {
+    async handleCallAPI(api, args, loading = true) {
+      let loader = null
       try {
-        return await api(args)
+        if (!loading) {
+          return await api(args)
+        }
+
+        loader = this.$loading.show({
+          color: '#7367f0',
+          loader: 'spinner',
+          width: 64,
+          height: 64,
+          backgroundColor: '#ffffff',
+          opacity: 0.8,
+          zIndex: 10001
+        })
+
+        const response = await api(args)
+        loader.hide()
+        loader = null
+        return response
       } catch (error) {
+        if (loading) {
+          loader.hide()
+          loader = null
+        }
+
         if (error.response.status == 400) {
           this.$vs.notify({
             title: 'Input error',

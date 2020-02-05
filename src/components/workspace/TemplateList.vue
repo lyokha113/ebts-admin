@@ -87,10 +87,22 @@ export default {
     }
   },
   async mounted() {
+    let loader = this.$loading.show({
+      color: '#7367f0',
+      loader: 'spinner',
+      width: 64,
+      height: 64,
+      backgroundColor: '#ffffff',
+      opacity: 0.8,
+      zIndex: 10001
+    })
+
     await Promise.all([
-      this.handleCallAPI(this.getCategories),
-      this.handleCallAPI(this.getTemplates)
+      this.handleCallAPI(this.getCategories, null, false),
+      this.handleCallAPI(this.getTemplates, null, false)
     ])
+
+    loader.hide()
 
     this.items = this.templates
   }

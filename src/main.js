@@ -56,6 +56,10 @@ import filters from '@/filters.js'
 // Moment
 Vue.use(require('vue-moment'))
 
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+Vue.use(Loading)
+
 Vue.config.productionTip = false
 
 new Vue({

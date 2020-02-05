@@ -105,19 +105,39 @@ export default {
     this.editor.on('change:changesCount', async () => {
       this.countEditorChange()
       this.save = false
-      if (this.editorChange == 50) {
+      if (this.editorChange == 10) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
-        await this.handleCallAPI(this.autoUpdateVersionContent, {
-          rawId: this.currentRaw.id,
-          content
-        })
-        this.save = true
-        this.resetEditorChange()
+        if (
+          await this.handleCallAPI(
+            this.autoUpdateVersionContent,
+            {
+              rawId: this.currentRaw.id,
+              content
+            },
+            false
+          )
+        ) {
+          this.save = true
+          this.resetEditorChange()
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto saved',
+            color: 'success',
+            position: 'top-right'
+          })
+        } else {
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto failed',
+            color: 'warning',
+            position: 'top-right'
+          })
+        }
       }
     })
 
     this.editor.on('load', async () => {
-      window.setTimeout(() => this.resetEditorChange(), 1000)
+      window.setTimeout(() => this.resetEditorChange(), 100)
     })
   },
   methods: {
