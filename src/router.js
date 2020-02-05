@@ -185,6 +185,11 @@ const router = new Router({
           component: () => import('@/views/401/index.vue')
         },
         {
+          path: '/oauth2',
+          name: 'oauth2',
+          component: () => import('@/views/oauth2/index.vue')
+        },
+        {
           path: '/confirm/useremail',
           name: 'Confirm Useremail',
           component: () => import('@/views/confirm/useremail/index.vue')

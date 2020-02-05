@@ -20,8 +20,20 @@
         </div>
       </vs-row>
       <vs-row class="justify-center align-center">
-        <vs-input icon="info" label="Fullname" v-model="name" name="name" class="mr-2" />
-        <vs-input icon="email" label="Email" v-model="email" name="email" class="ml-2" />
+        <vs-input
+          icon="info"
+          label="Fullname"
+          v-model="name"
+          name="name"
+          class="mr-2"
+        />
+        <vs-input
+          icon="email"
+          label="Email"
+          v-model="email"
+          name="email"
+          class="ml-2"
+        />
       </vs-row>
       <vs-row class="justify-center align-center mt-4">
         <vs-button @click="handleUpdate">Update</vs-button>
@@ -56,8 +68,16 @@
     <div class="parentDiv">
       <vs-row class="justify-center align-center text-medium">Checklist</vs-row>
       <vs-row class="justify-center align-center mt-4">
-        <vs-input class="mr-4" icon="email" label="Email" v-model="emailTest" name="emailTest" />
-        <vs-button class="mt-6" type="gradient" @click="handleAddEmail">+ Add new email</vs-button>
+        <vs-input
+          class="mr-4"
+          icon="email"
+          label="Email"
+          v-model="emailTest"
+          name="emailTest"
+        />
+        <vs-button class="mt-6" type="gradient" @click="handleAddEmail"
+          >+ Add new email</vs-button
+        >
       </vs-row>
       <div id="data-list-list-view" class="data-list-container mt-3">
         <vs-table ref="table" :data="userEmails">

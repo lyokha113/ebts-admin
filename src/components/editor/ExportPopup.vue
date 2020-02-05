@@ -187,7 +187,8 @@ export default {
       'autoUpdateVersionContent',
       'resetEditorChange',
       'makeDraftOutlook',
-      'makeDraftYahoo'
+      'makeDraftYahoo',
+      'makeDraftGMail'
     ]),
     close() {
       this.$emit('update:open', false)
@@ -228,7 +229,10 @@ export default {
       FileSaver.saveAs(file)
     },
 
-    async handleGMailDraft() {},
+    async handleGMailDraft() {
+      await this.fetchInlineContent()
+      await this.handleCallAPI(this.makeDraftGMail, this.currentRaw.id)
+    },
 
     async handleOutlookDraft() {
       if (!this.validateEmail(this.outlookEmail)) {

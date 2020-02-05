@@ -666,17 +666,37 @@ const actions = {
   // EMAIL
   // ////////////////////////////////////////////
 
-  async makeDraftGMail({ commit }, request) {
-    const { data } = await makeDraftGMail(request)
+  async makeDraftGMail({ commit }, rawId) {
+    const { data } = await makeDraftGMail(rawId)
+
     if (data.success) {
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: 'Yahoo draft was created',
-        color: 'success',
-        position: 'top-right'
-      })
+      let popup = null
+      const openPopup = url => {
+        if (popup === null || popup.closed) {
+          popup = window.open(
+            url,
+            'Google Authorization',
+            'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
+          )
+        }
+        popup.focus()
+      }
+
+      const receiveMessage = event => {
+        if (!event.data) {
+          this._vm.$vs.notify({
+            title: 'Information',
+            text: 'Google Mail draft was created',
+            color: 'success',
+            position: 'top-right'
+          })
+        }
+      }
+
+      window.onmessage = () => {}
+      window.onmessage = receiveMessage
+      openPopup(data.data)
     }
-    return data.success
   },
 
   async makeDraftYahoo({ commit }, request) {

@@ -125,13 +125,15 @@ export default {
       await this.handleCallAPI(this.googleAuth, loginInfo)
     },
     OnGoogleAuthFail(error) {
-      this.$vs.notify({
-        title: 'Login Error',
-        text: error.error.toUpperCase(),
-        color: 'warning',
-        icon: 'error',
-        position: 'top-right'
-      })
+      if (error.error !== 'popup_closed_by_user') {
+        this.$vs.notify({
+          title: 'Login Error',
+          text: error.error.toUpperCase(),
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+      }
     },
     async handleRegister() {
       if (!this.email || !this.name || !this.password || !this.confirm) {

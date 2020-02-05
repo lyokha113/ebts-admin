@@ -2,8 +2,13 @@ import axios from '@/plugin/axios'
 
 const URI = '/email'
 
-export function makeDraftGMail(request) {
-  return axios.post(`${URI}/draft/gmail`, request)
+export function makeDraftGMail(rawId) {
+  return axios.get(`/google/authorize`, {
+    params: {
+      redirectUri: process.env.VUE_APP_API_DOMAIN_LOCAL + `${URI}/draft/gmail`,
+      rawId
+    }
+  })
 }
 
 export function makeDraftYahoo(request) {
