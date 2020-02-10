@@ -306,7 +306,6 @@ export default {
     }
   },
   async created() {
-    await this.handleCallAPI(this.getPublishes)
     this.connectWs()
   },
   mounted() {

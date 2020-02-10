@@ -227,6 +227,12 @@ export default {
         }
       )
       FileSaver.saveAs(file)
+      this.$vs.notify({
+        title: 'Information',
+        text: 'HTML file exported',
+        color: 'success',
+        position: 'top-right'
+      })
     },
 
     async handleGMailDraft() {

@@ -141,7 +141,7 @@ export default {
       height: 64,
       backgroundColor: '#ffffff',
       opacity: 0.8,
-      zIndex: 2147483647
+      zIndex: 110000
     })
 
     await Promise.all([

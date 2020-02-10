@@ -110,6 +110,7 @@
             class="mb-4"
             label="Categories"
             v-model="categories"
+            multiple
             width="250px"
           >
             <div>
@@ -172,12 +173,7 @@ export default {
     ...mapGetters(['currentTemplate', 'categoriesNoTemplate'])
   },
   methods: {
-    ...mapActions([
-      'getTemplate',
-      'deleteTemplate',
-      'updateTemplate',
-      'getCategories'
-    ]),
+    ...mapActions(['getTemplate', 'deleteTemplate', 'updateTemplate']),
     async handlePreview(id) {
       if (this.currentTemplate == null || this.currentTemplate.id != id) {
         await this.handleCallAPI(this.getTemplate, id)
@@ -238,9 +234,6 @@ export default {
         }
       })
     }
-  },
-  async mounted() {
-    await this.handleCallAPI(this.getCategories)
   },
   destroyed() {
     this.popup = false

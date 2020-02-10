@@ -17,10 +17,26 @@ export default {
     AvailableTemplate
   },
   methods: {
-    ...mapActions(['getCategories'])
+    ...mapActions(['getCategories', 'getTemplates', 'getPublishes'])
   },
   async created() {
-    await this.handleCallAPI(this.getCategories)
+    let loader = this.$loading.show({
+      color: '#7367f0',
+      loader: 'spinner',
+      width: 64,
+      height: 64,
+      backgroundColor: '#ffffff',
+      opacity: 0.8,
+      zIndex: 110000
+    })
+
+    await Promise.all([
+      this.handleCallAPI(this.getCategories, null, false),
+      this.handleCallAPI(this.getTemplates, null, false),
+      this.handleCallAPI(this.getPublishes, null, false)
+    ])
+
+    loader.hide()
   }
 }
 </script>

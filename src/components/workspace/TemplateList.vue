@@ -2,11 +2,6 @@
   <div>
     <vs-row vs-align="center" class="mt-5">
       <vs-col vs-type="flex" vs-justify="flex-start" vs-w="4">
-        <vs-button type="gradient" @click="$emit('back')">
-          Back
-        </vs-button>
-      </vs-col>
-      <vs-col vs-type="flex" vs-justify="flex-end" vs-w="8">
         <vs-select
           placeholder="Choose specific category"
           multiple
@@ -22,6 +17,11 @@
             v-for="item in categoriesNoTemplate"
           />
         </vs-select>
+      </vs-col>
+      <vs-col vs-type="flex" vs-justify="flex-end" vs-w="8">
+        <vs-button type="gradient" @click="$emit('back')">
+          Back
+        </vs-button>
       </vs-col>
     </vs-row>
 
@@ -94,7 +94,7 @@ export default {
       height: 64,
       backgroundColor: '#ffffff',
       opacity: 0.8,
-      zIndex: 10001
+      zIndex: 110000
     })
 
     await Promise.all([

@@ -14,7 +14,7 @@ export default {
           height: 64,
           backgroundColor: '#ffffff',
           opacity: 0.8,
-          zIndex: 10001
+          zIndex: 110000
         })
 
         const response = await api(args)

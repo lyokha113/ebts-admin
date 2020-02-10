@@ -265,7 +265,6 @@ export default {
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getTemplates)
     this.config.requestHeaders.AUTHORIZATION = `Bearer ${this.accessToken}`
   },
   destroyed() {
