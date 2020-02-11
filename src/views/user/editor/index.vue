@@ -3,6 +3,11 @@
     <div id="editor"></div>
 
     <ExportPopup :open.sync="exportPopup" :editor="editor" />
+    <SendMailPopup
+      :open.sync="sendmailPopup"
+      :editor="editor"
+      :dynamicAttrs="dynamicAttrs"
+    />
 
     <CustomPopup
       button-close-hidden
@@ -28,6 +33,7 @@ import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import CustomPopup from '@/components/CustomPopup.vue'
 import ExportPopup from '@/components/editor/ExportPopup.vue'
+import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -37,15 +43,17 @@ export default {
   data() {
     return {
       editor: {},
-      saved: false,
       uploadPopup: false,
       uploadPercent: 0,
-      exportPopup: false
+      dynamicAttrs: [],
+      exportPopup: false,
+      sendmailPopup: false
     }
   },
   components: {
     CustomPopup,
-    ExportPopup
+    ExportPopup,
+    SendMailPopup
   },
   computed: {
     ...mapGetters(['accessToken', 'currentRaw', 'editorFiles', 'editorChange'])
@@ -56,8 +64,8 @@ export default {
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getFiles)
-    this.resetEditorChange()
+    await this.handleCallAPI(this.getFiles, null, false)
+    this.setEditorChange(false)
 
     this.editor = grapesjs.init({
       components: this.currentRaw && this.currentRaw.content,
@@ -103,41 +111,12 @@ export default {
     })
 
     this.editor.on('change:changesCount', async () => {
-      this.countEditorChange()
-      this.save = false
-      if (this.editorChange == 10) {
-        const content = this.editor.runCommand('gjs-get-inlined-html')
-        if (
-          await this.handleCallAPI(
-            this.autoUpdateVersionContent,
-            {
-              rawId: this.currentRaw.id,
-              content
-            },
-            false
-          )
-        ) {
-          this.save = true
-          this.resetEditorChange()
-          this.$vs.notify({
-            title: 'Information',
-            text: 'Auto saved',
-            color: 'success',
-            position: 'top-right'
-          })
-        } else {
-          this.$vs.notify({
-            title: 'Information',
-            text: 'Auto failed',
-            color: 'warning',
-            position: 'top-right'
-          })
-        }
-      }
+      this.setEditorChange(true)
     })
 
     this.editor.on('load', async () => {
-      window.setTimeout(() => this.resetEditorChange(), 100)
+      window.setTimeout(() => this.setEditorChange(false), 100)
+      // window.setInterval(this.handleAutoSave, 1000 * 60 * 3)
     })
   },
   methods: {
@@ -146,8 +125,7 @@ export default {
       'createFile',
       'updateVersionContent',
       'autoUpdateVersionContent',
-      'countEditorChange',
-      'resetEditorChange'
+      'setEditorChange'
     ]),
 
     getFileNameFromAM(src, assetManager) {
@@ -190,12 +168,45 @@ export default {
       this.exportPopup = true
     },
 
+    handleSendMailPopup(attr) {
+      this.dynamicAttrs = attr
+      this.sendmailPopup = true
+    },
+
     async handleSaveContent() {
       const content = this.editor.runCommand('gjs-get-inlined-html')
       await this.handleCallAPI(this.updateVersionContent, {
         rawId: this.currentRaw.id,
         content
       })
+    },
+
+    async handleAutoSave() {
+      if (this.editorChange) {
+        const content = this.editor.runCommand('gjs-get-inlined-html')
+        if (
+          await this.handleCallAPI(
+            this.autoUpdateVersionContent,
+            { rawId: this.currentRaw.id, content },
+            false
+          )
+        ) {
+          this.setEditorChange(false)
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto saved',
+            color: 'success',
+            position: 'top-right'
+          })
+        } else {
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto failed',
+            color: 'warning',
+            position: 'top-right'
+          })
+        }
+      }
     },
 
     async handleApplyEditFile(file, name, imageModel, assetManager) {
@@ -261,6 +272,8 @@ export default {
   destroyed() {
     this.uploadPopup = false
     this.exportPopup = false
+    this.sendmailPopup = false
+    // window.clearInterval(this.handleAutoSave)
   }
 }
 </script>

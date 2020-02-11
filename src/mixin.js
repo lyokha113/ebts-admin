@@ -22,6 +22,8 @@ export default {
         loader = null
         return response
       } catch (error) {
+        console.log(error)
+
         if (loading) {
           loader.hide()
           loader = null

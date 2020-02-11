@@ -26,7 +26,7 @@
             icon="EditIcon"
           ></feather-icon>
           <div class="text-xl self-center font-medium" @click="handleDesign">
-            Start to design
+            Start To Design
           </div>
         </div>
       </vs-col>

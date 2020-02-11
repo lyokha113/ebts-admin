@@ -28,7 +28,7 @@ export default function(editor, options) {
   const basicBlocksIds = ['text', 'divider', 'image', 'link']
   const structuredBlocksIds = ['text-sect']
 
-  const setDefaultBlocks = () => {
+  const setInitConfig = () => {
     blockManager.remove('quote')
     blockManager.remove('button')
     blockManager.remove('link-block')
@@ -42,13 +42,18 @@ export default function(editor, options) {
       if (basicBlocksIds.includes(b.id)) b.set('category', 'Basic')
       if (structuredBlocksIds.includes(b.id)) b.set('category', 'Structured')
     })
+
+    panelManager.removeButton('options', 'gjs-open-import-template')
+    panelManager.removeButton('options', 'gjs-toggle-images')
   }
 
   const addTypes = () => {
     domComponents.addType('dynamic text', {
       isComponent: el => {
-        el instanceof HTMLElement &&
-          el.getAttribute('datatype') === 'dynamic text'
+        return (
+          el instanceof HTMLElement &&
+          el.getAttribute('datatype') == 'dynamic text'
+        )
       },
       model: {
         defaults: {
@@ -56,7 +61,7 @@ export default function(editor, options) {
             { name: 'name', placeholder: 'Field name' },
             { name: 'text', placeholder: 'Default text' }
           ],
-          attributes: { dataType: 'dynamic text' }
+          attributes: { datatype: 'dynamic text' }
         },
         init() {
           this.on('change:attributes:text', this.handleTextChange)
@@ -71,15 +76,17 @@ export default function(editor, options) {
 
     domComponents.addType('dynamic link', {
       isComponent: el => {
-        el instanceof HTMLElement &&
-          el.getAttribute('datatype') === 'dynamic link'
+        return (
+          el instanceof HTMLElement &&
+          el.getAttribute('datatype') == 'dynamic link'
+        )
       },
       model: {
         defaults: {
           tagName: 'a',
           traits: [
             { name: 'name', placeholder: 'Field name' },
-            { name: 'text', placeholder: 'Text to show' },
+            { name: 'text', placeholder: 'Default text' },
             { name: 'href', placeholder: 'Default link' },
             {
               type: 'select',
@@ -91,7 +98,7 @@ export default function(editor, options) {
             }
           ],
           attributes: {
-            dataType: 'dynamic link',
+            datatype: 'dynamic link',
             href: 'about:blank',
             target: '_blank'
           }
@@ -394,6 +401,15 @@ export default function(editor, options) {
 
   const addButtons = () => {
     panelManager.addButton('options', {
+      id: 'save',
+      label: ' Save',
+      className: 'fa fa-upload',
+      attributes: { title: 'Save' },
+      active: false,
+      command: () => vueInstance.handleSaveContent()
+    })
+
+    panelManager.addButton('options', {
       id: 'export',
       label: ' Export',
       className: 'fa fa-cloud-download',
@@ -401,9 +417,22 @@ export default function(editor, options) {
       active: false,
       command: () => vueInstance.handleExportPopup()
     })
+
+    panelManager.addButton('options', {
+      id: 'sendmail',
+      label: ' Test',
+      className: 'fa fa-paper-plane',
+      attributes: { title: 'Test' },
+      active: false,
+      command: () => {
+        const wrapper = domComponents.getWrapper().find('[datatype^=dynamic ')
+        const attr = wrapper.map(c => c.getAttributes())
+        vueInstance.handleSendMailPopup(attr)
+      }
+    })
   }
 
-  setDefaultBlocks()
+  setInitConfig()
   addTypes()
   addBlocks()
   addCommands()

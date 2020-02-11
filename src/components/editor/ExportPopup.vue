@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <vs-button @click="close">
+          <vs-button type="border" @click="close">
             Close
           </vs-button>
         </div>
@@ -185,7 +185,7 @@ export default {
   methods: {
     ...mapActions([
       'autoUpdateVersionContent',
-      'resetEditorChange',
+      'setEditorChange',
       'makeDraftOutlook',
       'makeDraftYahoo',
       'makeDraftGMail'
@@ -213,7 +213,7 @@ export default {
           rawId: this.currentRaw.id,
           content
         })
-        this.resetEditorChange()
+        this.setEditorChange(false)
       }
     },
 

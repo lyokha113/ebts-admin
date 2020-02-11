@@ -234,6 +234,7 @@ export default {
       'createWorkspace',
       'updateWorkspace',
       'deleteWorkspace',
+      'getRawTemplate',
       'createRawTemplate',
       'updateRawTemplate'
     ]),
@@ -296,9 +297,12 @@ export default {
       }
 
       if (templateId != null) {
-        if (await this.handleCallAPI(this.createRawTemplate, raw)) {
+        const id = await this.handleCallAPI(this.createRawTemplate, raw)
+        if (id) {
+          await this.handleCallAPI(this.getRawTemplate, id)
           this.popupTemplates = false
           this.popupCreateTemplate = false
+          this.$router.push(`/user/editor/`)
         } else {
           this.handleBack()
         }
@@ -307,10 +311,14 @@ export default {
           type: 'confirm',
           color: 'danger',
           title: `Confirm`,
-          text: `Do you want to create this workspace ?`,
+          text: `Do you want to create a blank template ?`,
           accept: async () => {
-            if (await this.handleCallAPI(this.createRawTemplate, raw)) {
+            const id = await this.handleCallAPI(this.createRawTemplate, raw)
+            if (id) {
+              await this.handleCallAPI(this.getRawTemplate, id)
+              this.popupTemplates = false
               this.popupCreateTemplate = false
+              this.$router.push(`/user/editor/`)
             }
           }
         })

@@ -115,6 +115,24 @@
               >
             </div>
           </vs-col>
+          <vs-col class="my-3" vs-type="flex" vs-w="12">
+            <div
+              class="flex py-4 justify-center cursor-pointer"
+              style="width: 50%; background-color: #33caad; color: white; border-radius: 10px; margin: auto"
+            >
+              <feather-icon
+                class="mr-5"
+                svgClasses="h-8 w-8"
+                icon="EditIcon"
+              ></feather-icon>
+              <div
+                class="text-xl self-center font-medium"
+                @click="handleDesign"
+              >
+                Start To Design
+              </div>
+            </div>
+          </vs-col>
         </vs-row>
       </vs-col>
     </vs-row>
@@ -139,6 +157,13 @@ export default {
     ...mapActions(['getTemplate', 'rate']),
     setviewPort(view) {
       this.viewport = view == 'desktop' ? 'desktop' : 'mobile'
+    },
+    handleDesign() {
+      if (this.activeUser) {
+        this.$router.push('/user/workspace')
+      } else {
+        this.$router.push('/login?return=workspace')
+      }
     },
     async handleRate(isVote) {
       if (this.activeUser) {

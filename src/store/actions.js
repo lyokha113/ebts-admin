@@ -564,8 +564,9 @@ const actions = {
         color: 'success',
         position: 'top-right'
       })
+      return data.data.id
     }
-    return data.success
+    return null
   },
 
   async updateRawTemplate({ commit }, raw) {
@@ -635,13 +636,8 @@ const actions = {
     return data.success
   },
 
-  async countEditorChange({ commit, getters }) {
-    const count = getters.editorChange + 1
-    commit('SET_EDITOR_CHANGE', count)
-  },
-
-  async resetEditorChange({ commit }) {
-    commit('SET_EDITOR_CHANGE', 0)
+  async setEditorChange({ commit }, status) {
+    commit('SET_EDITOR_CHANGE', status)
   },
 
   // ////////////////////////////////////////////

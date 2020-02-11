@@ -192,8 +192,8 @@ const mutations = {
   SAVE_CONTENT(state, content) {
     state.currentRaw.content = content
   },
-  SET_EDITOR_CHANGE(state, count) {
-    state.editorChange = count
+  SET_EDITOR_CHANGE(state, status) {
+    state.editorChange = status
   },
 
   // ////////////////////////////////////////////
