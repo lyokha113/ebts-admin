@@ -7,12 +7,12 @@
         </div>
         <div class="modal-body">
           <template v-if="step === 1">
-            <div class="description-row">
+            <div class="description-row italic">
               <span>List emai is setup on user profile page</span>
             </div>
             <vs-table multiple v-model="selected" :data="emails">
               <template slot="thead">
-                <vs-th>
+                <vs-th class="text-base">
                   Choose emails
                 </vs-th>
               </template>
@@ -30,7 +30,10 @@
           </template>
 
           <template v-if="step === 2">
-            <div class="description-row">
+            <div class="description-row text-base italic" v-if="!isDynamicData">
+              <span>Setup email data to send</span>
+            </div>
+            <div class="description-row text-base italic" v-if="isDynamicData">
               <span
                 >All dynamic components must have unique name attribute</span
               >
@@ -40,70 +43,56 @@
                 the last one</span
               >
             </div>
-            <vs-table :data="dynamicForm">
-              <template slot="thead">
-                <vs-th />
-                <vs-th>
-                  Setup dynamic value
-                </vs-th>
-              </template>
 
-              <template slot-scope="{ data }">
-                <vs-tr :key="index" v-for="(row, index) in data">
-                  <vs-td>{{ row.email }}</vs-td>
+            <div class="px-6 text-lg font-bold" style="display: flex">
+              <label for="">Use dynamic data</label>
+              <vs-checkbox v-model="isDynamicData" style="margin-left: 10px" />
+              <div
+                class="font-light italic cursor-pointer"
+                style="margin-left: auto; color: #7367f0"
+              >
+                Excel file support
+              </div>
+            </div>
 
-                  <template slot="expand">
-                    <div>
-                      <vs-row
-                        class="mb-3"
-                        vs-align="center"
-                        :key="index"
-                        v-for="(attr, index) in row.attrs"
-                      >
-                        <vs-col
-                          class="my-1"
-                          v-if="attr.datatype == 'dynamic text'"
-                          vs-type="flex"
-                          vs-w="12"
-                        >
-                          <vs-input
-                            :label="`Text Component name: ${attr.name}`"
-                            style="width: 500px"
-                            v-model="attr.value"
-                          />
-                        </vs-col>
-
-                        <vs-col
-                          class="my-1"
-                          v-if="attr.datatype == 'dynamic link'"
-                          vs-type="flex"
-                          vs-w="6"
-                        >
-                          <vs-input
-                            :label="`Link Component name: ${attr.name}`"
-                            style="width: 235px"
-                            v-model="attr.value"
-                          />
-                        </vs-col>
-
-                        <vs-col
-                          class="my-1"
-                          v-if="attr.datatype == 'dynamic link'"
-                          vs-type="flex"
-                          vs-w="6"
-                        >
-                          <vs-input
-                            :label="`Link Component name: ${attr.name}`"
-                            style="width: 235px"
-                            v-model="attr.value"
-                          />
-                        </vs-col>
-                      </vs-row>
-                    </div>
-                  </template>
-                </vs-tr>
-              </template>
-            </vs-table>
+            <vs-collapse accordion type="shadow">
+              <vs-collapse-item
+                :key="index"
+                v-for="(row, index) in dynamicForm"
+                :disabled="!isDynamicData"
+              >
+                <div slot="header" class="text-base">
+                  {{ row.email }}
+                </div>
+                <div v-show="isDynamicData" class="pt-1">
+                  <vs-row
+                    class="mb-3"
+                    vs-align="center"
+                    :key="index"
+                    v-for="(attr, index) in row.attrs"
+                    style="position: relative"
+                  >
+                    <vs-col vs-type="flex" vs-w="12">
+                      <div class="ml-1">Component name</div>
+                      <div class="ml-2 font-medium">{{ attr.name }}</div>
+                    </vs-col>
+                    <vs-col class="my-1" vs-type="flex" vs-w="12">
+                      <input
+                        :id="`${row.email}-${attr.id}`"
+                        class="dynamic-input"
+                        type="text"
+                        v-model="attr.value"
+                      />
+                      <label :for="`${row.email}-${attr.id}`">{{
+                        attr.datatype == 'dynamic text'
+                          ? 'Text Data'
+                          : 'Link Data'
+                      }}</label>
+                    </vs-col>
+                  </vs-row>
+                </div>
+              </vs-collapse-item>
+            </vs-collapse>
           </template>
         </div>
         <div class="modal-footer">
@@ -113,10 +102,15 @@
           <vs-button class="mx-2" v-if="step == 2" @click="step = 1">
             Back
           </vs-button>
-          <vs-button class="mx-2" v-if="step == 1" @click="handleDynamicValue">
+          <vs-button
+            class="mx-2"
+            v-if="step == 1"
+            @click="handleDynamicValue"
+            :disabled="!selected.length"
+          >
             Next
           </vs-button>
-          <vs-button class="mx-2" v-if="step == 2" @click="close">
+          <vs-button class="mx-2" v-if="step == 2" @click="handleSendMail">
             Send
           </vs-button>
         </div>
@@ -154,6 +148,8 @@ export default {
       step: 1,
       selected: [],
       dynamicForm: [],
+      test: '',
+      isDynamicData: false,
       emails: ['lyokha113@gmail.com', 'longnhse62770@fpt.edu.vn']
     }
   },
@@ -177,7 +173,6 @@ export default {
         attrs.forEach(a => (a.value = ''))
         return { email, attrs }
       })
-      console.log(this.dynamicForm)
 
       this.step = 2
     },
@@ -191,6 +186,10 @@ export default {
         })
         this.setEditorChange(false)
       }
+    },
+
+    async handleSendMail() {
+      console.log(this.dynamicForm)
     }
   }
 }
@@ -239,36 +238,37 @@ export default {
       text-align: center;
       margin-bottom: 15px;
     }
+  }
+}
 
-    .text-row {
-      display: flex;
-      justify-content: space-between;
-      text-align: center;
+.dynamic-input {
+  width: 100%;
+  padding: 10px 0 10px 5px;
+  border: solid lightgray 1px;
+  border-radius: 10px;
+  outline: 0;
+  text-indent: 100px;
+  text-overflow: ellipsis;
 
-      div {
-        width: 100px;
-        margin-top: 10px;
-      }
-    }
+  + label {
+    position: absolute;
+    padding: 8px 10px;
+    color: white;
+    background: #7367f0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
 
-    .icon-row {
-      display: flex;
-      justify-content: space-between;
-
-      .export {
-        width: 100px;
-        height: 100px;
-        padding: 10px;
-        border-radius: 25px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-origin: content-box;
-      }
-    }
+  &:focus {
+    border: solid #7367f0 1px;
   }
 }
 
 /deep/ .vs-popup {
-  width: 00px;
+  width: 600px;
+}
+
+/deep/ .con-content--item {
+  padding-top: 0px !important;
 }
 </style>

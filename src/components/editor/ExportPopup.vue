@@ -100,7 +100,11 @@
           />
         </div>
         <div style="display: flex; justify-content: flex-end">
-          <vs-button class="m-3" @click="handleOutlookDraft">
+          <vs-button
+            class="m-3"
+            @click="handleOutlookDraft"
+            :disabled="!outlookEmail || !outlookPassword"
+          >
             Submit
           </vs-button>
         </div>
@@ -140,7 +144,11 @@
           />
         </div>
         <div style="display: flex; justify-content: flex-end">
-          <vs-button class="m-3" @click="handleYahooDraft">
+          <vs-button
+            class="m-3"
+            @click="handleYahooDraft"
+            :disabled="!yahooEmail || !yahooPassword"
+          >
             Submit
           </vs-button>
         </div>
