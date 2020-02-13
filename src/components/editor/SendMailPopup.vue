@@ -48,8 +48,10 @@
               <label for="">Use dynamic data</label>
               <vs-checkbox v-model="isDynamicData" style="margin-left: 10px" />
               <div
+                v-if="isDynamicData"
                 class="font-light italic cursor-pointer"
                 style="margin-left: auto; color: #7367f0"
+                @click="handleExcelPopup"
               >
                 Excel file support
               </div>
@@ -116,11 +118,62 @@
         </div>
       </div>
     </div>
+
+    <CustomPopup title="Excel support" :active.sync="excelPopup">
+      <div>
+        <p class="text-center text-lg font-bold mb-3">
+          File format need to be followed rule exactly to set data.
+        </p>
+        <p class="text-base">
+          * Work on first sheet.
+          <br />
+          <br />
+          * First row is contain dynamic component names as headers seperated by
+          each column and the first column is always 'Reciver Email'.
+          <br />
+          <br />
+          * Other rows are data values which correspond to headers.
+          <br />
+          <br />
+          * You can
+          <download-excel
+            class="inline-block cursor-pointer font-semibold italic mx-1"
+            style="color: #725de1"
+            worksheet="Dynamic data"
+            :name="`ETBS-${currentRaw.name}.xls`"
+            :meta="excelMetadata"
+            :data="excelData"
+            :fields="excelFields"
+          >
+            click here to download
+          </download-excel>
+          this formatted file to use for this temlate.
+        </p>
+
+        <div style="display: flex; justify-content: center">
+          <div id="file-uploader" class="mt-4 my-1">
+            <input
+              type="file"
+              ref="uploader"
+              id="file"
+              accept=".xls,.xlsx"
+              @click="handleImportExcel"
+            />
+            <label for="file" class="btn-upload"
+              ><span class="truncate mt-1">{{
+                'Upload excel file'
+              }}</span></label
+            >
+          </div>
+        </div>
+      </div>
+    </CustomPopup>
   </div>
 </template>
 
 <script>
-// import CustomPopup from '@/components/CustomPopup.vue'
+import readXlsxFile from 'read-excel-file'
+import CustomPopup from '@/components/CustomPopup.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
@@ -140,21 +193,31 @@ export default {
       required: true
     }
   },
-  // components: {
-  //   VStepper
-  // },
+  components: {
+    CustomPopup
+  },
   data() {
     return {
       step: 1,
       selected: [],
       dynamicForm: [],
-      test: '',
+      excelPopup: false,
       isDynamicData: false,
+      excelData: [],
+      excelFields: {},
+      excelMetadata: [
+        [
+          {
+            key: 'charset',
+            value: 'utf-8'
+          }
+        ]
+      ],
       emails: ['lyokha113@gmail.com', 'longnhse62770@fpt.edu.vn']
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'activeUser', 'editorChange'])
+    ...mapGetters(['accessToken', 'activeUser', 'editorChange', 'currentRaw'])
   },
   methods: {
     ...mapActions(['autoUpdateVersionContent', 'setEditorChange']),
@@ -165,16 +228,64 @@ export default {
       this.dynamicForm = []
     },
 
+    formatDynamicData() {
+      return this.dynamicForm.map(row => {
+        row.attrs = row.attrs
+          .filter(a => a.value)
+          .map(a => {
+            return {
+              datatype: a.datatype,
+              id: a.id,
+              name: a.name,
+              value: a.value
+            }
+          })
+        return { email: row.email, data: row.attrs }
+      })
+    },
+
     handleDynamicValue() {
-      const unique = new Map()
-      this.dynamicAttrs.filter(a => a.name).forEach(a => unique.set(a.name, a))
+      const map = new Map()
+      this.dynamicAttrs.filter(a => a.name).forEach(a => map.set(a.name, a))
       this.dynamicForm = this.selected.map(email => {
-        const attrs = [...unique.values()]
+        const attrs = [...map.values()]
         attrs.forEach(a => (a.value = ''))
         return { email, attrs }
       })
 
       this.step = 2
+    },
+
+    handleExcelPopup() {
+      const fields = { 'Reciver email': 'email' }
+      const data = []
+
+      const map = new Map()
+      this.dynamicAttrs.filter(a => a.name).forEach(a => map.set(a.name, a))
+
+      const attrs = [...map.values()]
+      this.selected.forEach(email => {
+        const row = {}
+        attrs.forEach(f => {
+          fields[f.name] = f.name
+          row[f.name] = f.text ? f.text : 'Default value'
+        })
+
+        row['email'] = email
+        data.push(row)
+      })
+
+      this.excelFields = Object.assign({}, fields)
+      this.excelData = data
+
+      this.excelPopup = true
+    },
+
+    async handleImportExcel() {
+      const excelFile = this.$refs.uploader.files[0]
+      readXlsxFile(excelFile).then(rows => {
+        console.log(rows)
+      })
     },
 
     async fetchInlineContent() {
@@ -189,7 +300,12 @@ export default {
     },
 
     async handleSendMail() {
-      console.log(this.dynamicForm)
+      // const data = this.formatDynamicData()
+      // const request = {
+      //   rawId: this.currentRaw.id,
+      //   data
+      // }
+      console.log(this.formatDynamicData())
     }
   }
 }
@@ -270,5 +386,77 @@ export default {
 
 /deep/ .con-content--item {
   padding-top: 0px !important;
+}
+
+#file-uploader {
+  [type='file'] {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    margin-left: auto;
+    margin-top: auto;
+  }
+
+  [type='file'] + label {
+    background: #725de1;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: inherit;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    outline: none;
+    padding: 0.5rem 20px;
+    position: relative;
+    transition: all 0.3s;
+    vertical-align: middle;
+
+    &:hover {
+      background-color: darken(#6d41b9, 10%);
+    }
+
+    &.btn-upload {
+      background-color: #725de1;
+      border-radius: 25px;
+      overflow: hidden;
+      margin-bottom: auto;
+
+      span {
+        display: inline-block;
+        height: 100%;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      &::before {
+        color: #fff;
+        content: '\e2c3';
+        font-family: 'Material Icons';
+        font-size: 130%;
+        height: 100%;
+        left: 45%;
+        line-height: 2.6;
+        position: absolute;
+        top: -180%;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      &:hover {
+        background-color: darken(#725de1, 30%);
+
+        span {
+          transform: translateY(300%);
+        }
+
+        &::before {
+          top: 0;
+        }
+      }
+    }
+  }
 }
 </style>
