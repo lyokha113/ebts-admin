@@ -61,7 +61,8 @@
     "vuepress": "^1.2.0",
     "vuesax": "3.8.75",
     "vuex": "^3.1.2",
-    "webstomp-client": "^1.2.6"
+    "webstomp-client": "^1.2.6",
+    "xlsx": "^0.15.5"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^1.2.0",

@@ -136,17 +136,13 @@
           <br />
           <br />
           * You can
-          <download-excel
+          <span
             class="inline-block cursor-pointer font-semibold italic mx-1"
             style="color: #725de1"
-            worksheet="Dynamic data"
-            :name="`ETBS-${currentRaw.name}.xls`"
-            :meta="excelMetadata"
-            :data="excelData"
-            :fields="excelFields"
+            @click="handleDownloadExcel"
           >
             click here to download
-          </download-excel>
+          </span>
           this formatted file to use for this temlate.
         </p>
 
@@ -172,7 +168,8 @@
 </template>
 
 <script>
-import readXlsxFile from 'read-excel-file'
+import XLSX from 'xlsx'
+import FileSaver from 'file-saver'
 import CustomPopup from '@/components/CustomPopup.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -205,14 +202,6 @@ export default {
       isDynamicData: false,
       excelData: [],
       excelFields: {},
-      excelMetadata: [
-        [
-          {
-            key: 'charset',
-            value: 'utf-8'
-          }
-        ]
-      ],
       emails: ['lyokha113@gmail.com', 'longnhse62770@fpt.edu.vn']
     }
   },
@@ -257,35 +246,48 @@ export default {
     },
 
     handleExcelPopup() {
-      const fields = { 'Reciver email': 'email' }
-      const data = []
+      this.excelPopup = true
+    },
 
+    handleDownloadExcel() {
+      const data = []
       const map = new Map()
       this.dynamicAttrs.filter(a => a.name).forEach(a => map.set(a.name, a))
 
       const attrs = [...map.values()]
       this.selected.forEach(email => {
         const row = {}
+        row['Reciver Email'] = email
         attrs.forEach(f => {
-          fields[f.name] = f.name
           row[f.name] = f.text ? f.text : 'Default value'
         })
-
-        row['email'] = email
         data.push(row)
       })
 
-      this.excelFields = Object.assign({}, fields)
-      this.excelData = data
-
-      this.excelPopup = true
+      const worksheet = XLSX.utils.json_to_sheet(data)
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Dynamic Data')
+      const out = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' })
+      FileSaver.saveAs(
+        new Blob([this.strToArrayBuffer(out)], {
+          type: 'application/octet-stream'
+        }),
+        `ETBS-${this.currentRaw.name}.xlsx`
+      )
     },
 
-    async handleImportExcel() {
-      const excelFile = this.$refs.uploader.files[0]
-      readXlsxFile(excelFile).then(rows => {
-        console.log(rows)
-      })
+    async handleImportExcel(event) {
+      const excelFile = event.target.files[0]
+      console.log(excelFile)
+      var reader = new FileReader()
+      reader.onload = function(e) {
+        let data = new Uint8Array(e.target.result)
+        let workbook = XLSX.read(data, { type: 'array' })
+        console.log(XLSX.utils.sheet_to_json(workbook))
+
+        /* DO SOMETHING WITH workbook HERE */
+      }
+      reader.readAsArrayBuffer(excelFile)
     },
 
     async fetchInlineContent() {

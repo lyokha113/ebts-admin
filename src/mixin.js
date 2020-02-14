@@ -76,6 +76,12 @@ export default {
 
       return new Blob([buffer], { type })
     },
+    strToArrayBuffer(str) {
+      let buf = new ArrayBuffer(str.length)
+      let view = new Uint8Array(buf)
+      for (var i = 0; i != str.length; ++i) view[i] = str.charCodeAt(i) & 0xff
+      return buf
+    },
     validateEmail(email) {
       // eslint-disable-next-line no-useless-escape
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
