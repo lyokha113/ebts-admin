@@ -61,7 +61,8 @@ import { updateVersionContent } from '@/service/version'
 import {
   makeDraftGMail,
   makeDraftYahoo,
-  makeDraftOutlook
+  makeDraftOutlook,
+  sendEmail
 } from '@/service/email'
 import { updateUser } from '@/service/user'
 
@@ -714,6 +715,20 @@ const actions = {
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Outlook draft was created',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async sendEmail({ commit }, request) {
+    const { data } = await sendEmail(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text:
+          'Mail was sent. Check all your mailbox and spam. Try again if you do not see them',
         color: 'success',
         position: 'top-right'
       })

@@ -46,7 +46,11 @@
 
             <div class="px-6 text-lg font-bold" style="display: flex">
               <label for="">Use dynamic data</label>
-              <vs-checkbox v-model="isDynamicData" style="margin-left: 10px" />
+              <vs-checkbox
+                v-model="isDynamicData"
+                :disabled="disableDynamic"
+                style="margin-left: 10px"
+              />
               <div
                 v-if="isDynamicData"
                 class="font-light italic cursor-pointer"
@@ -125,11 +129,11 @@
           File format need to be followed rule exactly to set data.
         </p>
         <p class="text-base">
-          * Work on first sheet.
+          * Workbook have to have a sheet with name "Dynamic Data".
           <br />
           <br />
           * First row is contain dynamic component names as headers seperated by
-          each column and the first column is always 'Reciver Email'.
+          each column and always have one "Reciver Email" column.
           <br />
           <br />
           * Other rows are data values which correspond to headers.
@@ -139,7 +143,7 @@
           <span
             class="inline-block cursor-pointer font-semibold italic mx-1"
             style="color: #725de1"
-            @click="handleDownloadExcel"
+            @click="handleExportExcel"
           >
             click here to download
           </span>
@@ -153,7 +157,7 @@
               ref="uploader"
               id="file"
               accept=".xls,.xlsx"
-              @click="handleImportExcel"
+              @change="handleImportExcel"
             />
             <label for="file" class="btn-upload"
               ><span class="truncate mt-1">{{
@@ -200,16 +204,20 @@ export default {
       dynamicForm: [],
       excelPopup: false,
       isDynamicData: false,
-      excelData: [],
-      excelFields: {},
       emails: ['lyokha113@gmail.com', 'longnhse62770@fpt.edu.vn']
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'activeUser', 'editorChange', 'currentRaw'])
+    ...mapGetters(['accessToken', 'activeUser', 'editorChange', 'currentRaw']),
+    disableDynamic() {
+      return (
+        !this.dynamicAttrs.length ||
+        this.dynamicAttrs.every(a => !a.hasOwnProperty('name') || !a.name)
+      )
+    }
   },
   methods: {
-    ...mapActions(['autoUpdateVersionContent', 'setEditorChange']),
+    ...mapActions(['autoUpdateVersionContent', 'setEditorChange', 'sendEmail']),
     close() {
       this.$emit('update:open', false)
       this.step = 1
@@ -234,10 +242,14 @@ export default {
     },
 
     handleDynamicValue() {
+      if (this.disableDynamic) {
+        this.isDynamicData = false
+      }
+
       const map = new Map()
       this.dynamicAttrs.filter(a => a.name).forEach(a => map.set(a.name, a))
       this.dynamicForm = this.selected.map(email => {
-        const attrs = [...map.values()]
+        const attrs = JSON.parse(JSON.stringify([...map.values()]))
         attrs.forEach(a => (a.value = ''))
         return { email, attrs }
       })
@@ -249,7 +261,7 @@ export default {
       this.excelPopup = true
     },
 
-    handleDownloadExcel() {
+    handleExportExcelData() {
       const data = []
       const map = new Map()
       this.dynamicAttrs.filter(a => a.name).forEach(a => map.set(a.name, a))
@@ -259,11 +271,15 @@ export default {
         const row = {}
         row['Reciver Email'] = email
         attrs.forEach(f => {
-          row[f.name] = f.text ? f.text : 'Default value'
+          row[f.name] = f.text ? f.text : ''
         })
         data.push(row)
       })
+      return data
+    },
 
+    handleExportExcel() {
+      let data = this.handleExportExcelData()
       const worksheet = XLSX.utils.json_to_sheet(data)
       const workbook = XLSX.utils.book_new()
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Dynamic Data')
@@ -276,16 +292,61 @@ export default {
       )
     },
 
-    async handleImportExcel(event) {
-      const excelFile = event.target.files[0]
-      console.log(excelFile)
-      var reader = new FileReader()
-      reader.onload = function(e) {
-        let data = new Uint8Array(e.target.result)
-        let workbook = XLSX.read(data, { type: 'array' })
-        console.log(XLSX.utils.sheet_to_json(workbook))
+    handleImportExcelData(data) {
+      data = data.map(d => {
+        let { 'Reciver Email': email, ...components } = d
+        let attrs = []
+        for (const key in components) {
+          attrs.push({ name: key, value: components[key] })
+        }
+        return { email, attrs }
+      })
+      this.dynamicForm.forEach(row => {
+        const matched = data.find(d => row.email.trim() === d.email.trim())
+        if (matched) {
+          row.attrs.forEach(r => {
+            const attr = matched.attrs.find(m => m.name === r.name)
+            if (attr) {
+              r.value = attr.value
+            }
+          })
+        } else {
+          row.attrs.forEach(r => (r.value = ''))
+        }
+      })
+    },
 
-        /* DO SOMETHING WITH workbook HERE */
+    handleImportExcel() {
+      const excelFile = this.$refs.uploader.files[0]
+      var reader = new FileReader()
+      reader.onload = e => {
+        const types = [
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel'
+        ]
+        if (!types.includes(excelFile.type)) {
+          this.$vs.notify({
+            title: 'File not supported',
+            text: `Can't import ${excelFile.name}`,
+            color: 'warning',
+            icon: 'error',
+            position: 'top-right'
+          })
+          return
+        }
+        let workbook = XLSX.read(new Uint8Array(e.target.result), {
+          type: 'array'
+        })
+        let data = XLSX.utils.sheet_to_json(workbook.Sheets['Dynamic Data'])
+        this.handleImportExcelData(data)
+        this.excelPopup = false
+        this.$vs.notify({
+          title: 'Dynamic data',
+          text: `Data were imported`,
+          color: 'success',
+          icon: 'success',
+          position: 'top-right'
+        })
       }
       reader.readAsArrayBuffer(excelFile)
     },
@@ -302,12 +363,23 @@ export default {
     },
 
     async handleSendMail() {
-      // const data = this.formatDynamicData()
-      // const request = {
-      //   rawId: this.currentRaw.id,
-      //   data
-      // }
-      console.log(this.formatDynamicData())
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Send test email ?`,
+        accept: async () => {
+          const data = this.formatDynamicData()
+          const request = {
+            rawId: this.currentRaw.id,
+            data
+          }
+
+          if (await await this.handleCallAPI(this.sendEmail, request)) {
+            this.close()
+          }
+        }
+      })
     }
   }
 }

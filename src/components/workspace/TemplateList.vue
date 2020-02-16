@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -64,7 +64,6 @@ export default {
     ...mapGetters(['categoriesNoTemplate', 'templates'])
   },
   methods: {
-    ...mapActions(['getCategories', 'getTemplates']),
     handleFilter() {
       if (!this.filterCategories.length) {
         this.items = this.templates
@@ -87,23 +86,6 @@ export default {
     }
   },
   async mounted() {
-    let loader = this.$loading.show({
-      color: '#7367f0',
-      loader: 'spinner',
-      width: 64,
-      height: 64,
-      backgroundColor: '#ffffff',
-      opacity: 0.8,
-      zIndex: 110000
-    })
-
-    await Promise.all([
-      this.handleCallAPI(this.getCategories, null, false),
-      this.handleCallAPI(this.getTemplates, null, false)
-    ])
-
-    loader.hide()
-
     this.items = this.templates
   }
 }

@@ -236,7 +236,9 @@ export default {
       'deleteWorkspace',
       'getRawTemplate',
       'createRawTemplate',
-      'updateRawTemplate'
+      'updateRawTemplate',
+      'getCategories',
+      'getTemplates'
     ]),
     handleChange() {
       this.workspaceName = this.workspaces.find(
@@ -433,7 +435,23 @@ export default {
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getWorkspaces)
+    let loader = this.$loading.show({
+      color: '#7367f0',
+      loader: 'spinner',
+      width: 64,
+      height: 64,
+      backgroundColor: '#ffffff',
+      opacity: 0.8,
+      zIndex: 110000
+    })
+
+    await Promise.all([
+      this.handleCallAPI(this.getWorkspaces, null, false),
+      this.handleCallAPI(this.getCategories, null, false),
+      this.handleCallAPI(this.getTemplates, null, false)
+    ])
+
+    loader.hide()
     this.workspace = this.workspaces.find(w => w.name == 'Default workspace').id
   },
   destroyed() {
