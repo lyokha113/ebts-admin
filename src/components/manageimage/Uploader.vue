@@ -11,6 +11,7 @@
           <input
             ref="uploader"
             type="file"
+            @click="e => (e.target.value = null)"
             @change="handleUpload"
             multiple
             accept=".gif,.jpg,.jpeg,.png"

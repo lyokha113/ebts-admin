@@ -135,6 +135,7 @@
               ref="uploader"
               id="file"
               accept=".gif,.jpg,.jpeg,.png"
+              @click="e => (e.target.value = null)"
               @change="handleUpload"
             />
             <label for="file" class="btn-upload"

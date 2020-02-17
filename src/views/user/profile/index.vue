@@ -15,7 +15,12 @@
             <i translate="no" class="material-icons notranslate"
               >cloud_upload</i
             >
-            <input ref="uploader" type="file" @change="uploadImage" />
+            <input
+              ref="uploader"
+              type="file"
+              @click="e => (e.target.value = null)"
+              @change="uploadImage"
+            />
           </button>
         </div>
       </vs-row>

@@ -157,6 +157,7 @@
               ref="uploader"
               id="file"
               accept=".xls,.xlsx"
+              @click="e => (e.target.value = null)"
               @change="handleImportExcel"
             />
             <label for="file" class="btn-upload"
@@ -232,12 +233,11 @@ export default {
           .map(a => {
             return {
               datatype: a.datatype,
-              id: a.id,
               name: a.name,
               value: a.value
             }
           })
-        return { email: row.email, data: row.attrs }
+        return { email: row.email, attrs: row.attrs }
       })
     },
 
