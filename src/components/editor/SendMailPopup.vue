@@ -204,17 +204,25 @@ export default {
       selected: [],
       dynamicForm: [],
       excelPopup: false,
-      isDynamicData: false,
-      emails: ['lyokha113@gmail.com', 'longnhse62770@fpt.edu.vn']
+      isDynamicData: false
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'activeUser', 'editorChange', 'currentRaw']),
+    ...mapGetters([
+      'accessToken',
+      'activeUser',
+      'editorChange',
+      'currentRaw',
+      'userEmails'
+    ]),
     disableDynamic() {
       return (
         !this.dynamicAttrs.length ||
         this.dynamicAttrs.every(a => !a.hasOwnProperty('name') || !a.name)
       )
+    },
+    emails() {
+      return this.userEmails.map(e => e.email)
     }
   },
   methods: {
@@ -375,7 +383,8 @@ export default {
             data
           }
 
-          if (await await this.handleCallAPI(this.sendEmail, request)) {
+          await this.handleCallAPI(this.fetchInlineContent)
+          if (await this.handleCallAPI(this.sendEmail, request)) {
             this.close()
           }
         }

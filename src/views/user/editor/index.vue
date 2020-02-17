@@ -64,7 +64,23 @@ export default {
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getFiles, null, false)
+    let loader = this.$loading.show({
+      color: '#7367f0',
+      loader: 'spinner',
+      width: 64,
+      height: 64,
+      backgroundColor: '#ffffff',
+      opacity: 0.8,
+      zIndex: 110000
+    })
+
+    await Promise.all([
+      this.handleCallAPI(this.getFiles, null, false),
+      this.handleCallAPI(this.getUserEmails, null, false)
+    ])
+
+    loader.hide()
+
     this.setEditorChange(false)
 
     this.editor = grapesjs.init({
@@ -125,7 +141,8 @@ export default {
       'createFile',
       'updateVersionContent',
       'autoUpdateVersionContent',
-      'setEditorChange'
+      'setEditorChange',
+      'getUserEmails'
     ]),
 
     getFileNameFromAM(src, assetManager) {
