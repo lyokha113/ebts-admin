@@ -58,12 +58,12 @@ export default {
   computed: {
     ...mapGetters(['accessToken', 'currentRaw', 'editorFiles', 'editorChange'])
   },
-  created() {
+  async mounted() {
     if (!this.currentRaw) {
       this.$router.push('/user/workspace')
+      return
     }
-  },
-  async mounted() {
+
     let loader = this.$loading.show({
       color: '#7367f0',
       loader: 'spinner',
@@ -139,8 +139,8 @@ export default {
     ...mapActions([
       'getFiles',
       'createFile',
-      'updateVersionContent',
-      'autoUpdateVersionContent',
+      'updateRawContent',
+      'autoUpdateRawContent',
       'setEditorChange',
       'getUserEmails'
     ]),
@@ -192,7 +192,7 @@ export default {
 
     async handleSaveContent() {
       const content = this.editor.runCommand('gjs-get-inlined-html')
-      await this.handleCallAPI(this.updateVersionContent, {
+      await this.handleCallAPI(this.updateRawContent, {
         rawId: this.currentRaw.id,
         content
       })
@@ -203,7 +203,7 @@ export default {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         if (
           await this.handleCallAPI(
-            this.autoUpdateVersionContent,
+            this.autoUpdateRawContent,
             { rawId: this.currentRaw.id, content },
             false
           )

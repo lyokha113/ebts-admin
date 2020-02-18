@@ -1,4 +1,4 @@
-import axios from '@/plugin/axios'
+import axios from '@/plugins/axios'
 
 const URI = '/tutorial'
 

@@ -1,4 +1,4 @@
-import axios from '@/plugin/axios'
+import axios from '@/plugins/axios'
 
 const URI = '/raw'
 
@@ -14,10 +14,8 @@ export function updateRawTemplate(raw) {
   return axios.put(`${URI}/${raw.id}`, raw)
 }
 
-export function changeVersion(id, versionId) {
-  return axios.patch(`${URI}/${id}`, null, {
-    params: { versionId }
-  })
+export function updateRawContent(raw) {
+  return axios.patch(`${URI}/${raw.rawId}`, { string: raw.content })
 }
 
 export function deleteRawTemplate(id) {

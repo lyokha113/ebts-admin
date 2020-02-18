@@ -28,22 +28,6 @@ import store from './store/store'
 // Vuesax Admin Filters
 import './filters/filters'
 
-// Vuejs - Vue wrapper for hammerjs
-import { VueHammer } from 'vue2-hammer'
-Vue.use(VueHammer)
-
-// PrismJS
-import 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
-
-import 'froala-editor/css/froala_editor.pkgd.min.css'
-
-// Import and use Vue Froala lib.
-import VueFroala from 'vue-froala-wysiwyg'
-import 'froala-editor/css/froala_editor.pkgd.min.css'
-import 'froala-editor/js/plugins.pkgd.min'
-Vue.use(VueFroala)
-
 // Feather font icon
 require('./assets/css/iconfont.css')
 
@@ -53,16 +37,8 @@ import mixins from '@/mixin.js'
 // Filters
 import filters from '@/filters.js'
 
-// Moment
-Vue.use(require('vue-moment'))
-
-// Excel
-import JsonExcel from 'vue-json-excel'
-Vue.component('downloadExcel', JsonExcel)
-
-import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
-Vue.use(Loading)
+// Plugins
+import '@/plugins'
 
 Vue.config.productionTip = false
 

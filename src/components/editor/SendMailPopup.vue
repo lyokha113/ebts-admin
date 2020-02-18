@@ -226,7 +226,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['autoUpdateVersionContent', 'setEditorChange', 'sendEmail']),
+    ...mapActions(['autoUpdateRawContent', 'setEditorChange', 'sendEmail']),
     close() {
       this.$emit('update:open', false)
       this.step = 1
@@ -362,7 +362,7 @@ export default {
     async fetchInlineContent() {
       if (this.editorChange > 0) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
-        await this.handleCallAPI(this.autoUpdateVersionContent, {
+        await this.handleCallAPI(this.autoUpdateRawContent, {
           rawId: this.currentRaw.id,
           content
         })

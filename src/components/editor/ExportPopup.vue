@@ -192,7 +192,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'autoUpdateVersionContent',
+      'autoUpdateRawContent',
       'setEditorChange',
       'makeDraftOutlook',
       'makeDraftYahoo',
@@ -217,7 +217,7 @@ export default {
     async fetchInlineContent() {
       if (this.editorChange > 0) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
-        await this.handleCallAPI(this.autoUpdateVersionContent, {
+        await this.handleCallAPI(this.autoUpdateRawContent, {
           rawId: this.currentRaw.id,
           content
         })

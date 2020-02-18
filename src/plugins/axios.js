@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 import store from '@/store/store'
-import { getToken } from '@/plugin/auth'
+import { getToken } from '@/plugins/auth'
 
 const api_local = process.env.VUE_APP_API_DOMAIN_LOCAL
 const api_aws = process.env.VUE_APP_API_DOMAIN_AWS

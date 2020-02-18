@@ -1,7 +1,7 @@
 import themeConfig from '@/../themeConfig.js'
 import colors from '@/../themeConfig.js'
 
-import { getToken } from '@/plugin/auth'
+import { getToken } from '@/plugins/auth'
 
 const state = {
   // ////////////////////////////////////////////

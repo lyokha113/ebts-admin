@@ -52,11 +52,9 @@ import {
   getRawTemplate,
   createRawTemplate,
   updateRawTemplate,
-  changeVersion,
+  updateRawContent,
   deleteRawTemplate
 } from '@/service/rawtemplate'
-
-import { updateVersionContent } from '@/service/version'
 
 import {
   makeDraftGMail,
@@ -75,7 +73,7 @@ import {
 } from '@/service/useremail'
 
 import router from '@/router'
-import { removeToken, setToken, decodeToken } from '@/plugin/auth'
+import { removeToken, setToken, decodeToken } from '@/plugins/auth'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -584,20 +582,6 @@ const actions = {
     return data.success
   },
 
-  async changeVersion({ commit }, id) {
-    // const { data } = await deleteWorkspace(id)
-    // if (data.success) {
-    //   commit('DELETE_WORKSPACE', id)
-    //   this._vm.$vs.notify({
-    //     title: 'Information',
-    //     text: 'Workspace deleted',
-    //     color: 'success',
-    //     position: 'top-right'
-    //   })
-    // }
-    // return data.success
-  },
-
   async deleteRawTemplate({ commit }, raw) {
     const { data } = await deleteRawTemplate(raw.id)
     if (data.success) {
@@ -612,13 +596,10 @@ const actions = {
     return data.success
   },
 
-  // ////////////////////////////////////////////
-  // VERSION
-  // ////////////////////////////////////////////
-  async updateVersionContent({ commit }, version) {
-    const { data } = await updateVersionContent(version)
+  async updateRawContent({ commit }, raw) {
+    const { data } = await updateRawContent(raw)
     if (data.success) {
-      commit('SAVE_CONTENT', version.content)
+      commit('SAVE_CONTENT', raw.content)
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Template saved',
@@ -629,10 +610,10 @@ const actions = {
     return data.success
   },
 
-  async autoUpdateVersionContent({ commit }, version) {
-    const { data } = await updateVersionContent(version)
+  async autoUpdateRawContent({ commit }, raw) {
+    const { data } = await updateRawContent(raw)
     if (data.success) {
-      commit('SAVE_CONTENT', version.content)
+      commit('SAVE_CONTENT', raw.content)
     }
     return data.success
   },
