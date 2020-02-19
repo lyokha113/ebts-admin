@@ -2,18 +2,12 @@ import axios from '@/plugins/axios'
 
 const URI = '/useremail'
 
-const URI_CONFIRM = '/useremail/confirm'
-
 export function getUserEmails() {
   return axios.get(`${URI}`)
 }
 
-export function addUserEmail(userEmail) {
+export function createUserEmail(userEmail) {
   return axios.post(`${URI}`, userEmail)
-}
-
-export function updateUserEmail(userEmail) {
-  return axios.put(`${URI}/${userEmail.id}`, userEmail)
 }
 
 export function deleteUserEmail(id) {
@@ -21,5 +15,7 @@ export function deleteUserEmail(id) {
 }
 
 export function confirmUserEmail(token) {
-  return axios.get(`${URI_CONFIRM}?${token}`)
+  return axios.get(`${URI}/confirm`, {
+    params: { token }
+  })
 }

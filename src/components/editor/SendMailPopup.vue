@@ -222,7 +222,10 @@ export default {
       )
     },
     emails() {
-      return this.userEmails.map(e => e.email)
+      return [
+        this.activeUser.email,
+        ...this.userEmails.filter(e => e.email == 'APPROVED').map(e => e.email)
+      ]
     }
   },
   methods: {

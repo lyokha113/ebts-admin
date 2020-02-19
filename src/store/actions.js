@@ -66,8 +66,7 @@ import { updateUser } from '@/service/user'
 
 import {
   getUserEmails,
-  addUserEmail,
-  updateUserEmail,
+  createUserEmail,
   deleteUserEmail,
   confirmUserEmail
 } from '@/service/useremail'
@@ -727,30 +726,18 @@ const actions = {
     }
   },
 
-  async addUserEmail({ commit }, userEmail) {
-    const { data } = await addUserEmail(userEmail)
+  async createUserEmail({ commit }, userEmail) {
+    const { data } = await createUserEmail(userEmail)
     if (data.success) {
       commit('CREATE_USER_EMAIL', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `User email created`,
+        text: `Email was added`,
         color: 'success',
         position: 'top-right'
       })
     }
-  },
 
-  async updateUserEmail({ commit }, userEmail) {
-    const { data } = await updateUserEmail(userEmail)
-    if (data.success) {
-      commit('UPDATE_USER_EMAIL', data.data)
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: `User email updated`,
-        color: 'success',
-        position: 'top-right'
-      })
-    }
     return data.success
   },
 
@@ -760,7 +747,7 @@ const actions = {
       commit('DELETE_USER_EMAIL', id)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'User email deleted',
+        text: 'Email was deleted',
         color: 'success',
         position: 'top-right'
       })

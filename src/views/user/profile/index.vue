@@ -31,6 +31,7 @@
                         <input
                           ref="uploader"
                           type="file"
+                          accept=".gif,.jpg,.jpeg,.png"
                           @click="e => (e.target.value = null)"
                           @change="uploadImage"
                         />
@@ -119,6 +120,7 @@
               label="Email"
               v-model="emailTest"
               name="emailTest"
+              style="width: 610px"
             />
             <vs-button class="mt-5" type="gradient" @click="handleAddEmail">
               <feather-icon
@@ -132,6 +134,7 @@
               <vs-table
                 ref="table"
                 :data="userEmails"
+                noDataText="Don't have any email"
                 class="shadow-md"
                 style="width: 700px"
               >
@@ -151,7 +154,15 @@
                       <vs-td style="width: 70%">
                         <p>{{ tr.email }}</p>
                       </vs-td>
-                      <vs-td style="width: 20%">
+
+                      <vs-td
+                        style="width: 20%"
+                        :style="[
+                          tr.status == 'PENDING'
+                            ? { color: 'darkorange' }
+                            : { color: 'teal' }
+                        ]"
+                      >
                         <p>{{ tr.status }}</p>
                       </vs-td>
                       <vs-td style="width: 10%;">
@@ -204,10 +215,10 @@ export default {
     ...mapActions([
       'updateUser',
       'getUserEmails',
-      'addUserEmail',
+      'createUserEmail',
       'deleteUserEmail'
     ]),
-    async handleChangePassword() {
+    handleChangePassword() {
       if (!this.password || !this.confirm) {
         this.$vs.notify({
           title: 'Warning',
@@ -230,19 +241,11 @@ export default {
       }
       this.handleChangePasswordConfirm()
     },
-    async handleChangePasswordConfirm() {
-      const account = {
-        password: this.password
-      }
-      await this.handleCallAPI(this.updateUser, account)
-      this.password = ''
-      this.confirm = ''
-    },
-    async handleAddEmail() {
+    handleAddEmail() {
       if (!this.validateEmail(this.emailTest)) {
         this.$vs.notify({
           title: 'Email empty or format incorrect',
-          text: 'Please re-check your email',
+          text: 'Please re-check your input email',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -261,46 +264,13 @@ export default {
         return
       }
 
-      this.handleCheckDuplicate()
-      if (!this.duplicate) {
-        this.handleAddEmailConfirm()
-      }
-    },
-    async handleAddEmailConfirm() {
-      const userEmail = {
-        email: this.emailTest
-      }
-      await this.handleCallAPI(this.addUserEmail, userEmail)
-    },
-    async handleCheckDuplicate() {
-      this.duplicate = false
-      this.userEmails.forEach(list => {
-        if (list.email == this.emailTest) {
-          this.duplicate = true
-          this.$vs.notify({
-            title: 'Email is existed in your list',
-            text: 'Please re-check email textfield',
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
-        }
-      })
-    },
-    async handleDeleteEmail(id) {
-      this.$vs.dialog({
-        type: 'confirm',
-        color: 'danger',
-        title: `Confirm`,
-        text: `This action can't be undo. Do you want to delete this email ?`,
-        accept: async () => await this.handleCallAPI(this.deleteUserEmail, id)
-      })
+      this.handleAddEmailConfirm()
     },
     async handleUpdate() {
-      if (!this.email || !this.name) {
+      if (!this.name) {
         this.$vs.notify({
           title: 'Warning',
-          text: 'Please enter email and name',
+          text: 'Please enter name',
           color: 'warning',
           position: 'top-right'
         })
@@ -308,20 +278,55 @@ export default {
       }
       this.handleUpdateConfirm()
     },
+    async handleChangePasswordConfirm() {
+      const account = {
+        password: this.password
+      }
+      await this.handleCallAPI(this.updateUser, account)
+      this.password = ''
+      this.confirm = ''
+    },
+    async handleAddEmailConfirm() {
+      const userEmail = {
+        string: this.emailTest
+      }
+      if (await this.handleCallAPI(this.createUserEmail, userEmail)) {
+        this.emailTest = ''
+      }
+    },
     async handleUpdateConfirm() {
       const account = {
-        email: this.email,
         fullName: this.name,
         imageUrl: this.imageUrl
       }
       await this.handleCallAPI(this.updateUser, account)
     },
+    async handleDeleteEmail(id) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to delete this email ?`,
+        accept: async () => await this.handleCallAPI(this.deleteUserEmail, id)
+      })
+    },
     uploadImage(e) {
       const image = e.target.files[0]
-      const reader = new FileReader()
-      reader.readAsDataURL(image)
-      reader.onload = e => {
-        this.imageUrl = e.target.result
+
+      if (/image.*/.test(image.type)) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          this.imageUrl = e.target.result
+        }
+        reader.readAsDataURL(image)
+      } else {
+        this.$vs.notify({
+          title: 'File not supported',
+          text: `Can't upload ${image.name}`,
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
       }
     }
   },
