@@ -1,5 +1,6 @@
 <template>
   <vs-sidebar
+    v-model="isSidebarActiveLocal"
     click-not-close
     position-right
     parent="body"
@@ -7,14 +8,13 @@
     color="primary"
     class="add-new-data-sidebar items-no-padding"
     spacer
-    v-model="isSidebarActiveLocal"
   >
     <div class="mt-6 flex items-center justify-between px-6">
       <h4>{{ selected ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
       <feather-icon
         icon="XIcon"
-        @click.stop="isSidebarActiveLocal = false"
         class="cursor-pointer"
+        @click.stop="isSidebarActiveLocal = false"
       ></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
@@ -25,23 +25,23 @@
     >
       <div class="p-6">
         <vs-input
+          v-model="email"
           label="Email"
           name="email"
-          v-model="email"
           class="mt-5 w-full"
           :readonly="selected"
         />
         <vs-input
+          v-model="fullName"
           label="Full name"
           name="fullname"
-          v-model="fullName"
           class="mt-5 w-full"
         />
         <vs-input
+          v-model="password"
           label="Password"
           name="password"
           type="password"
-          v-model="password"
           class="mt-5 w-full"
         />
 
@@ -52,25 +52,25 @@
           disabled
         >
           <vs-select-item
+            v-for="item in providers"
             :key="item.value"
             :value="item.value"
             :text="item.text"
-            v-for="item in providers"
           />
         </vs-select>
 
         <vs-select v-model="role" label="Role" class="mt-5 w-full" disabled>
           <vs-select-item
+            v-for="item in roles"
             :key="item.value"
             :value="item.value"
             :text="item.text"
-            v-for="item in roles"
           />
         </vs-select>
       </div>
     </VuePerfectScrollbar>
 
-    <div class="flex flex-wrap items-center justify-center p-6" slot="footer">
+    <div slot="footer" class="flex flex-wrap items-center justify-center p-6">
       <vs-button class="mr-6" @click="handleSubmit">{{
         selected ? 'Update' : 'Create'
       }}</vs-button>

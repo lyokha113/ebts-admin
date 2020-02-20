@@ -51,7 +51,7 @@
             <feather-icon
               class="title"
               icon="FileIcon"
-              svgClasses="h-10 w-10"
+              svg-classes="h-10 w-10"
             />
             <div class="text-xl self-end font-semibold italic mx-4">Name:</div>
             <div class="text-xl self-end truncate">{{ template.name }}</div>
@@ -60,7 +60,7 @@
             <feather-icon
               class="title"
               icon="UserIcon"
-              svgClasses="h-10 w-10"
+              svg-classes="h-10 w-10"
             />
             <div class="text-xl self-end font-semibold italic mx-4">
               Author:
@@ -73,7 +73,7 @@
             <feather-icon
               class="title"
               icon="MessageSquareIcon"
-              svgClasses="h-10 w-10"
+              svg-classes="h-10 w-10"
             />
             <div class="text-xl self-end font-semibold italic mx-4">
               Description:
@@ -86,31 +86,31 @@
             <feather-icon
               class="title"
               icon="AwardIcon"
-              svgClasses="h-10 w-10"
+              svg-classes="h-10 w-10"
             />
             <div
               class="bg-success flex text-white mx-4 px-2 py-1 rounded cursor-pointer"
               @click="handleRate(true)"
             >
               <span class="text-xl mx-2">{{ template.upVote }}</span>
-              <feather-icon icon="ChevronUpIcon" svgClasses="h-8 w-8" />
+              <feather-icon icon="ChevronUpIcon" svg-classes="h-8 w-8" />
             </div>
             <div
               class="bg-danger flex text-white mx-4 px-2 py-1 rounded cursor-pointer"
               @click="handleRate(false)"
             >
               <span class="text-xl mx-2">{{ template.downVote }}</span>
-              <feather-icon icon="ChevronDownIcon" svgClasses="h-8 w-8" />
+              <feather-icon icon="ChevronDownIcon" svg-classes="h-8 w-8" />
             </div>
           </vs-col>
           <vs-col class="my-5" vs-type="flex" vs-w="12">
             <div class="text-xl font-semibold italic mx-4">Categories:</div>
             <div>
               <vs-chip
-                color="#24c1a0"
-                class="mr-2"
                 v-for="item in template.categories"
                 :key="item.id"
+                color="#24c1a0"
+                class="mr-2"
                 >{{ item.name }}</vs-chip
               >
             </div>
@@ -122,7 +122,7 @@
             >
               <feather-icon
                 class="mr-5"
-                svgClasses="h-8 w-8"
+                svg-classes="h-8 w-8"
                 icon="EditIcon"
               ></feather-icon>
               <div

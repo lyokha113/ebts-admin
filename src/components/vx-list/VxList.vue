@@ -1,6 +1,6 @@
 <template>
   <ul class="list">
-    <li class="list__item" v-for="(item, index) in list" :key="index">
+    <li v-for="(item, index) in list" :key="index" class="list__item">
       <feather-icon :icon="icon" class="w-5 h-5 mr-1"></feather-icon
       ><span v-html="item"></span>
     </li>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'vx-list',
+  name: 'VxList',
   props: {
     list: {
       type: Array,

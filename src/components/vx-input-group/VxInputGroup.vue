@@ -2,9 +2,9 @@
   <div class="vx-input-group flex">
     <!-- SLOT: PREPEND -->
     <div
+      v-if="this.$slots.prepend"
       class="vx-input-group-prepend flex"
       :class="prependClasses"
-      v-if="this.$slots.prepend"
     >
       <slot name="prepend"></slot>
     </div>
@@ -16,9 +16,9 @@
 
     <!-- SLOT: APPEND -->
     <div
+      v-if="this.$slots.append"
       class="vx-input-group-append flex"
       :class="appendClasses"
-      v-if="this.$slots.append"
     >
       <slot name="append"></slot>
     </div>
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'vx-input-group',
+  name: 'VxInputGroup',
   props: {
     prependClasses: {
       type: String

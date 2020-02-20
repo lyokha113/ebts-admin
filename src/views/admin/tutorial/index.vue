@@ -16,7 +16,7 @@
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
             @click="handleContent(null)"
           >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="PlusIcon" svg-classes="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Create new</span>
           </div>
           <div
@@ -41,7 +41,7 @@
               }}
               of {{ tutorials.length }}
             </span>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="ChevronDownIcon" svg-classes="h-4 w-4" />
           </div>
           <vs-dropdown-menu>
             <vs-dropdown-item @click="itemsPerPage = 10">
@@ -70,7 +70,7 @@
 
       <template slot-scope="{ data }">
         <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
             <vs-td class="img-container">
               <img :src="tr.thumbnail" class="product-img" />
             </vs-td>
@@ -111,17 +111,17 @@
       fullscreen
       title="Tutorial content"
       :active.sync="popup"
-      buttonCloseHidden
+      button-close-hidden
     >
       <vx-card style="min-height: 500px; margin: auto">
         <vs-row class="mb-5" vs-align="center">
           <vs-col vs-type="flex" vs-align="center" vs-w="3  ">
             <span>Tutorial name: &nbsp;</span>
-            <vs-input placeholder="Name" v-model="name" />
+            <vs-input v-model="name" placeholder="Name" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="3">
             <span>Tutorial description: &nbsp;</span>
-            <vs-input placeholder="Description" v-model="description" />
+            <vs-input v-model="description" placeholder="Description" />
           </vs-col>
           <vs-col
             id="file-uploader"
@@ -131,9 +131,9 @@
             vs-w="3"
           >
             <input
-              type="file"
-              ref="uploader"
               id="file"
+              ref="uploader"
+              type="file"
               accept=".gif,.jpg,.jpeg,.png"
               @click="e => (e.target.value = null)"
               @change="handleUpload"
@@ -149,9 +149,9 @@
         <div>
           <froala
             id="edit"
+            v-model="content"
             :tag="'textarea'"
             :config="config"
-            v-model="content"
           ></froala>
           <vs-divider />
           <prism language="html">{{ content }}</prism>

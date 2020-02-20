@@ -6,7 +6,7 @@
     <SendMailPopup
       :open.sync="sendmailPopup"
       :editor="editor"
-      :dynamicAttrs="dynamicAttrs"
+      :dynamic-attrs="dynamicAttrs"
     />
 
     <CustomPopup
@@ -40,6 +40,11 @@ import { mapGetters, mapActions } from 'vuex'
 import 'grapesjs/dist/css/grapes.min.css'
 import 'grapesjs-preset-newsletter/dist/grapesjs-preset-newsletter.css'
 export default {
+  components: {
+    CustomPopup,
+    ExportPopup,
+    SendMailPopup
+  },
   data() {
     return {
       editor: {},
@@ -49,11 +54,6 @@ export default {
       exportPopup: false,
       sendmailPopup: false
     }
-  },
-  components: {
-    CustomPopup,
-    ExportPopup,
-    SendMailPopup
   },
   computed: {
     ...mapGetters(['accessToken', 'currentRaw', 'editorFiles', 'editorChange'])
@@ -131,7 +131,7 @@ export default {
     })
 
     this.editor.on('load', async () => {
-      window.setTimeout(() => this.setEditorChange(false), 100)
+      window.setTimeout(() => this.setEditorChange(false), 1000)
       // window.setInterval(this.handleAutoSave, 1000 * 60 * 3)
     })
   },
@@ -291,6 +291,20 @@ export default {
     this.exportPopup = false
     this.sendmailPopup = false
     // window.clearInterval(this.handleAutoSave)
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.editorChange > 0) {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Your template haven't saved. Do you want to leave it ?`,
+        cancel: async () => next(false),
+        accept: async () => next()
+      })
+    } else {
+      next()
+    }
   }
 }
 </script>

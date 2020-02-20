@@ -1,5 +1,5 @@
 <template id="modal-template">
-  <div class="modal" v-show="open">
+  <div v-show="open" class="modal">
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-header">
@@ -12,36 +12,36 @@
           <div class="icon-row">
             <div
               class="shadow-md cursor-pointer export"
-              @click="handleDownload"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-file.png') + ')'
               }"
+              @click="handleDownload"
             />
             <div
               class="shadow-md cursor-pointer export"
-              @click="handleGMailDraft"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-gmail.png') + ')'
               }"
+              @click="handleGMailDraft"
             />
 
             <div
               class="shadow-md cursor-pointer export"
-              @click="handleYahooPopup"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-yahoo.png') + ')'
               }"
+              @click="handleYahooPopup"
             />
             <div
               class="shadow-md cursor-pointer export"
-              @click="handleOutlookPopup"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-outlook.png') + ')'
               }"
+              @click="handleOutlookPopup"
             />
           </div>
           <div class="text-row">
@@ -86,24 +86,24 @@
           style="display: flex; text-align: left; justify-content: center; flex-wrap: wrap"
         >
           <vs-input
+            v-model="outlookEmail"
             placeholder="Email"
             class="m-3"
             style="width: 100%;"
-            v-model="outlookEmail"
           />
           <vs-input
+            v-model="outlookPassword"
             type="password"
             placeholder="Pasword"
             class="m-3"
             style="width: 100%"
-            v-model="outlookPassword"
           />
         </div>
         <div style="display: flex; justify-content: flex-end">
           <vs-button
             class="m-3"
-            @click="handleOutlookDraft"
             :disabled="!outlookEmail || !outlookPassword"
+            @click="handleOutlookDraft"
           >
             Submit
           </vs-button>
@@ -130,24 +130,24 @@
           style="display: flex; text-align: left; justify-content: center; flex-wrap: wrap"
         >
           <vs-input
+            v-model="yahooEmail"
             placeholder="Email"
             class="m-3"
             style="width: 100%;"
-            v-model="yahooEmail"
           />
           <vs-input
+            v-model="yahooPassword"
             type="password"
             placeholder="Pasword"
             class="m-3"
             style="width: 100%"
-            v-model="yahooPassword"
           />
         </div>
         <div style="display: flex; justify-content: flex-end">
           <vs-button
             class="m-3"
-            @click="handleYahooDraft"
             :disabled="!yahooEmail || !yahooPassword"
+            @click="handleYahooDraft"
           >
             Submit
           </vs-button>
@@ -162,6 +162,9 @@ import FileSaver from 'file-saver'
 import CustomPopup from '@/components/CustomPopup.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  components: {
+    CustomPopup
+  },
   props: {
     open: {
       type: Boolean,
@@ -173,9 +176,6 @@ export default {
       default: undefined,
       required: true
     }
-  },
-  components: {
-    CustomPopup
   },
   data() {
     return {

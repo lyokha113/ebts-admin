@@ -22,7 +22,7 @@
         >
           <feather-icon
             class="mr-5"
-            svgClasses="h-8 w-8"
+            svg-classes="h-8 w-8"
             icon="EditIcon"
           ></feather-icon>
           <div class="text-xl self-center font-medium" @click="handleDesign">
@@ -36,28 +36,28 @@
           style="width: 100%; background-color: white; border-radius: 10px"
         >
           <vs-select
+            v-model="filterCategories"
             placeholder="Choose specific category"
             multiple
             label="Categories"
             width="300px"
-            v-model="filterCategories"
             @change="handleFilter"
           >
             <vs-select-item
+              v-for="item in categoriesNoTemplate"
               :key="item.id"
               :value="item.id"
               :text="`${item.name} - ${item.noOfTemplates} templates`"
-              v-for="item in categoriesNoTemplate"
             />
           </vs-select>
           <vs-input
+            v-model="searchQuery"
             icon="search"
             label="Search"
             placeholder="Enter name to search"
             style="width: 300px"
-            v-model="searchQuery"
           />
-          <vs-button @click="handleSearch" style="height: 40px" type="gradient"
+          <vs-button style="height: 40px" type="gradient" @click="handleSearch"
             >Search</vs-button
           >
         </div>

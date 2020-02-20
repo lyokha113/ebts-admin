@@ -8,8 +8,8 @@
       <div>
         Enter category name:
         <vs-input
-          placeholder="Name"
           v-model="name"
+          placeholder="Name"
           style="width: 270px"
           class="my-2"
         />
@@ -31,8 +31,8 @@
       <div>
         Enter category name to update:
         <vs-input
-          placeholder="Name"
           v-model="updateName"
+          placeholder="Name"
           style="width: 270px"
           class="my-2"
         />
@@ -62,7 +62,7 @@
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
             @click=";(name = ''), (addPrompt = true)"
           >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="PlusIcon" svg-classes="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Create new</span>
           </div>
         </div>
@@ -81,7 +81,7 @@
               }}
               of {{ categoriesWithTemplates.length }}
             </span>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="ChevronDownIcon" svg-classes="h-4 w-4" />
           </div>
           <vs-dropdown-menu>
             <vs-dropdown-item @click="itemsPerPage = 10">
@@ -109,7 +109,7 @@
 
       <template slot-scope="{ data }">
         <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
             <vs-td style="width: 800px">
               <p class="font-medium">{{ tr.name }}</p>
             </vs-td>

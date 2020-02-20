@@ -4,7 +4,7 @@
       <vs-table ref="table" :data="tutorials">
         <template slot-scope="{ data }">
           <tbody>
-            <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+            <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
               <div @click="showTutorialDetail(tr.id)">
                 <div class="box">
                   <img :src="tr.thumbnail" class="thumbnail" />
@@ -28,7 +28,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import CustomPopup from '@/components/CustomPopup.vue'
 export default {
-  name: 'userTutorial',
+  name: 'UserTutorial',
   components: {
     CustomPopup
   },

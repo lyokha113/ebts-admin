@@ -15,7 +15,7 @@
         <vs-col vs-type="flex" vs-align="center" vs-w="12">
           <feather-icon
             icon="FileIcon"
-            svgClasses="h-4 w-4"
+            svg-classes="h-4 w-4"
             class="mr-2"
           ></feather-icon>
           <span class="truncate font-semibold text-lg">{{ raw.name }}</span>
@@ -23,7 +23,7 @@
         <vs-col class="my-1" vs-type="flex" vs-align="center" vs-w="12">
           <feather-icon
             icon="ClockIcon"
-            svgClasses="h-4 w-4"
+            svg-classes="h-4 w-4"
             class="mr-2"
           ></feather-icon>
           <span class="text-sm">

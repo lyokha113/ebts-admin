@@ -1,7 +1,7 @@
 <template>
   <div
-    class="vx-card"
     ref="card"
+    class="vx-card"
     :class="[
       { 'overflow-hidden': tempHidden },
       { 'no-shadow': noShadow },
@@ -11,7 +11,7 @@
     ]"
     :style="cardStyles"
   >
-    <div class="vx-card__header" v-if="hasHeader">
+    <div v-if="hasHeader" class="vx-card__header">
       <!-- card title -->
       <div class="vx-card__title">
         <h4 v-if="this.$props.title" :style="titleStyles" :class="titleClasses">
@@ -27,10 +27,9 @@
       </div>
 
       <!-- card actions -->
-      <div class="vx-card__actions" v-if="hasAction">
+      <div v-if="hasAction" class="vx-card__actions">
         <slot name="actions">
           <div
-            class="vx-card__action-buttons"
             v-if="
               (actionButtons ||
                 collapseAction ||
@@ -38,30 +37,31 @@
                 removeCardAction) &&
                 !codeToggler
             "
+            class="vx-card__action-buttons"
           >
             <feather-icon
-              @click="toggleContent"
+              v-if="actionButtons || collapseAction"
               icon="ChevronUpIcon"
               :class="{ rotate180: !isContentCollapsed }"
               class="ml-4"
-              v-if="actionButtons || collapseAction"
+              @click="toggleContent"
             />
             <feather-icon
-              @click="refreshcard"
+              v-if="actionButtons || refreshContentAction"
               icon="RotateCwIcon"
               class="ml-4"
-              v-if="actionButtons || refreshContentAction"
+              @click="refreshcard"
             />
             <feather-icon
-              @click="removeCard"
+              v-if="actionButtons || removeCardAction"
               icon="XIcon"
               class="ml-4"
-              v-if="actionButtons || removeCardAction"
+              @click="removeCard"
             />
           </div>
           <div
-            class="vx-card__code-toggler sm:block hidden"
             v-if="codeToggler && !actionButtons"
+            class="vx-card__code-toggler sm:block hidden"
           >
             <feather-icon
               icon="CodeIcon"
@@ -76,8 +76,8 @@
     </div>
 
     <div
-      class="vx-card__collapsible-content vs-con-loading__container"
       ref="content"
+      class="vx-card__collapsible-content vs-con-loading__container"
       :class="[
         { collapsed: isContentCollapsed },
         { 'overflow-hidden': tempHidden }
@@ -88,22 +88,22 @@
       <slot name="no-body"></slot>
 
       <!-- content inside body(with padding) -->
-      <div class="vx-card__body" v-if="this.$slots.default">
+      <div v-if="this.$slots.default" class="vx-card__body">
         <slot></slot>
       </div>
 
       <!-- content with no body(no padding) -->
       <slot name="no-body-bottom"></slot>
 
-      <div class="vx-card__footer" v-if="this.$slots.footer">
+      <div v-if="this.$slots.footer" class="vx-card__footer">
         <slot name="footer"></slot>
       </div>
     </div>
 
     <div
-      class="vx-card__code-container"
-      ref="codeContainer"
       v-show="this.$slots.codeContainer"
+      ref="codeContainer"
+      class="vx-card__code-container"
       :style="codeContainerStyles"
       :class="{ collapsed: !showCode }"
     >
@@ -121,7 +121,10 @@ import Prism from 'vue-prism-component'
 import _color from '@/assets/utils/color.js'
 
 export default {
-  name: 'vx-card',
+  name: 'VxCard',
+  components: {
+    Prism
+  },
   props: {
     title: String,
     subtitle: String,
@@ -341,9 +344,6 @@ export default {
         }, 150)
       }
     }
-  },
-  components: {
-    Prism
   }
 }
 </script>

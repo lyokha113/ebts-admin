@@ -3,10 +3,10 @@
     <vs-row vs-align="center">
       <vs-col vs-type="flex" vs-align="center" vs-w="4">
         <vs-select
+          v-model="workspace"
           class="mr-2"
           label="Workspaces"
           width="270px"
-          v-model="workspace"
           @change="handleChange"
         >
           <vs-select-item
@@ -74,8 +74,8 @@
       <div>
         Enter workspace name:
         <vs-input
-          placeholder="Name"
           v-model="name"
+          placeholder="Name"
           style="width: 250px"
           class="my-2"
         />
@@ -93,8 +93,8 @@
       <div>
         Enter workspace name:
         <vs-input
-          placeholder="Name"
           v-model="name"
+          placeholder="Name"
           style="width: 250px"
           class="my-2"
         />
@@ -116,15 +116,15 @@
       <div>
         Enter name:
         <vs-input
-          placeholder="Name"
           v-model="templateName"
+          placeholder="Name"
           style="width: 250px"
           class="mt-1 mb-4"
         />
         Enter description:
         <vs-input
-          placeholder="Description"
           v-model="templateDescription"
+          placeholder="Description"
           style="width: 250px"
           class="mt-1 mb-4"
         />
@@ -157,28 +157,28 @@
       <div>
         Enter name:
         <vs-input
+          v-model="templateName"
           placeholder="Name"
           style="width: 250px"
-          v-model="templateName"
           class="mt-1 mb-4"
         />Enter description:
         <vs-input
+          v-model="templateDescription"
           placeholder="Description"
           style="width: 250px"
-          v-model="templateDescription"
           class="mt-1 mb-4"
         />
         <vs-select
+          v-model="templateWorkspace"
           class="mb-4"
           label="Workspace"
-          v-model="templateWorkspace"
           width="250px"
         >
           <vs-select-item
+            v-for="item in workspaces"
             :key="item.id"
             :value="item.id"
             :text="item.name"
-            v-for="item in workspaces"
           />
         </vs-select>
         <vs-button

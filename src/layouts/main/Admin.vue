@@ -1,7 +1,7 @@
 z<template>
   <div class="layout--main navbar-floating footer-static app-page">
     <vx-sidebar
-      :sidebarItems="sidebarItems"
+      :sidebar-items="sidebarItems"
       :logo="require('@/assets/images/logo/logo.png')"
       title="ETBS"
       parent=".layout--main"
@@ -20,8 +20,8 @@ z<template>
           <div class="router-content">
             <transition :name="routerTransition">
               <div
-                class="router-header flex flex-wrap items-center mb-6"
                 v-if="$route.meta.breadcrumb || $route.meta.pageTitle"
+                class="router-header flex flex-wrap items-center mb-6"
               >
                 <div
                   class="content-area__heading"
@@ -35,16 +35,16 @@ z<template>
 
                 <!-- BREADCRUMB -->
                 <vx-breadcrumb
-                  class="ml-4 md:block hidden"
                   v-if="$route.meta.breadcrumb"
+                  class="ml-4 md:block hidden"
                 />
               </div>
             </transition>
             <div class="content-area__content">
               <back-to-top
+                v-if="!hideScrollToTop"
                 bottom="5%"
                 visibleoffset="500"
-                v-if="!hideScrollToTop"
               >
                 <vs-button
                   icon-pack="feather"
@@ -101,6 +101,9 @@ export default {
       return 'content-area-default'
     }
   },
+  created() {
+    this.setSidebarWidth()
+  },
   methods: {
     changeRouteTitle(title) {
       this.routeTitle = title
@@ -128,9 +131,6 @@ export default {
     TheNavbarAdmin,
     TheFooter,
     BackToTop
-  },
-  created() {
-    this.setSidebarWidth()
   }
 }
 </script>

@@ -24,7 +24,7 @@
               }}
               of {{ publishes.length }}
             </span>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="ChevronDownIcon" svg-classes="h-4 w-4" />
           </div>
           <vs-dropdown-menu>
             <vs-dropdown-item @click="itemsPerPage = 10">
@@ -53,7 +53,7 @@
 
       <template slot-scope="{ data }">
         <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
             <vs-td style="width: 300px">
               <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
@@ -104,13 +104,6 @@ export default {
   components: {
     ProgressBar
   },
-  data() {
-    return {
-      itemsPerPage: 10,
-      wsConnected: false,
-      isMounted: false
-    }
-  },
   filters: {
     duplicationRate(rate) {
       if (rate <= 60) return '#28c76f'
@@ -121,6 +114,13 @@ export default {
       if (status == 'DENIED') return 'danger'
       if (status == 'PUBLISHED') return 'success'
       return 'warning'
+    }
+  },
+  data() {
+    return {
+      itemsPerPage: 10,
+      wsConnected: false,
+      isMounted: false
     }
   },
   computed: {

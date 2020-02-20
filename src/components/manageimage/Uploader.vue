@@ -11,10 +11,10 @@
           <input
             ref="uploader"
             type="file"
-            @click="e => (e.target.value = null)"
-            @change="handleUpload"
             multiple
             accept=".gif,.jpg,.jpeg,.png"
+            @click="e => (e.target.value = null)"
+            @change="handleUpload"
           />
           <i translate="no" class="material-icons notranslate">
             cloud_upload

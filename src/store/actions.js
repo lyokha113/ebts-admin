@@ -62,13 +62,13 @@ import {
   makeDraftOutlook,
   sendEmail
 } from '@/service/email'
+
 import { updateUser } from '@/service/user'
 
 import {
   getUserEmails,
   createUserEmail,
-  deleteUserEmail,
-  confirmUserEmail
+  deleteUserEmail
 } from '@/service/useremail'
 
 import router from '@/router'
@@ -184,7 +184,7 @@ const actions = {
       commit('CREATE_ACCOUNT', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Account created',
+        text: 'Account was created',
         color: 'success',
         position: 'top-right'
       })
@@ -198,7 +198,7 @@ const actions = {
       commit('UPDATE_ACCOUNT', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Account updated',
+        text: 'Account was updated',
         color: 'success',
         position: 'top-right'
       })
@@ -212,7 +212,7 @@ const actions = {
       commit('UPDATE_ACCOUNT', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Account status updated',
+        text: 'Account status was updated',
         color: 'success',
         position: 'top-right'
       })
@@ -243,7 +243,7 @@ const actions = {
       commit('CREATE_CATEGORY', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Category created',
+        text: 'Category was created',
         color: 'success',
         position: 'top-right'
       })
@@ -257,7 +257,7 @@ const actions = {
       commit('UPDATE_CATEGORY', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Category updated',
+        text: 'Category was updated',
         color: 'success',
         position: 'top-right'
       })
@@ -290,7 +290,7 @@ const actions = {
       commit('CREATE_TEMPLATE', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Template created`,
+        text: `Template was created`,
         color: 'success',
         position: 'top-right'
       })
@@ -304,7 +304,7 @@ const actions = {
       commit('UPDATE_TEMPLATE', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Template updated',
+        text: 'Template was updated',
         color: 'success',
         position: 'top-right'
       })
@@ -318,7 +318,7 @@ const actions = {
       commit('DELETE_TEMPLATE', id)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Template deleted',
+        text: 'Template was deleted',
         color: 'success',
         position: 'top-right'
       })
@@ -368,7 +368,7 @@ const actions = {
       commit('CHANGE_STATUS_FILE', file)
       this._vm.$vs.notify({
         title: 'Successfully',
-        text: file.active ? 'File restored' : 'File deleted',
+        text: file.active ? 'File was restored' : 'File was deleted',
         color: 'success',
         position: 'top-right'
       })
@@ -399,7 +399,7 @@ const actions = {
       commit('CREATE_TUTORIAL', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Tutorial created`,
+        text: `Tutorial was created`,
         color: 'success',
         position: 'top-right'
       })
@@ -413,7 +413,7 @@ const actions = {
       commit('UPDATE_TUTORIALS', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Tutorial updated`,
+        text: `Tutorial was updated`,
         color: 'success',
         position: 'top-right'
       })
@@ -427,7 +427,7 @@ const actions = {
       commit('UPDATE_TUTORIALS', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Tutorial status updated',
+        text: 'Tutorial status was updated',
         color: 'success',
         position: 'top-right'
       })
@@ -506,7 +506,7 @@ const actions = {
       commit('CREATE_WORKSPACE', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Workspace created`,
+        text: `Workspace was created`,
         color: 'success',
         position: 'top-right'
       })
@@ -520,7 +520,7 @@ const actions = {
       commit('UPDATE_WORKSPACE', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Workspace updated`,
+        text: `Workspace was updated`,
         color: 'success',
         position: 'top-right'
       })
@@ -534,7 +534,7 @@ const actions = {
       commit('DELETE_WORKSPACE', workspace)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Workspace deleted',
+        text: 'Workspace was deleted',
         color: 'success',
         position: 'top-right'
       })
@@ -558,7 +558,7 @@ const actions = {
       commit('CREATE_RAW', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Template created`,
+        text: `Template was created`,
         color: 'success',
         position: 'top-right'
       })
@@ -573,7 +573,7 @@ const actions = {
       commit('UPDATE_RAW', { data: data.data, currentWS: raw.currentWS })
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Template updated`,
+        text: `Template was updated`,
         color: 'success',
         position: 'top-right'
       })
@@ -587,7 +587,7 @@ const actions = {
       commit('DELETE_RAW', raw)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Template deleted',
+        text: 'Template was deleted',
         color: 'success',
         position: 'top-right'
       })
@@ -601,7 +601,7 @@ const actions = {
       commit('SAVE_CONTENT', raw.content)
       this._vm.$vs.notify({
         title: 'Information',
-        text: 'Template saved',
+        text: 'Template was saved',
         color: 'success',
         position: 'top-right'
       })
@@ -631,7 +631,7 @@ const actions = {
       commit('SET_ACTIVE_USER', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Account updated`,
+        text: `Account was updated`,
         color: 'success',
         position: 'top-right'
       })
@@ -732,7 +732,7 @@ const actions = {
       commit('CREATE_USER_EMAIL', data.data)
       this._vm.$vs.notify({
         title: 'Information',
-        text: `Email was added`,
+        text: `A email was sent to this email for confirmation. Please approve it. Re-add it if you don't get the email.`,
         color: 'success',
         position: 'top-right'
       })
@@ -753,18 +753,6 @@ const actions = {
       })
     }
     return data.success
-  },
-
-  async confirmUserEmail({ commit }, token) {
-    const { data } = await confirmUserEmail(token)
-    if (data.success) {
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: 'User email updated',
-        color: 'success',
-        position: 'top-right'
-      })
-    }
   }
 }
 export default actions

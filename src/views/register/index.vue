@@ -1,7 +1,7 @@
 <template>
   <div
-    class="h-screen flex w-full bg-img vx-row no-gutter items-center justify-center"
     id="page-login"
+    class="h-screen flex w-full bg-img vx-row no-gutter items-center justify-center"
   >
     <div class="vx-col sm:w-1/2 md:w-1/2 lg:w-3/4 xl:w-3/5 sm:m-0 m-4">
       <vx-card>
@@ -16,8 +16,8 @@
               />
               <vs-button
                 class="flex m-auto"
-                @click="$router.push('/').catch(err => {})"
                 type="border"
+                @click="$router.push('/').catch(err => {})"
                 >Home Page</vs-button
               >
             </div>
@@ -28,40 +28,40 @@
                   <p>Enter your details and sign-up to be a member</p>
                 </div>
                 <vs-input
+                  v-model="email"
                   name="email"
                   icon="icon icon-mail"
                   icon-pack="feather"
                   label-placeholder="Email"
-                  v-model="email"
                   class="w-full no-icon-border"
                 />
 
                 <vs-input
+                  v-model="name"
                   name="fullname"
                   icon="icon icon-user"
                   icon-pack="feather"
                   label-placeholder="Fullname"
-                  v-model="name"
                   class="w-full no-icon-border"
                 />
 
                 <vs-input
+                  v-model="password"
                   type="password"
                   name="password"
                   icon="icon icon-lock"
                   icon-pack="feather"
                   label-placeholder="Password"
-                  v-model="password"
                   class="w-full mt-6 no-icon-border"
                 />
 
                 <vs-input
+                  v-model="confirm"
                   type="password"
                   name="confirm"
                   icon="icon icon-lock"
                   icon-pack="feather"
                   label-placeholder="Confirm password"
-                  v-model="confirm"
                   class="w-full mt-6 mb-6 no-icon-border"
                 />
 
@@ -74,8 +74,8 @@
                 >
 
                 <div
-                  class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
                   v-google-signin-button="googleClientId"
+                  class="bg-google pt-3 pb-2 px-4 rounded-lg cursor-pointer mr-4 float-right"
                 >
                   <svg
                     aria-hidden="true"

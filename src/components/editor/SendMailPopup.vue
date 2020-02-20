@@ -1,5 +1,5 @@
 <template id="modal-template">
-  <div class="modal" v-show="open">
+  <div v-show="open" class="modal">
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-header">
@@ -10,7 +10,7 @@
             <div class="description-row italic">
               <span>List emai is setup on user profile page</span>
             </div>
-            <vs-table multiple v-model="selected" :data="emails">
+            <vs-table v-model="selected" multiple :data="emails">
               <template slot="thead">
                 <vs-th class="text-base">
                   Choose emails
@@ -19,9 +19,9 @@
 
               <template slot-scope="{ data }">
                 <vs-tr
-                  :data="email"
-                  :key="index"
                   v-for="(email, index) in data"
+                  :key="index"
+                  :data="email"
                 >
                   <vs-td> {{ email }}</vs-td>
                 </vs-tr>
@@ -30,10 +30,10 @@
           </template>
 
           <template v-if="step === 2">
-            <div class="description-row text-base italic" v-if="!isDynamicData">
+            <div v-if="!isDynamicData" class="description-row text-base italic">
               <span>Setup email data to send</span>
             </div>
-            <div class="description-row text-base italic" v-if="isDynamicData">
+            <div v-if="isDynamicData" class="description-row text-base italic">
               <span
                 >All dynamic components must have unique name attribute</span
               >
@@ -63,8 +63,8 @@
 
             <vs-collapse accordion type="shadow">
               <vs-collapse-item
-                :key="index"
                 v-for="(row, index) in dynamicForm"
+                :key="index"
                 :disabled="!isDynamicData"
               >
                 <div slot="header" class="text-base">
@@ -72,10 +72,10 @@
                 </div>
                 <div v-show="isDynamicData" class="pt-1">
                   <vs-row
+                    v-for="(attr, index) in row.attrs"
+                    :key="index"
                     class="mb-3"
                     vs-align="center"
-                    :key="index"
-                    v-for="(attr, index) in row.attrs"
                     style="position: relative"
                   >
                     <vs-col vs-type="flex" vs-w="12">
@@ -85,9 +85,9 @@
                     <vs-col class="my-1" vs-type="flex" vs-w="12">
                       <input
                         :id="`${row.email}-${attr.id}`"
+                        v-model="attr.value"
                         class="dynamic-input"
                         type="text"
-                        v-model="attr.value"
                       />
                       <label :for="`${row.email}-${attr.id}`">{{
                         attr.datatype == 'dynamic text'
@@ -105,18 +105,18 @@
           <vs-button class="mx-2" type="border" @click="close">
             Close
           </vs-button>
-          <vs-button class="mx-2" v-if="step == 2" @click="step = 1">
+          <vs-button v-if="step == 2" class="mx-2" @click="step = 1">
             Back
           </vs-button>
           <vs-button
-            class="mx-2"
             v-if="step == 1"
-            @click="handleDynamicValue"
+            class="mx-2"
             :disabled="!selected.length"
+            @click="handleDynamicValue"
           >
             Next
           </vs-button>
-          <vs-button class="mx-2" v-if="step == 2" @click="handleSendMail">
+          <vs-button v-if="step == 2" class="mx-2" @click="handleSendMail">
             Send
           </vs-button>
         </div>
@@ -153,9 +153,9 @@
         <div style="display: flex; justify-content: center">
           <div id="file-uploader" class="mt-4 my-1">
             <input
-              type="file"
-              ref="uploader"
               id="file"
+              ref="uploader"
+              type="file"
               accept=".xls,.xlsx"
               @click="e => (e.target.value = null)"
               @change="handleImportExcel"
@@ -178,6 +178,9 @@ import FileSaver from 'file-saver'
 import CustomPopup from '@/components/CustomPopup.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  components: {
+    CustomPopup
+  },
   props: {
     open: {
       type: Boolean,
@@ -194,9 +197,6 @@ export default {
       default: () => [],
       required: true
     }
-  },
-  components: {
-    CustomPopup
   },
   data() {
     return {

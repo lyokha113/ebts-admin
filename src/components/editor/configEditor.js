@@ -120,7 +120,8 @@ export default function(editor, options) {
       label: 'Button',
       category: 'Basic',
       content: {
-        content: '<a>Button</a>',
+        type: 'link',
+        content: 'Button',
         style: {
           margin: '15px',
           padding: '10px',
@@ -133,8 +134,10 @@ export default function(editor, options) {
           'letter-spacing': '3px',
           'line-heighth:': '30px',
           'background-color': '#7367f0',
-          'border-radius': '5px'
-        }
+          'border-radius': '5px',
+          display: 'block'
+        },
+        droppable: false
       },
       attributes: { class: 'gjs-fonts gjs-f-button' }
     })

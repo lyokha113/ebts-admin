@@ -9,53 +9,53 @@
     @mouseover="mouseover"
     @mouseout="mouseout"
   >
-    <div @click="clickGroup" class="group-header w-full">
+    <div class="group-header w-full" @click="clickGroup">
       <span class="flex items-center w-full">
         <feather-icon
-          :icon="group.icon || 'CircleIcon'"
-          :svgClasses="{ 'w-3 h-3': this.groupIndex % 1 != 0 }"
           v-if="group.icon || this.groupIndex > Math.floor(this.groupIndex)"
+          :icon="group.icon || 'CircleIcon'"
+          :svg-classes="{ 'w-3 h-3': this.groupIndex % 1 != 0 }"
         />
         <span v-show="!sidebarItemsMin" class="truncate mr-3 select-none">{{
           group.name
         }}</span>
         <vs-chip
+          v-if="group.tag && !sidebarItemsMin"
           class="ml-auto mr-4"
           :color="group.tagColor"
-          v-if="group.tag && !sidebarItemsMin"
           >{{ group.tag }}</vs-chip
         >
       </span>
       <feather-icon
+        v-show="!sidebarItemsMin"
         icon="ChevronRightIcon"
         svg-classes="w-4 h-4"
         :class="[{ rotate90: openItems }, 'feather-grp-header-arrow']"
-        v-show="!sidebarItemsMin"
       />
       <span class="vs-sidebar--tooltip">{{ group.name }}</span>
     </div>
     <ul ref="items" :style="styleItems" class="vs-sidebar-group-items">
       <li v-for="(groupItem, index) in group.submenu" :key="index">
         <vx-sidebar-group
-          :group="groupItem"
-          :groupIndex="Number(`${groupIndex}.${index}`)"
-          :open="isGroupActive(groupItem)"
-          :openHover="openHover"
           v-if="groupItem.submenu"
+          :group="groupItem"
+          :group-index="Number(`${groupIndex}.${index}`)"
+          :open="isGroupActive(groupItem)"
+          :open-hover="openHover"
         />
         <vx-sidebar-item
+          v-else
           :index="groupIndex + '.' + index"
           :to="groupItem.url"
           :icon="itemIcon(groupIndex + '.' + index)"
           icon-small
           :target="groupItem.target"
-          v-else
         >
           <span class="truncate">{{ groupItem.name }}</span>
           <vs-chip
+            v-if="groupItem.tag"
             class="ml-auto"
             :color="groupItem.tagColor"
-            v-if="groupItem.tag"
             >{{ groupItem.tag }}</vs-chip
           >
         </vx-sidebar-item>
@@ -68,7 +68,10 @@
 import VxSidebarItem from './VxSidebarItem.vue'
 
 export default {
-  name: 'vx-sidebar-group',
+  name: 'VxSidebarGroup',
+  components: {
+    VxSidebarItem
+  },
   props: {
     openHover: {
       default: false,
@@ -166,6 +169,12 @@ export default {
       }
     }
   },
+  mounted() {
+    this.openItems = this.open
+    if (this.open) {
+      this.maxHeight = 'none'
+    }
+  },
   methods: {
     clickGroup() {
       if (!this.openHover) {
@@ -204,15 +213,6 @@ export default {
         let scrollHeight = 0
         this.maxHeight = `${scrollHeight}px`
       }
-    }
-  },
-  components: {
-    VxSidebarItem
-  },
-  mounted() {
-    this.openItems = this.open
-    if (this.open) {
-      this.maxHeight = 'none'
     }
   }
 }

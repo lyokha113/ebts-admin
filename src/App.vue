@@ -13,6 +13,16 @@ export default {
       this.toggleClassInBody(val)
     }
   },
+  mounted() {
+    this.toggleClassInBody(themeConfig.theme)
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.handleWindowResize)
+    })
+    this.$store.dispatch('updateWindowWidth', window.innerWidth)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleWindowResize)
+  },
   methods: {
     toggleClassInBody(className) {
       if (className == 'dark') {
@@ -33,16 +43,6 @@ export default {
     handleWindowResize(event) {
       this.$store.dispatch('updateWindowWidth', event.currentTarget.innerWidth)
     }
-  },
-  mounted() {
-    this.toggleClassInBody(themeConfig.theme)
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.handleWindowResize)
-    })
-    this.$store.dispatch('updateWindowWidth', window.innerWidth)
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleWindowResize)
   }
 }
 </script>

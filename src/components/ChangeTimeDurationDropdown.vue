@@ -4,7 +4,7 @@
       >Last 7 days
       <feather-icon
         icon="ChevronDownIcon"
-        svgClasses="h-4 w-4"
+        svg-classes="h-4 w-4"
         class="ml-1"
       ></feather-icon
     ></small>

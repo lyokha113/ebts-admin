@@ -24,7 +24,7 @@
               }}
               of {{ publishes.length }}
             </span>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="ChevronDownIcon" svg-classes="h-4 w-4" />
           </div>
           <vs-dropdown-menu>
             <vs-dropdown-item @click="itemsPerPage = 10">
@@ -54,7 +54,7 @@
 
       <template slot-scope="{ data }">
         <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
             <vs-td style="width: 200px">
               <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
@@ -116,41 +116,41 @@
       <div>
         Enter name:
         <vs-input
-          placeholder="Name"
           v-model="name"
+          placeholder="Name"
           style="width: 250px"
           class="mt-1 mb-4"
         />Enter description:
         <vs-input
-          placeholder="Description"
           v-model="description"
+          placeholder="Description"
           style="width: 250px"
           class="mt-1 mb-4"
         />
         <vs-select
+          v-model="categories"
           class="mb-4"
           label="Categories"
-          v-model="categories"
           width="250px"
           multiple
         >
           <div>
             <vs-select-group title="Active">
               <vs-select-item
+                v-for="item in categoriesNoTemplate.filter(c => c.active)"
                 :key="item.id"
                 :value="item.id"
                 :text="item.name"
-                v-for="item in categoriesNoTemplate.filter(c => c.active)"
               />
             </vs-select-group>
           </div>
           <div>
             <vs-select-group title="Locked">
               <vs-select-item
+                v-for="item in categoriesNoTemplate.filter(c => !c.active)"
                 :key="item.id"
                 :value="item.id"
                 :text="item.name"
-                v-for="item in categoriesNoTemplate.filter(c => !c.active)"
               />
             </vs-select-group>
           </div>
@@ -178,6 +178,18 @@ export default {
     ProgressBar,
     CustomPopup
   },
+  filters: {
+    duplicationRate(rate) {
+      if (rate <= 60) return '#28c76f'
+      if (rate <= 89) return '#fe9f43'
+      return '#fe485a'
+    },
+    publishStatus(status) {
+      if (status == 'DENIED') return 'danger'
+      if (status == 'PUBLISHED') return 'success'
+      return 'warning'
+    }
+  },
   data() {
     return {
       id: '',
@@ -191,18 +203,6 @@ export default {
       itemsPerPage: 10,
       wsConnected: false,
       isMounted: false
-    }
-  },
-  filters: {
-    duplicationRate(rate) {
-      if (rate <= 60) return '#28c76f'
-      if (rate <= 89) return '#fe9f43'
-      return '#fe485a'
-    },
-    publishStatus(status) {
-      if (status == 'DENIED') return 'danger'
-      if (status == 'PUBLISHED') return 'success'
-      return 'warning'
     }
   },
   computed: {

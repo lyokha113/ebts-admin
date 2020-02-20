@@ -2,14 +2,14 @@
   <div class="vx-auto-suggest">
     <div class="flex items-center relative">
       <vs-input
-        :placeholder="placeholder"
         ref="input"
+        v-model="searchQuery"
+        :placeholder="placeholder"
         :class="inputClassses"
         class="z-50"
         icon-pack="feather"
         icon="icon-search"
         icon-no-border
-        v-model="searchQuery"
         @keyup.esc="escPressed"
         @keyup.up="increaseIndex(false)"
         @keyup.down="increaseIndex"
@@ -22,17 +22,17 @@
       ref="scrollContainer"
       class="auto-suggest-suggestions-list z-50 rounded-lg mt-2 shadow-lg overflow-hidden"
       :class="{ hidden: !inputFocused }"
+      tabindex="-1"
       @mouseenter="insideSuggestions = true"
       @mouseleave="insideSuggestions = false"
       @focus="updateInputFocus"
       @blur="updateInputFocus(false)"
-      tabindex="-1"
     >
       <li
-        ref="option"
-        class="auto-suggest__suggestion flex items-center justify-between py-3 cursor-pointer"
         v-for="(suggestion, index) in filteredData"
+        ref="option"
         :key="index"
+        class="auto-suggest__suggestion flex items-center justify-between py-3 cursor-pointer"
         :class="{
           'vx-auto-suggest__current-selected': currentSelected == index,
           'pointer-events-none': suggestion.index < 0
@@ -43,7 +43,7 @@
         <div class="flex items-center">
           <feather-icon
             :icon="suggestion.labelIcon"
-            svgClasses="h-5 w-5"
+            svg-classes="h-5 w-5"
             class="mr-4"
           ></feather-icon>
           <span>{{ suggestion.label }}</span>
@@ -51,7 +51,7 @@
         <feather-icon
           v-if="showAction"
           :icon="data.actionIcon"
-          :svgClasses="[actionClasses(suggestion.highlightAction), 'h-5 w-5']"
+          :svg-classes="[actionClasses(suggestion.highlightAction), 'h-5 w-5']"
           @click.stop="actionClicked"
         ></feather-icon>
       </li>
@@ -101,6 +101,17 @@ export default {
       currentSelected: -1,
       inputFocused: false,
       insideSuggestions: false
+    }
+  },
+  computed: {
+    bodyOverlay() {
+      return this.$store.state.bodyOverlay
+    },
+    actionClasses() {
+      return isHighlighted => {
+        if (isHighlighted)
+          return `stroke-current text-${this.data.highlightColor}`
+      }
     }
   },
   watch: {
@@ -161,16 +172,8 @@ export default {
       }
     }
   },
-  computed: {
-    bodyOverlay() {
-      return this.$store.state.bodyOverlay
-    },
-    actionClasses() {
-      return isHighlighted => {
-        if (isHighlighted)
-          return `stroke-current text-${this.data.highlightColor}`
-      }
-    }
+  mounted() {
+    if (this.autoFocus) this.focusInput()
   },
   methods: {
     escPressed() {
@@ -242,9 +245,6 @@ export default {
         }
       }
     }
-  },
-  mounted() {
-    if (this.autoFocus) this.focusInput()
   }
 }
 </script>

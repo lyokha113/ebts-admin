@@ -16,9 +16,9 @@
       <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon">
       </vs-icon>
       <feather-icon
+        v-else
         :icon="icon"
         :class="{ 'w-3 h-3': iconSmall }"
-        v-else
       ></feather-icon>
       <slot></slot>
     </router-link>
@@ -26,9 +26,9 @@
       <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon">
       </vs-icon>
       <feather-icon
+        v-else
         :icon="icon"
         :class="{ 'w-3 h-3': iconSmall }"
-        v-else
       ></feather-icon>
       <slot></slot>
     </a>
@@ -86,6 +86,9 @@ export default {
       this.CheckIsActive()
     }
   },
+  updated() {
+    this.CheckIsActive()
+  },
   methods: {
     CheckIsActive() {
       if (this.to) {
@@ -95,9 +98,6 @@ export default {
         // else this.activeLink = false
       }
     }
-  },
-  updated() {
-    this.CheckIsActive()
   }
 }
 </script>

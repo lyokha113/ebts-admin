@@ -19,9 +19,9 @@ z<template>
           <div class="router-content">
             <div class="content-area__content">
               <back-to-top
+                v-if="!hideScrollToTop"
                 bottom="5%"
                 visibleoffset="500"
-                v-if="!hideScrollToTop"
               >
                 <vs-button
                   icon-pack="feather"
@@ -49,6 +49,11 @@ import themeConfig from '@/../themeConfig.js'
 import BackToTop from 'vue-backtotop'
 
 export default {
+  components: {
+    TheNavbar,
+    TheFooter,
+    BackToTop
+  },
   data() {
     return {
       routerTransition: themeConfig.routerTransition || 'none',
@@ -57,14 +62,14 @@ export default {
       hideScrollToTop: themeConfig.hideScrollToTop
     }
   },
-  watch: {
-    $route() {
-      this.routeTitle = this.$route.meta.pageTitle
-    }
-  },
   computed: {
     bodyOverlay() {
       return this.$store.state.bodyOverlay
+    }
+  },
+  watch: {
+    $route() {
+      this.routeTitle = this.$route.meta.pageTitle
     }
   },
   methods: {
@@ -77,11 +82,6 @@ export default {
     toggleHideScrollToTop(val) {
       this.hideScrollToTop = val
     }
-  },
-  components: {
-    TheNavbar,
-    TheFooter,
-    BackToTop
   }
 }
 </script>

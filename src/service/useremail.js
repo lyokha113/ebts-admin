@@ -13,9 +13,3 @@ export function createUserEmail(userEmail) {
 export function deleteUserEmail(id) {
   return axios.delete(`${URI}/${id}`)
 }
-
-export function confirmUserEmail(token) {
-  return axios.get(`${URI}/confirm`, {
-    params: { token }
-  })
-}

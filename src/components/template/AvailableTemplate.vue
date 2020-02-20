@@ -7,7 +7,7 @@
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
             @click="handlePopup"
           >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="PlusIcon" svg-classes="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Create new</span>
           </div>
         </div>
@@ -31,17 +31,17 @@
       fullscreen
       title="Template"
       :active.sync="popup"
-      buttonCloseHidden
+      button-close-hidden
     >
       <vx-card style="min-height: 500px; margin: auto">
         <vs-row class="mb-5" vs-align="center">
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
             <span>Name: &nbsp;</span>
-            <vs-input style="width: 400px" v-model="name" />
+            <vs-input v-model="name" style="width: 400px" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
             <span>Description: &nbsp;</span>
-            <vs-input style="width: 400px" v-model="description" />
+            <vs-input v-model="description" style="width: 400px" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
             <span>Categories: &nbsp;</span>
@@ -49,20 +49,20 @@
               <div>
                 <vs-select-group title="Active">
                   <vs-select-item
+                    v-for="item in categoriesNoTemplate.filter(c => c.active)"
                     :key="item.id"
                     :value="item.id"
                     :text="item.name"
-                    v-for="item in categoriesNoTemplate.filter(c => c.active)"
                   />
                 </vs-select-group>
               </div>
               <div>
                 <vs-select-group title="Locked">
                   <vs-select-item
+                    v-for="item in categoriesNoTemplate.filter(c => !c.active)"
                     :key="item.id"
                     :value="item.id"
                     :text="item.name"
-                    v-for="item in categoriesNoTemplate.filter(c => !c.active)"
                   />
                 </vs-select-group>
               </div>
@@ -72,9 +72,9 @@
         <div>
           <froala
             id="edit"
+            v-model="content"
             :tag="'textarea'"
             :config="config"
-            v-model="content"
           ></froala>
           <vs-divider />
           <prism language="html">{{ content }}</prism>

@@ -1,7 +1,7 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
     <DataSidebar
-      :isSidebarActive="sideBar"
+      :is-sidebar-active="sideBar"
       :selected="selected"
       @closeSidebar="sideBar = false"
     />
@@ -22,7 +22,7 @@
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
             @click="handleSideBar(null)"
           >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="PlusIcon" svg-classes="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Create new</span>
           </div>
         </div>
@@ -41,7 +41,7 @@
               }}
               of {{ accounts.length }}
             </span>
-            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+            <feather-icon icon="ChevronDownIcon" svg-classes="h-4 w-4" />
           </div>
           <vs-dropdown-menu>
             <vs-dropdown-item @click="itemsPerPage = 10">
@@ -72,7 +72,7 @@
 
       <template slot-scope="{ data }">
         <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+          <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
             <vs-td>
               <vs-avatar
                 class="avatar-thumb shadow-md"

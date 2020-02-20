@@ -64,7 +64,7 @@ const mutations = {
     state.categoriesWithTemplates = categoriesWithTemplates
   },
   CREATE_CATEGORY(state, category) {
-    state.categoriesNoTemplate.unshift(category)
+    state.categoriesWithTemplates.unshift(category)
   },
   UPDATE_CATEGORY(state, category) {
     const current = state.categoriesWithTemplates.find(

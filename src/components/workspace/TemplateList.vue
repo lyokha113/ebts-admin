@@ -3,18 +3,18 @@
     <vs-row vs-align="center" class="mt-5">
       <vs-col vs-type="flex" vs-justify="flex-start" vs-w="4">
         <vs-select
+          v-model="filterCategories"
           placeholder="Choose specific category"
           multiple
           label="Categories"
           width="270px"
-          v-model="filterCategories"
           @change="handleFilter"
         >
           <vs-select-item
+            v-for="item in categoriesNoTemplate"
             :key="item.id"
             :value="item.id"
             :text="`${item.name} - ${item.noOfTemplates} templates`"
-            v-for="item in categoriesNoTemplate"
           />
         </vs-select>
       </vs-col>
@@ -63,6 +63,9 @@ export default {
   computed: {
     ...mapGetters(['categoriesNoTemplate', 'templates'])
   },
+  async mounted() {
+    this.items = this.templates
+  },
   methods: {
     handleFilter() {
       if (!this.filterCategories.length) {
@@ -84,9 +87,6 @@ export default {
         accept: () => this.$emit('getTemplate', id)
       })
     }
-  },
-  async mounted() {
-    this.items = this.templates
   }
 }
 </script>

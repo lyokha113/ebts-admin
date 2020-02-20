@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="line-area-chart" :id="chartData.id">
+      <div :id="chartData.id" class="line-area-chart">
         <vue-apex-charts
           ref="apexChart"
           :type="type"
@@ -37,6 +37,9 @@
 import VueApexCharts from 'vue-apexcharts'
 
 export default {
+  components: {
+    VueApexCharts
+  },
   props: {
     icon: {
       type: String,
@@ -70,6 +73,11 @@ export default {
       default: false
     }
   },
+  computed: {
+    themePrimaryColor() {
+      return this.$store.state.themePrimaryColor
+    }
+  },
   watch: {
     themePrimaryColor() {
       this.$refs.apexChart.updateOptions({
@@ -77,9 +85,16 @@ export default {
       })
     }
   },
-  computed: {
-    themePrimaryColor() {
-      return this.$store.state.themePrimaryColor
+  created() {
+    if (this.type == 'area') {
+      this.chartData.chartOptions['theme'] = {
+        monochrome: {
+          enabled: true,
+          color: this.getHex(this.color),
+          shadeTo: 'light',
+          shadeIntensity: 0.65
+        }
+      }
     }
   },
   methods: {
@@ -99,21 +114,6 @@ export default {
           .toString(16)
           .slice(1)
       )
-    }
-  },
-  components: {
-    VueApexCharts
-  },
-  created() {
-    if (this.type == 'area') {
-      this.chartData.chartOptions['theme'] = {
-        monochrome: {
-          enabled: true,
-          color: this.getHex(this.color),
-          shadeTo: 'light',
-          shadeIntensity: 0.65
-        }
-      }
     }
   }
 }

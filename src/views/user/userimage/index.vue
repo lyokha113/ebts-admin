@@ -2,7 +2,7 @@
   <div>
     <vs-row class="mb-3" vs-justify="flex-end">
       <vs-col vs-type="flex" vs-align="center" vs-justify="flex-end" vs-w="3">
-        <vs-select width="300px" class="ml-3" v-model="type">
+        <vs-select v-model="type" width="300px" class="ml-3">
           <vs-select-item value="Active" text="Active" />
           <vs-select-item value="Deleted" text="Deleted" />
         </vs-select>

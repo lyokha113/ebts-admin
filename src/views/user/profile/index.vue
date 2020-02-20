@@ -42,18 +42,18 @@
                     <vs-row>
                       <vs-col vs-type="flex" vs-justify="center" vs-w="12">
                         <vs-input
+                          v-model="email"
                           icon="email"
                           label="Email"
                           name="email"
-                          v-model="email"
                           readonly
                         />
                       </vs-col>
                       <vs-col vs-type="flex" vs-justify="center" vs-w="12">
                         <vs-input
+                          v-model="name"
                           icon="info"
                           label="Fullname"
-                          v-model="name"
                           name="name"
                           :readonly="activeUser.provider == 'google'"
                         />
@@ -72,23 +72,23 @@
                     <vs-row>
                       <vs-col vs-type="flex" vs-justify="center" vs-w="12">
                         <vs-input
+                          v-model="password"
                           :readonly="activeUser.provider == 'google'"
                           type="password"
                           icon="icon icon-lock"
                           icon-pack="feather"
                           label="New Password"
-                          v-model="password"
                           name="Password"
                         />
                       </vs-col>
                       <vs-col vs-type="flex" vs-justify="center" vs-w="12">
                         <vs-input
+                          v-model="confirm"
                           :readonly="activeUser.provider == 'google'"
                           type="password"
                           icon="icon icon-repeat"
                           icon-pack="feather"
                           label="Confirm Password"
-                          v-model="confirm"
                           name="confirm"
                         />
                       </vs-col>
@@ -115,17 +115,17 @@
           </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-w="12">
             <vs-input
+              v-model="emailTest"
               class="mr-4"
               icon="email"
               label="Email"
-              v-model="emailTest"
               name="emailTest"
               style="width: 610px"
             />
             <vs-button class="mt-5" type="gradient" @click="handleAddEmail">
               <feather-icon
                 icon="PlusCircleIcon"
-                svgClasses="h-5 w-5"
+                svg-classes="h-5 w-5"
               ></feather-icon>
             </vs-button>
           </vs-col>
@@ -134,7 +134,7 @@
               <vs-table
                 ref="table"
                 :data="userEmails"
-                noDataText="Don't have any email"
+                no-data-text="Don't have any email"
                 class="shadow-md"
                 style="width: 700px"
               >
@@ -147,9 +147,9 @@
                 <template slot-scope="{ data }">
                   <tbody>
                     <vs-tr
-                      :data="tr"
-                      :key="indextr"
                       v-for="(tr, indextr) in data"
+                      :key="indextr"
+                      :data="tr"
                     >
                       <vs-td style="width: 70%">
                         <p>{{ tr.email }}</p>
@@ -167,8 +167,8 @@
                       </vs-td>
                       <vs-td style="width: 10%;">
                         <vs-button
-                          icon="delete"
                           v-if="tr.status != 'Default'"
+                          icon="delete"
                           color="danger"
                           radius
                           @click="handleDeleteEmail(tr.id)"
@@ -188,7 +188,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
-  name: 'userProfile',
+  name: 'UserProfile',
   computed: {
     ...mapGetters(['activeUser', 'userEmails']),
     user_displayName() {
@@ -279,12 +279,12 @@ export default {
       this.handleUpdateConfirm()
     },
     async handleChangePasswordConfirm() {
-      const account = {
-        password: this.password
+      if (
+        await this.handleCallAPI(this.updateUser, { password: this.password })
+      ) {
+        this.password = ''
+        this.confirm = ''
       }
-      await this.handleCallAPI(this.updateUser, account)
-      this.password = ''
-      this.confirm = ''
     },
     async handleAddEmailConfirm() {
       const userEmail = {
@@ -299,7 +299,9 @@ export default {
         fullName: this.name,
         imageUrl: this.imageUrl
       }
-      await this.handleCallAPI(this.updateUser, account)
+      if (await this.handleCallAPI(this.updateUser, account)) {
+        this.imageUrl = ''
+      }
     },
     async handleDeleteEmail(id) {
       this.$vs.dialog({

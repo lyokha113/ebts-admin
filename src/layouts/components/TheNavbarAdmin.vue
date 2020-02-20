@@ -17,21 +17,21 @@
 
         <!-- SEARCHBAR -->
         <div
+          v-show="showFullSearch"
           class="search-full-container w-full h-full absolute left-0 rounded-lg"
           :class="{ flex: showFullSearch }"
-          v-show="showFullSearch"
         >
           <vx-auto-suggest
-            :autoFocus="showFullSearch"
-            :data="navbarSearchAndPinList"
-            @selected="selected"
             ref="navbarSearch"
-            @closeSearchbar="showFullSearch = false"
+            :auto-focus="showFullSearch"
+            :data="navbarSearchAndPinList"
             placeholder="Search..."
             class="w-full"
-            inputClassses="w-full vs-input-no-border vs-input-no-shdow-focus no-icon-border"
+            input-classses="w-full vs-input-no-border vs-input-no-shdow-focus no-icon-border"
             icon="SearchIcon"
             background-overlay
+            @selected="selected"
+            @closeSearchbar="showFullSearch = false"
           ></vx-auto-suggest>
           <div class="absolute right-0 h-full z-50">
             <feather-icon
@@ -43,8 +43,8 @@
         </div>
         <feather-icon
           icon="SearchIcon"
-          @click="showFullSearch = true"
           class="cursor-pointer navbar-fuzzy-search mx-4"
+          @click="showFullSearch = true"
         ></feather-icon>
 
         <!-- NOTIFICATIONS -->
@@ -147,7 +147,7 @@
                 >
                   <feather-icon
                     icon="LogOutIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-2">Logout</span>
                 </li>
@@ -166,7 +166,7 @@ import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'the-navbar-admin',
+  name: 'TheNavbarAdmin',
   data() {
     return {
       navbarSearchAndPinList: navbarSearchAndPinList,

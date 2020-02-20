@@ -58,7 +58,7 @@
                 >
                   <feather-icon
                     icon="LogInIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Login</span>
                 </li>
@@ -69,7 +69,7 @@
                 >
                   <feather-icon
                     icon="SmileIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Register</span>
                 </li>
@@ -80,7 +80,7 @@
                 >
                   <feather-icon
                     icon="UserIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Profiles</span>
                 </li>
@@ -91,7 +91,7 @@
                 >
                   <feather-icon
                     icon="ImageIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Images</span>
                 </li>
@@ -102,7 +102,7 @@
                 >
                   <feather-icon
                     icon="FileMinusIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Workspace</span>
                 </li>
@@ -113,7 +113,7 @@
                 >
                   <feather-icon
                     icon="UploadCloudIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Publishes</span>
                 </li>
@@ -123,7 +123,7 @@
                 >
                   <feather-icon
                     icon="HelpCircleIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Tutorial</span>
                 </li>
@@ -134,7 +134,7 @@
                 >
                   <feather-icon
                     icon="LogOutIcon"
-                    svgClasses="w-4 h-4"
+                    svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Logout</span>
                 </li>
@@ -151,7 +151,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'the-navbar',
+  name: 'TheNavbar',
   computed: {
     ...mapGetters(['sidebarWidth', 'activeUser']),
     navWidth() {

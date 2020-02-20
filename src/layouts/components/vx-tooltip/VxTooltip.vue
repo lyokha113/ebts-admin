@@ -28,7 +28,7 @@
 import utils from '@/assets/utils'
 import _color from '@/assets/utils/color.js'
 export default {
-  name: 'vx-tooltip',
+  name: 'VxTooltip',
   props: {
     title: {
       default: null,
