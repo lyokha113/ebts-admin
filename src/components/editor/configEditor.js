@@ -123,19 +123,16 @@ export default function(editor, options) {
         type: 'link',
         content: 'Button',
         style: {
-          margin: '15px',
-          padding: '10px',
-          width: '130px',
-          color: 'white',
           cursor: 'pointer',
-          'min-height': '30px',
-          'font-size': '18px',
-          'text-align': 'center',
-          'letter-spacing': '3px',
-          'line-heighth:': '30px',
-          'background-color': '#7367f0',
-          'border-radius': '5px',
-          display: 'block'
+          margin: 'auto',
+          padding: '10px 20px 10px 20px',
+          color: 'white',
+          'font-weight': 'bold',
+          'box-sizing': 'border-box',
+          'background-color': '#44d1b3',
+          'letter-spacing': '2px',
+          'text-decoration': 'none',
+          'border-radius': '5px'
         },
         droppable: false
       },
@@ -167,7 +164,7 @@ export default function(editor, options) {
     })
 
     let productItem = `
-    <div class="card" style="height:300px;width:300px;margin-bottom:30px;font-weight:100;box-shadow:0 1px 2px 0 rgba(0, 0, 0, 0.2);border-radius:2px;overflow:hidden;">
+    <div class="card" style="height:300px;width:300px;margin-bottom:30px;font-weight:100;border: double 2px whitesmoke;border-radius:5px;overflow:hidden;">
       <div class="card-header" style="height:155px;background-image:url('https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F350x150.png?alt=media&token=485e296d-fe1e-4d40-93c4-236aa63df81a');background-size:cover;background-position:center center;"></div>
       <div class="card-body" style="padding:15px 15px 5px 15px;color:#555;">
         <div class="card-title" style="font-size:1.4em;margin-bottom:5px;">Title</div>

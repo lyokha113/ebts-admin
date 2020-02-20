@@ -224,7 +224,7 @@ export default {
     emails() {
       return [
         this.activeUser.email,
-        ...this.userEmails.filter(e => e.email == 'APPROVED').map(e => e.email)
+        ...this.userEmails.filter(e => e.status == 'APPROVED').map(e => e.email)
       ]
     }
   },

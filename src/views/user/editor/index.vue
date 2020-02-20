@@ -299,6 +299,7 @@ export default {
         color: 'danger',
         title: `Confirm`,
         text: `Your template haven't saved. Do you want to leave it ?`,
+        'accept-text': 'Leave',
         cancel: async () => next(false),
         accept: async () => next()
       })
