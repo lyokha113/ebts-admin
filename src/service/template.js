@@ -10,6 +10,10 @@ export function getTemplate(id) {
   return axios.get(`${URI}/${id}`)
 }
 
+export function getTemplatesByAuthor(uuid) {
+  return axios.get(`${URI}/author/${uuid}`)
+}
+
 export function createTemplate(template) {
   return axios.post(`${URI}`, template)
 }

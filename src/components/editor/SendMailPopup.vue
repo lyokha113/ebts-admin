@@ -31,7 +31,9 @@
 
           <template v-if="step === 2">
             <div v-if="!isDynamicData" class="description-row text-base italic">
-              <span>Setup email data to send</span>
+              <span>
+                Dynamic data only available for dynamic components.
+              </span>
             </div>
             <div v-if="isDynamicData" class="description-row text-base italic">
               <span
@@ -137,6 +139,9 @@
           <br />
           <br />
           * Other rows are data values which correspond to headers.
+          <br />
+          <br />
+          * Duplicate rows name will be got firsts.
           <br />
           <br />
           * You can

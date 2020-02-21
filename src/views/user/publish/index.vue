@@ -1,5 +1,9 @@
 <template>
-  <div id="data-list-list-view" class="data-list-container mt-3">
+  <div
+    id="data-list-list-view"
+    class="data-list-container mt-3"
+    style="background-color: white; padding: 10px;"
+  >
     <vs-table
       ref="table"
       pagination

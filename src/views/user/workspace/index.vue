@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: white; padding: 10px;">
     <vs-row vs-align="center">
       <vs-col vs-type="flex" vs-align="center" vs-w="4">
         <vs-select

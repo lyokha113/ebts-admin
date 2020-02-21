@@ -1,40 +1,48 @@
 <template>
-  <div class="parent">
-    <img
-      src="https://cdn.dribbble.com/users/1061799/screenshots/5749278/phone-successful-dribbble.png"
-      class="mt-10"
-      width="50%"
-    />
-    <h2 class="mt-10">
-      Your account verified successful.
-      <br />Now you can close this window!
-    </h2>
+  <div
+    class="h-screen flex w-full bg-img vx-row no-gutter items-center justify-center"
+  >
+    <div class="vx-col">
+      <vx-card>
+        <div slot="no-body" class="full-page-bg-color">
+          <div class="vx-row no-gutter justify-center items-center m-4">
+            <div class="mt-6 mb-3" style="width: 100%">
+              <img
+                v-if="error"
+                src="@/assets/images/error.png"
+                alt="approve"
+                width="300px"
+                style="margin: auto"
+              />
+              <img
+                v-else
+                src="@/assets/images/approve.png"
+                alt="approve"
+                width="300px"
+                style="margin: auto"
+              />
+            </div>
+            <span class="font-bold mb-5" style="font-size: 20px">
+              {{
+                error
+                  ? 'There are some errors happend when approving. Please try again.'
+                  : 'Confirmation was approved successfully. This page can be closed now.'
+              }}
+            </span>
+          </div>
+        </div>
+      </vx-card>
+    </div>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
 export default {
   data() {
-    return {}
+    return {
+      error: this.$route.query.error
+    }
   },
-  created() {
-    this.handleCallAPI(
-      this.confirmUserEmail,
-      window.location.href.split('?')[1]
-    )
-  },
-  methods: {
-    ...mapActions(['confirmUserEmail'])
-  }
+
+  methods: {}
 }
 </script>
-<style scoped>
-div.parent {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  justify-content: center;
-  text-align: center;
-}
-</style>

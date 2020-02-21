@@ -164,7 +164,7 @@ export default function(editor, options) {
     })
 
     let productItem = `
-    <div class="card" style="height:300px;width:300px;margin-bottom:30px;font-weight:100;border: double 2px whitesmoke;border-radius:5px;overflow:hidden;">
+    <div class="card" style="height:300px;max-width:300px;margin-bottom:30px;font-weight:100;border: double 2px whitesmoke;border-radius:5px;overflow:hidden;">
       <div class="card-header" style="height:155px;background-image:url('https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F350x150.png?alt=media&token=485e296d-fe1e-4d40-93c4-236aa63df81a');background-size:cover;background-position:center center;"></div>
       <div class="card-body" style="padding:15px 15px 5px 15px;color:#555;">
         <div class="card-title" style="font-size:1.4em;margin-bottom:5px;">Title</div>

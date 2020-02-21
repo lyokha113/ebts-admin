@@ -152,7 +152,9 @@
                       :data="tr"
                     >
                       <vs-td style="width: 70%">
-                        <p>{{ tr.email }}</p>
+                        <p class="truncate" style="max-width: 450px">
+                          {{ tr.email }}
+                        </p>
                       </vs-td>
 
                       <vs-td
@@ -209,7 +211,8 @@ export default {
     password: '',
     confirm: '',
     status: '',
-    emailTest: ''
+    emailTest: '',
+    getEmailsInterval: null
   }),
   methods: {
     ...mapActions([
@@ -312,6 +315,7 @@ export default {
         accept: async () => await this.handleCallAPI(this.deleteUserEmail, id)
       })
     },
+
     uploadImage(e) {
       const image = e.target.files[0]
 
@@ -337,6 +341,12 @@ export default {
     this.name = this.user_displayName
     this.imageUrl = this.user_displayImage
     await this.handleCallAPI(this.getUserEmails)
+    this.getEmailsInterval = window.setInterval(() => {
+      this.handleCallAPI(this.getUserEmails, null, false)
+    }, 3000)
+  },
+  destroyed() {
+    window.clearInterval(this.getEmailsInterval)
   }
 }
 </script>

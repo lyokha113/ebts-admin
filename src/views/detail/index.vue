@@ -72,19 +72,6 @@
           <vs-col class="my-5" vs-type="flex" vs-w="12">
             <feather-icon
               class="title"
-              icon="MessageSquareIcon"
-              svg-classes="h-10 w-10"
-            />
-            <div class="text-xl self-end font-semibold italic mx-4">
-              Description:
-            </div>
-            <div class="text-xl self-end truncate">
-              {{ template.description }}
-            </div>
-          </vs-col>
-          <vs-col class="my-5" vs-type="flex" vs-w="12">
-            <feather-icon
-              class="title"
               icon="AwardIcon"
               svg-classes="h-10 w-10"
             />
@@ -104,6 +91,14 @@
             </div>
           </vs-col>
           <vs-col class="my-5" vs-type="flex" vs-w="12">
+            <div class="text-xl font-semibold italic mx-4">
+              Description:
+            </div>
+            <div class="text-xl truncate-six">
+              {{ template.description }}
+            </div>
+          </vs-col>
+          <vs-col class="my-5" vs-type="flex" vs-w="12">
             <div class="text-xl font-semibold italic mx-4">Categories:</div>
             <div>
               <vs-chip
@@ -111,6 +106,7 @@
                 :key="item.id"
                 color="#24c1a0"
                 class="mr-2"
+                style="font-size: 13px"
                 >{{ item.name }}</vs-chip
               >
             </div>
@@ -136,34 +132,147 @@
         </vs-row>
       </vs-col>
     </vs-row>
+    <vs-row v-if="getOtherTemplates.length" class="mt-5 pb-5">
+      <vs-col vs-type="flex" vs-w="12" vs-justify="center" class="mb-5">
+        <h1 class="font-bold">Top by same Author</h1>
+      </vs-col>
+      <vs-col
+        v-for="item in getOtherTemplates"
+        :key="item.id"
+        vs-type="flex"
+        vs-align="center"
+        vs-w="3"
+      >
+        <TemplateGridItems :template="item" />
+      </vs-col>
+    </vs-row>
+
+    <CustomPopup
+      id="create-template-popup"
+      title="CREATE TEMPLATE"
+      :active.sync="popupCreateTemplate"
+    >
+      <div>
+        Enter name:
+        <vs-input
+          v-model="name"
+          placeholder="Name"
+          style="width: 270px"
+          class="mt-1 mb-4"
+        />
+        Enter description:
+        <vs-input
+          v-model="description"
+          placeholder="Description"
+          style="width: 270px"
+          class="mt-1 mb-4"
+        />
+        Choose workspace:
+        <vs-select v-model="workspace" class="mt-1 mb-4" style="width: 270px">
+          <vs-select-item
+            v-for="item in workspaces"
+            :key="item.id"
+            :value="item.id"
+            :text="item.name"
+          />
+        </vs-select>
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          @click="handleCreateTemplate"
+          >Create</vs-button
+        >
+      </div>
+    </CustomPopup>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
+import TemplateGridItems from '@/components/home/TemplateGridItems'
+import CustomPopup from '@/components/CustomPopup.vue'
 export default {
-  props: ['id'],
+  components: {
+    CustomPopup,
+    TemplateGridItems
+  },
   data() {
     return {
+      id: this.$route.params.id,
       template: null,
-      viewport: 'desktop'
+      viewport: 'desktop',
+      popupCreateTemplate: false,
+      name: '',
+      description: '',
+      workspace: ''
     }
   },
   computed: {
-    ...mapGetters(['activeUser', 'currentTemplate'])
+    ...mapGetters([
+      'activeUser',
+      'currentTemplate',
+      'workspaces',
+      'templatesByAuthor'
+    ]),
+    getOtherTemplates() {
+      return this.templatesByAuthor
+        .filter(t => t.id != this.template.id)
+        .slice(0, 4)
+    }
   },
   methods: {
-    ...mapActions(['getTemplate', 'rate']),
+    ...mapActions([
+      'getTemplate',
+      'getTemplatesByAuthor',
+      'getWorkspaces',
+      'getRawTemplate',
+      'createRawTemplate',
+      'rate'
+    ]),
     setviewPort(view) {
       this.viewport = view == 'desktop' ? 'desktop' : 'mobile'
     },
     handleDesign() {
       if (this.activeUser) {
-        this.$router.push('/user/workspace')
+        this.popupCreateTemplate = true
       } else {
         this.$router.push('/login?return=workspace')
       }
+    },
+    async handleCreateTemplate() {
+      if (!this.name || !this.description || !this.workspace) {
+        this.$vs.notify({
+          title: 'Empty value',
+          text: 'Please enter all information',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: `Confirm`,
+        text: `Do you want to create with this template content ?`,
+        accept: async () => {
+          const raw = {
+            name: this.name,
+            description: this.description,
+            workspaceId: this.workspace,
+            templateId: this.id
+          }
+          const id = await this.handleCallAPI(this.createRawTemplate, raw)
+          if (id) {
+            await this.handleCallAPI(this.getRawTemplate, id)
+            this.popupCreateTemplate = false
+            this.$router.push(`/user/editor/`)
+            return
+          }
+        }
+      })
     },
     async handleRate(isVote) {
       if (this.activeUser) {
@@ -176,10 +285,34 @@ export default {
       } else {
         this.$router.push(`/login?return=detail-${this.template.id}`)
       }
+    },
+    async fetchData() {
+      this.template = await this.handleCallAPI(this.getTemplate, this.id)
+
+      if (this.activeUser) {
+        await Promise.all([
+          this.handleCallAPI(
+            this.getTemplatesByAuthor,
+            this.template.authorId,
+            false
+          ),
+          this.handleCallAPI(this.getWorkspaces, null, false)
+        ])
+      } else {
+        await this.handleCallAPI(
+          this.getTemplatesByAuthor,
+          this.template.authorId,
+          false
+        )
+      }
     }
   },
   async mounted() {
-    this.template = await this.getTemplate(this.id)
+    this.fetchData()
+  },
+  beforeRouteUpdate(to) {
+    this.id = to.params.id
+    this.fetchData()
   }
 }
 </script>
@@ -225,6 +358,7 @@ export default {
   }
 
   .content {
+    padding: 10px;
     width: 668px;
     height: 440px;
     overflow: hidden;
@@ -274,5 +408,13 @@ export default {
     height: 520px;
     background: white;
   }
+}
+
+/deep/ .vs-popup {
+  width: 300px;
+}
+
+#create-template-popup {
+  z-index: 51100;
 }
 </style>

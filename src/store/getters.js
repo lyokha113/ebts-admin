@@ -26,6 +26,7 @@ const getters = {
   // TEMPLATES
   // ////////////////////////////////////////////
   templates: state => state.templates,
+  templatesByAuthor: state => state.templatesByAuthor,
   currentTemplate: state => state.currentTemplate,
 
   // ////////////////////////////////////////////

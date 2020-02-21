@@ -15,6 +15,30 @@
 
         <vs-spacer />
 
+        <div
+          class="font-semibold text-xl antialiased cursor-pointer mx-8"
+          :style="[
+            $route.name == 'Home' ? { color: '#32caab' } : { color: 'silver' }
+          ]"
+          @click="$router.push('/').catch(err => {})"
+        >
+          HOME
+        </div>
+
+        <div
+          class="font-semibold text-xl antialiased cursor-pointer mx-8"
+          :style="[
+            $route.name == 'Tutorial'
+              ? { color: '#32caab' }
+              : { color: 'silver' }
+          ]"
+          @click="$router.push('/tutorial').catch(err => {})"
+        >
+          TUTORIAL
+        </div>
+
+        <vs-spacer />
+
         <!-- USER META -->
         <div class="the-navbar__user-meta flex items-center">
           <div
@@ -116,16 +140,6 @@
                     svg-classes="w-4 h-4"
                   ></feather-icon>
                   <span class="ml-4">Publishes</span>
-                </li>
-                <li
-                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/tutorial').catch(err => {})"
-                >
-                  <feather-icon
-                    icon="HelpCircleIcon"
-                    svg-classes="w-4 h-4"
-                  ></feather-icon>
-                  <span class="ml-4">Tutorial</span>
                 </li>
                 <li
                   v-if="activeUser"

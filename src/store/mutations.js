@@ -79,6 +79,9 @@ const mutations = {
   SET_TEMPLATES(state, templates) {
     state.templates = templates
   },
+  SET_TEMPLATES_BY_AUTHOR(state, templatesByAuthor) {
+    state.templatesByAuthor = templatesByAuthor
+  },
   SET_CURRENT_TEMPLATE(state, template) {
     state.currentTemplate = template
   },

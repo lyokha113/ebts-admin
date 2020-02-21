@@ -18,6 +18,7 @@ import {
 
 import {
   getTemplates,
+  getTemplatesByAuthor,
   getTemplate,
   createTemplate,
   updateTemplate,
@@ -148,11 +149,13 @@ const actions = {
   async register({ dispatch }, registerInfo) {
     const { data } = await register(registerInfo)
     if (data.success) {
-      const loginInfo = {
-        email: registerInfo.email,
-        password: registerInfo.password
-      }
-      dispatch('login', loginInfo)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Account was created. Please check your email to confirm it.',
+        color: 'success',
+        position: 'top-right'
+      })
+      router.push('/login')
     }
   },
 
@@ -273,6 +276,13 @@ const actions = {
     const { data } = await getTemplates()
     if (data.success) {
       commit('SET_TEMPLATES', data.data)
+    }
+  },
+
+  async getTemplatesByAuthor({ commit }, uuid) {
+    const { data } = await getTemplatesByAuthor(uuid)
+    if (data.success) {
+      commit('SET_TEMPLATES_BY_AUTHOR', data.data)
     }
   },
 

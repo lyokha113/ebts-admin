@@ -133,14 +133,6 @@ const router = new Router({
           }
         },
         {
-          path: '/user/tutorial',
-          name: 'UserTutorial',
-          component: () => import('@/views/user/tutorial/index.vue'),
-          meta: {
-            permission: 2
-          }
-        },
-        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),
@@ -158,6 +150,14 @@ const router = new Router({
             if (isValidId) next()
             else next('/')
           },
+          meta: {
+            guest: true
+          }
+        },
+        {
+          path: '/tutorial',
+          name: 'Tutorial',
+          component: () => import('@/views/tutorial/index.vue'),
           meta: {
             guest: true
           }
