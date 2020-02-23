@@ -156,8 +156,8 @@ export default {
             this.setPublish(JSON.parse(data.body))
           })
         },
+        // eslint-disable-next-line no-unused-vars
         error => {
-          console.log(error)
           this.wsConnected = false
         }
       )

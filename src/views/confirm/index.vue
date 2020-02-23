@@ -23,11 +23,7 @@
               />
             </div>
             <span class="font-bold mb-5" style="font-size: 20px">
-              {{
-                error
-                  ? 'There are some errors happend when approving. Please try again.'
-                  : 'Confirmation was approved successfully. This page can be closed now.'
-              }}
+              {{ nofitication }}
             </span>
           </div>
         </div>
@@ -39,10 +35,20 @@
 export default {
   data() {
     return {
-      error: this.$route.query.error
+      error: this.$route.query.error,
+      confirm: this.$route.query.confirm
     }
   },
-
-  methods: {}
+  computed: {
+    nofitication() {
+      if (this.confirm == 'email')
+        return 'Email was approved successfully. This page can be closed now.'
+      else if (this.confirm == 'account')
+        return 'Account was approved successfully. This page can be closed now.'
+      else if (this.confirm == 'recovery')
+        return 'Your account new password was reset and sent to your email. This page can be closed now.'
+      else return 'There are some errors happend. Please try again.'
+    }
+  }
 }
 </script>

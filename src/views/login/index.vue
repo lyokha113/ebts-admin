@@ -45,8 +45,10 @@
                   class="w-full mt-6 no-icon-border"
                 />
 
-                <div class="flex flex-wrap justify-between mt-5">
-                  <!-- <router-link to="#">Forgot Password?</router-link> -->
+                <div class="flex my-3 cursor-pointer">
+                  <div style="color: #7367f0" @click="handleRecovery">
+                    Recover Account
+                  </div>
                 </div>
 
                 <vs-button type="border" @click="$router.push('/register')"
@@ -82,26 +84,54 @@
           </div>
         </div>
       </vx-card>
+
+      <CustomPopup
+        id="recovery-popup"
+        title="Recovery Account"
+        :active.sync="popupRecovery"
+      >
+        <div>
+          <vs-input
+            v-model="emailRecovery"
+            placeholder="Enter your login email"
+            style="width: 270px"
+            class="mt-1 mb-4"
+          />
+          <vs-button
+            color="primary"
+            type="filled"
+            class="float-right"
+            @click="handleRecoveryConfirm"
+            >Submit</vs-button
+          >
+        </div>
+      </CustomPopup>
     </div>
   </div>
 </template>
 
 <script>
 import GoogleSignInButton from 'vue-google-signin-button-directive'
+import CustomPopup from '@/components/CustomPopup.vue'
 import { mapActions } from 'vuex'
 export default {
+  components: {
+    CustomPopup
+  },
   directives: {
     GoogleSignInButton
   },
   data() {
     return {
       googleClientId: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+      popupRecovery: false,
+      emailRecovery: '',
       email: '',
       password: ''
     }
   },
   methods: {
-    ...mapActions(['login', 'googleAuth']),
+    ...mapActions(['login', 'googleAuth', 'sendEmailConfirm']),
     async OnGoogleAuthSuccess(token) {
       const loginInfo = { string: token, page: this.$route.query.return }
       await this.handleCallAPI(this.googleAuth, loginInfo)
@@ -115,6 +145,15 @@ export default {
           icon: 'error',
           position: 'top-right'
         })
+      }
+    },
+    handleRecovery() {
+      this.emailRecovery = ''
+      this.popupRecovery = true
+    },
+    async handleRecoveryConfirm() {
+      if (await this.handleCallAPI(this.sendEmailConfirm, this.emailRecovery)) {
+        this.popupRecovery = false
       }
     },
     async handleLogin() {
@@ -144,5 +183,12 @@ export default {
 <style lang="scss" scoped>
 .bg-google {
   background-color: #bf3b2d;
+}
+/deep/ .vs-popup {
+  width: 300px;
+}
+
+#recovery-popup {
+  z-index: 51100;
 }
 </style>

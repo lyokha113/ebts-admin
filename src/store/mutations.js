@@ -206,7 +206,10 @@ const mutations = {
     state.userEmails = userEmails
   },
   CREATE_USER_EMAIL(state, userEmail) {
-    state.userEmails.push(userEmail)
+    const current = state.userEmails.find(e => e.email === userEmail.email)
+    if (!current) {
+      state.userEmails.push(userEmail)
+    }
   },
   UPDATE_USER_EMAIL(state, userEmail) {
     const current = state.userEmails.find(e => e.id === userEmail.id)

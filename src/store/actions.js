@@ -61,7 +61,8 @@ import {
   makeDraftGMail,
   makeDraftYahoo,
   makeDraftOutlook,
-  sendEmail
+  sendEmail,
+  sendEmailConfirm
 } from '@/service/email'
 
 import { updateUser } from '@/service/user'
@@ -182,7 +183,6 @@ const actions = {
 
   async createAccount({ commit }, account) {
     const { data } = await createAccount(account)
-    console.log(data)
     if (data.success) {
       commit('CREATE_ACCOUNT', data.data)
       this._vm.$vs.notify({
@@ -719,6 +719,19 @@ const actions = {
         title: 'Information',
         text:
           'Mail was sent. Check all your mailbox and spam. Try again if you do not see them',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async sendEmailConfirm({ commit }, email) {
+    const { data } = await sendEmailConfirm(email)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Mail was sent. Check all your mailbox and spam',
         color: 'success',
         position: 'top-right'
       })

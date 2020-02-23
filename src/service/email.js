@@ -22,3 +22,9 @@ export function makeDraftOutlook(request) {
 export function sendEmail(request) {
   return axios.post(`${URI}/send`, request)
 }
+
+export function sendEmailConfirm(email) {
+  return axios.post(`${URI}/confirm`, null, {
+    params: { email }
+  })
+}
