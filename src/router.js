@@ -44,7 +44,7 @@ const router = new Router({
         },
         {
           path: '/admin/tutorial',
-          name: 'Tutorial',
+          name: 'AdminTutorial',
           component: () => import('./views/admin/tutorial/index.vue'),
           meta: {
             breadcrumb: [

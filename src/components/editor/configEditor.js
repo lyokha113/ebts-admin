@@ -35,13 +35,13 @@ export default function(editor, options) {
     blockManager.remove('list-items')
     blockManager.remove('grid-items')
 
-    blockManager.get('text').set('attributes', { class: 'fa fa-paragraph' })
-
     blockManager.getAll().forEach(b => {
       if (sectionBlocksIds.includes(b.id)) b.set('category', 'Section')
       if (basicBlocksIds.includes(b.id)) b.set('category', 'Basic')
       if (structuredBlocksIds.includes(b.id)) b.set('category', 'Structured')
     })
+
+    blockManager.get('text').set('attributes', { class: 'fa fa-paragraph' })
 
     panelManager.removeButton('options', 'gjs-open-import-template')
     panelManager.removeButton('options', 'gjs-toggle-images')
@@ -110,6 +110,20 @@ export default function(editor, options) {
         handleTextChange() {
           const text = this.getAttributes().text
           editor.getSelected().set('content', text)
+        }
+      }
+    })
+
+    domComponents.addType('user block', {
+      isComponent: el => {
+        return (
+          el instanceof HTMLElement &&
+          el.getAttribute('datatype') == 'user block'
+        )
+      },
+      model: {
+        defaults: {
+          attributes: { datatype: 'user block' }
         }
       }
     })
@@ -438,4 +452,19 @@ export default function(editor, options) {
   addCommands()
   addRTE()
   addButtons()
+
+  const rightView = panelManager.getPanel('views')
+  const openTM = rightView.buttons.models.find(m => m.id == 'open-tm')
+  const openSM = rightView.buttons.models.find(m => m.id == 'open-sm')
+
+  // const rightView = panelManager.getPanel('views')
+
+  // const leftView = Object.assign({}, rightView)
+  // const leftViewContainer = Object.assign({}, rightViewContainer)
+
+  panelManager.addPanel({
+    id: 'views-left',
+    visible: true,
+    buttons: [openTM, openSM]
+  })
 }
