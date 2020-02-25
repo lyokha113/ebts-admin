@@ -143,12 +143,16 @@
         vs-align="center"
         vs-w="3"
       >
-        <TemplateGridItems :template="item" />
+        <TemplateGridItems
+          :template="item"
+          @click="$router.push(`/detail/${item.id}`).catch(err => {})"
+        />
       </vs-col>
     </vs-row>
 
     <CustomPopup
       id="create-template-popup"
+      class="pa-3"
       title="CREATE TEMPLATE"
       :active.sync="popupCreateTemplate"
     >
@@ -157,29 +161,34 @@
         <vs-input
           v-model="name"
           placeholder="Name"
-          style="width: 270px"
+          style="width: 100%"
           class="mt-1 mb-4"
         />
         Enter description:
         <vs-input
           v-model="description"
           placeholder="Description"
-          style="width: 270px"
-          class="mt-1 mb-4"
+          style="width: 100%"
+          class="mt-1 mb-5"
         />
         Choose workspace:
-        <vs-select v-model="workspace" class="mt-1 mb-4" style="width: 270px">
-          <vs-select-item
-            v-for="item in workspaces"
-            :key="item.id"
-            :value="item.id"
-            :text="item.name"
-          />
-        </vs-select>
+        <multiselect
+          v-model="workspace"
+          track-by="id"
+          label="name"
+          placeholder=""
+          selectLabel=""
+          selectedLabel=""
+          deselectLabel=""
+          :options="workspaces"
+          :searchable="false"
+          :allow-empty="false"
+        >
+        </multiselect>
         <vs-button
           color="primary"
           type="filled"
-          class="float-right mt-2"
+          class="float-right mt-5"
           @click="handleCreateTemplate"
           >Create</vs-button
         >
@@ -190,7 +199,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import TemplateGridItems from '@/components/home/TemplateGridItems'
+import TemplateGridItems from '@/components/TemplateGridItems'
 import CustomPopup from '@/components/CustomPopup.vue'
 export default {
   components: {
@@ -261,7 +270,7 @@ export default {
           const raw = {
             name: this.name,
             description: this.description,
-            workspaceId: this.workspace,
+            workspaceId: this.workspace.id,
             templateId: this.id
           }
           const id = await this.handleCallAPI(this.createRawTemplate, raw)
@@ -310,9 +319,10 @@ export default {
   async mounted() {
     this.fetchData()
   },
-  beforeRouteUpdate(to) {
+  beforeRouteUpdate(to, from, next) {
     this.id = to.params.id
     this.fetchData()
+    next()
   }
 }
 </script>
@@ -411,7 +421,7 @@ export default {
 }
 
 /deep/ .vs-popup {
-  width: 300px;
+  width: 350px;
 }
 
 #create-template-popup {

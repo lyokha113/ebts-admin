@@ -143,6 +143,15 @@ export default {
     }
   }
 }
+.multiselect {
+  .multiselect__single {
+    font-size: 13px;
+  }
+
+  .multiselect__element {
+    font-size: 13px;
+  }
+}
 
 .truncate-two {
   -webkit-box-orient: vertical;

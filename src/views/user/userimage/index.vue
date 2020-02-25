@@ -6,7 +6,7 @@
           <vs-select-item value="Active" text="Active" />
           <vs-select-item value="Deleted" text="Deleted" />
         </vs-select>
-        <Uploader />
+        <Uploader @uploaded="type = 'Active'" />
       </vs-col>
     </vs-row>
     <vs-row v-if="filteredFiles.length">

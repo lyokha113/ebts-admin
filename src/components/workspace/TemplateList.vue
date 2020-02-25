@@ -2,21 +2,24 @@
   <div>
     <vs-row vs-align="center" class="mt-5">
       <vs-col vs-type="flex" vs-justify="flex-start" vs-w="4">
-        <vs-select
+        <multiselect
           v-model="filterCategories"
-          placeholder="Choose specific category"
-          multiple
-          label="Categories"
-          width="270px"
-          @change="handleFilter"
+          track-by="id"
+          label="name"
+          placeholder="Choose filter categories"
+          selectLabel=""
+          selectedLabel=""
+          deselectLabel=""
+          @input="handleFilter"
+          :options="categoriesNoTemplate"
+          :multiple="true"
+          :close-on-select="false"
+          :searchable="false"
         >
-          <vs-select-item
-            v-for="item in categoriesNoTemplate"
-            :key="item.id"
-            :value="item.id"
-            :text="`${item.name} - ${item.noOfTemplates} templates`"
-          />
-        </vs-select>
+          <template slot="singleLabel" slot-scope="{ item }">
+            {{ item.name }} - {{ item.noOfTemplates }} templates`
+          </template>
+        </multiselect>
       </vs-col>
       <vs-col vs-type="flex" vs-justify="flex-end" vs-w="8">
         <vs-button type="gradient" @click="$emit('back')">
@@ -31,29 +34,21 @@
         :key="item.id"
         vs-type="flex"
         vs-align="center"
-        vs-w="2"
+        vs-w="3"
       >
-        <vx-card class="grid-view-item mb-base overflow-hidden cursor-pointer">
-          <template slot="no-body">
-            <div
-              class="bg-white flex items-center justify-center"
-              @click="handleTemplate(item.id)"
-            >
-              <div
-                class="thumbnail mx-3 mt-3"
-                :style="{ backgroundImage: `url(${item.thumbnail})` }"
-              />
-            </div>
-          </template>
-        </vx-card>
+        <TemplateGridItems :template="item" @click="handleTemplate(item.id)" />
       </vs-col>
     </vs-row>
   </div>
 </template>
 
 <script>
+import TemplateGridItems from '@/components/TemplateGridItems'
 import { mapGetters } from 'vuex'
 export default {
+  components: {
+    TemplateGridItems
+  },
   data() {
     return {
       filterCategories: [],
@@ -72,8 +67,8 @@ export default {
         this.items = this.templates
       } else {
         this.items = this.templates.filter(t => {
-          return t.categories.some(
-            c => this.filterCategories.indexOf(c.id) > -1
+          return t.categories.some(c =>
+            this.filterCategories.find(fc => fc.id == c.id)
           )
         })
       }
@@ -109,6 +104,43 @@ export default {
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.con-vs-avatar.avatar-thumb {
+  background: none !important;
+  margin-left: 0px;
+}
+
+.template_category {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 77px;
+    height: 25px;
+    background-image: linear-gradient(90deg, hsla(0, 0%, 100%, 0), #fff);
+  }
+
+  span {
+    border-radius: 4px;
+    border: 1px solid #33caad;
+    font-family: Montserrat;
+    font-size: 9px;
+    font-weight: 800;
+    color: #33caad;
+    display: inline-block;
+    padding: 2px 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 }
 </style>

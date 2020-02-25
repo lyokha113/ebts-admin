@@ -206,10 +206,7 @@ const mutations = {
     state.userEmails = userEmails
   },
   CREATE_USER_EMAIL(state, userEmail) {
-    const current = state.userEmails.find(e => e.email === userEmail.email)
-    if (!current) {
-      state.userEmails.push(userEmail)
-    }
+    state.userEmails.push(userEmail)
   },
   UPDATE_USER_EMAIL(state, userEmail) {
     const current = state.userEmails.find(e => e.id === userEmail.id)
@@ -218,6 +215,33 @@ const mutations = {
   DELETE_USER_EMAIL(state, id) {
     const idx = state.userEmails.findIndex(e => e.id == id)
     state.userEmails.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
+  // USER BLOCK
+  // ////////////////////////////////////////////
+  SET_USER_BLOCKS(state, userBlocks) {
+    state.userBlocks = userBlocks
+  },
+  SET_CURRENT_USER_BLOCK(state, userBlock) {
+    state.currentBlock = userBlock
+  },
+  CREATE_USER_BLOCK(state, userBlock) {
+    const current = state.userBlocks.find(ub => ub.id === userBlock.id)
+    if (!current) {
+      state.userBlocks.push(userBlock)
+    }
+  },
+  UPDATE_USER_BLOCK(state, userBlock) {
+    const current = state.userBlocks.find(ub => ub.id === userBlock.id)
+    Object.assign(current, userBlock)
+  },
+  SAVE_USER_BLOCK_CONTENT(state, content) {
+    state.currentBlock.content = content
+  },
+  DELETE_USER_BLOCK(state, id) {
+    const idx = state.userBlocks.findIndex(ub => ub.id == id)
+    state.userBlocks.splice(idx, 1)
   }
 }
 

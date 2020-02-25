@@ -92,6 +92,7 @@ export default {
       this.files = []
       this.uploadPercent = 0
       this.uploading = false
+      this.$emit('uploaded')
     }
   }
 }

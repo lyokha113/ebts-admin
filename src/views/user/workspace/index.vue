@@ -159,32 +159,33 @@
         <vs-input
           v-model="templateName"
           placeholder="Name"
-          style="width: 250px"
+          style="width: 100%"
           class="mt-1 mb-4"
         />Enter description:
         <vs-input
           v-model="templateDescription"
           placeholder="Description"
-          style="width: 250px"
-          class="mt-1 mb-4"
+          style="width: 100%"
+          class="mt-1 mb-5"
         />
-        <vs-select
+        Enter workspace:
+        <multiselect
           v-model="templateWorkspace"
-          class="mb-4"
-          label="Workspace"
-          width="250px"
+          track-by="id"
+          label="name"
+          placeholder=""
+          selectLabel=""
+          selectedLabel=""
+          deselectLabel=""
+          :options="workspaces"
+          :searchable="false"
+          :allow-empty="false"
         >
-          <vs-select-item
-            v-for="item in workspaces"
-            :key="item.id"
-            :value="item.id"
-            :text="item.name"
-          />
-        </vs-select>
+        </multiselect>
         <vs-button
           color="primary"
           type="filled"
-          class="float-right mt-2"
+          class="float-right mt-5"
           @click="handleUpdateRaw"
           >Update</vs-button
         >
@@ -264,7 +265,9 @@ export default {
       this.templateToUpdate = raw
       this.templateName = raw.name
       this.templateDescription = raw.description
-      this.templateWorkspace = raw.workspaceId
+      this.templateWorkspace = this.workspaces.find(
+        ws => ws.id == raw.workspaceId
+      )
       this.popupUpdateTemplate = true
     },
     handlePopupCreateTemplate() {
@@ -342,7 +345,7 @@ export default {
         id: this.templateToUpdate.id,
         name: this.templateName,
         description: this.templateDescription,
-        workspaceId: this.templateWorkspace,
+        workspaceId: this.templateWorkspace && this.templateWorkspace.id,
         currentWS: this.templateToUpdate.workspaceId
       }
 
@@ -354,7 +357,7 @@ export default {
         accept: async () => {
           if (await this.handleCallAPI(this.updateRawTemplate, raw)) {
             this.popupUpdateTemplate = false
-            if (raw.currentWS != raw.workspaceId) {
+            if (raw.workspaceId && raw.currentWS != raw.workspaceId) {
               this.workspace = raw.workspaceId
               this.handleChange()
             }
@@ -454,7 +457,7 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .vs-popup {
-  width: 285px;
+  width: 320px;
 }
 
 #create-template-popup,

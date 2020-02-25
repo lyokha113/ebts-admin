@@ -101,8 +101,7 @@
 
 <script>
 import ProgressBar from 'vue-simple-progress'
-import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client'
+import { connectWSPublish, disconnectWS } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -123,7 +122,6 @@ export default {
   data() {
     return {
       itemsPerPage: 10,
-      wsConnected: false,
       isMounted: false
     }
   },
@@ -141,43 +139,17 @@ export default {
     handlePreview(content) {
       const preview = window.open('', '_blank')
       preview.document.write(content)
-    },
-    connectWs() {
-      this.socket = new SockJS(
-        process.env.VUE_APP_API_DOMAIN_LOCAL + '/ws-publish'
-      )
-      this.stompClient = Stomp.over(this.socket, { debug: false })
-      this.stompClient.connect(
-        {},
-        // eslint-disable-next-line no-unused-vars
-        frame => {
-          this.wsConnected = true
-          this.stompClient.subscribe('/topic/get-publish', data => {
-            this.setPublish(JSON.parse(data.body))
-          })
-        },
-        // eslint-disable-next-line no-unused-vars
-        error => {
-          this.wsConnected = false
-        }
-      )
-    },
-    disconnectWs() {
-      if (this.stompClient) {
-        this.stompClient.disconnect()
-      }
-      this.wsConnected = false
     }
   },
   async created() {
     await this.handleCallAPI(this.getPublishes)
-    this.connectWs()
+    connectWSPublish(this, this.setPublish)
   },
   mounted() {
     this.isMounted = true
   },
   destroyed() {
-    this.disconnectWs()
+    disconnectWS(this)
   }
 }
 </script>

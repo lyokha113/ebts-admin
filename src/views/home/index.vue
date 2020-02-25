@@ -37,7 +37,7 @@
         >
           <vs-select
             v-model="filterCategories"
-            placeholder="Choose specific category"
+            placeholder="Choose filter categories"
             multiple
             label="Categories"
             width="300px"
@@ -72,7 +72,10 @@
         vs-align="center"
         vs-w="3"
       >
-        <TemplateGridItems :template="item" />
+        <TemplateGridItems
+          :template="item"
+          @click="$router.push(`/detail/${item.id}`).catch(err => {})"
+        />
       </vs-col>
     </vs-row>
   </div>
@@ -80,7 +83,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import TemplateGridItems from '@/components/home/TemplateGridItems'
+import TemplateGridItems from '@/components/TemplateGridItems'
 const elasticlunr = require('elasticlunr')
 export default {
   components: {

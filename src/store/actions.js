@@ -73,6 +73,14 @@ import {
   deleteUserEmail
 } from '@/service/useremail'
 
+import {
+  getUserBlocks,
+  createUserbBlock,
+  updateUserBlock,
+  updateUserBlockContent,
+  deleteUserBlock
+} from '@/service/userblock'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugins/auth'
 
@@ -742,6 +750,10 @@ const actions = {
   // ////////////////////////////////////////////
   // USER EMAIL
   // ////////////////////////////////////////////
+  async setApprovedUserEmails({ commit }, userEmail) {
+    commit('UPDATE_USER_EMAIL', userEmail)
+  },
+
   async getUserEmails({ commit }) {
     const { data } = await getUserEmails()
     if (data.success) {
@@ -776,6 +788,17 @@ const actions = {
       })
     }
     return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // USER BLOCK
+  // ////////////////////////////////////////////
+
+  async getUserBlocks({ commit }) {
+    const { data } = await getUserBlocks()
+    if (data.success) {
+      commit('SET_USER_BLOCKS', data.data)
+    }
   }
 }
 export default actions

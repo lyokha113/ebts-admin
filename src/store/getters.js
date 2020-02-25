@@ -70,8 +70,16 @@ const getters = {
   // ////////////////////////////////////////////
   editorChange: state => state.editorChange,
 
-  //USER EMAIL
-  userEmails: state => state.userEmails
+  // ////////////////////////////////////////////
+  // USER EMAIL
+  // ////////////////////////////////////////////
+  userEmails: state => state.userEmails,
+
+  // ////////////////////////////////////////////
+  // USER BLOCK
+  // ////////////////////////////////////////////
+  userBlocks: state => state.userBlocks,
+  currentBlock: state => state.currentBlock
 }
 
 export default getters

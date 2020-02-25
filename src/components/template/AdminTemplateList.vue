@@ -97,47 +97,37 @@
           <vs-input
             v-model="name"
             placeholder="Name"
-            style="width: 250px"
+            style="width: 100%"
             class="mt-1 mb-4"
-          />Enter description:
+          />
+          Enter description:
           <vs-input
             v-model="description"
             placeholder="Description"
-            style="width: 250px"
-            class="mt-1 mb-4"
+            style="width: 100%"
+            class="mt-1 mb-5"
           />
-          <vs-select
+          Enter workspaces:
+          <multiselect
             v-model="categories"
-            class="mb-4"
-            label="Categories"
-            multiple
-            width="250px"
+            track-by="id"
+            label="name"
+            selectLabel=""
+            selectedLabel=""
+            deselectLabel=""
+            :options="categoriesNoTemplate"
+            :multiple="true"
+            :close-on-select="false"
+            :searchable="false"
           >
-            <div>
-              <vs-select-group title="Active">
-                <vs-select-item
-                  v-for="item in categoriesNoTemplate.filter(c => c.active)"
-                  :key="item.id"
-                  :value="item.id"
-                  :text="item.name"
-                />
-              </vs-select-group>
-            </div>
-            <div>
-              <vs-select-group title="Locked">
-                <vs-select-item
-                  v-for="item in categoriesNoTemplate.filter(c => !c.active)"
-                  :key="item.id"
-                  :value="item.id"
-                  :text="item.name"
-                />
-              </vs-select-group>
-            </div>
-          </vs-select>
+            <template slot="singleLabel" slot-scope="{ item }">
+              {{ item.name }} - {{ item.noOfTemplates }} templates`
+            </template>
+          </multiselect>
           <vs-button
             color="primary"
             type="filled"
-            class="float-right mt-2"
+            class="float-right mt-5"
             @click="handleUpdate"
             >Update</vs-button
           >
@@ -261,7 +251,7 @@ export default {
 }
 
 /deep/ .vs-popup {
-  width: 280px;
+  width: 500px;
 }
 
 #update-popup {

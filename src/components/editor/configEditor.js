@@ -452,19 +452,4 @@ export default function(editor, options) {
   addCommands()
   addRTE()
   addButtons()
-
-  const rightView = panelManager.getPanel('views')
-  const openTM = rightView.buttons.models.find(m => m.id == 'open-tm')
-  const openSM = rightView.buttons.models.find(m => m.id == 'open-sm')
-
-  // const rightView = panelManager.getPanel('views')
-
-  // const leftView = Object.assign({}, rightView)
-  // const leftViewContainer = Object.assign({}, rightViewContainer)
-
-  panelManager.addPanel({
-    id: 'views-left',
-    visible: true,
-    buttons: [openTM, openSM]
-  })
 }
