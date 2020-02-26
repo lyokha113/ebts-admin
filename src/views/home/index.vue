@@ -26,7 +26,8 @@
             icon="EditIcon"
           ></feather-icon>
           <div class="text-xl self-center font-medium" @click="handleDesign">
-            Start To Design
+            <!-- Start To Design -->
+            {{ process.env.VUE_APP_API_DOMAIN }}
           </div>
         </div>
       </vs-col>
