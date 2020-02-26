@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import store from '@/store/store'
 import { getToken } from '@/plugins/auth'
 
-const api_local = process.env.VUE_APP_API_DOMAIN_LOCAL
-const api_aws = process.env.VUE_APP_API_DOMAIN_AWS
+// eslint-disable-next-line no-undef
+const api_local = 'http://18.140.138.198/'
 
 const service = axios.create({
   baseURL: api_local,
