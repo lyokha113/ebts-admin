@@ -133,6 +133,17 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/block').catch(err => {})"
+                >
+                  <feather-icon
+                    icon="TrelloIcon"
+                    svg-classes="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">User Block</span>
+                </li>
+                <li
+                  v-if="activeUser"
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="$router.push('/user/publish').catch(err => {})"
                 >
                   <feather-icon

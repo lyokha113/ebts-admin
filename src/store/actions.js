@@ -75,7 +75,7 @@ import {
 
 import {
   getUserBlocks,
-  createUserbBlock,
+  createUserBlock,
   updateUserBlock,
   updateUserBlockContent,
   deleteUserBlock
@@ -799,6 +799,48 @@ const actions = {
     if (data.success) {
       commit('SET_USER_BLOCKS', data.data)
     }
+  },
+  async createUserBlock({ commit }, userBlock) {
+    const { data } = await createUserBlock(userBlock)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Block was created',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('CREATE_USER_BLOCK', data.data)
+    }
+
+    return data.success
+  },
+  async updateUserBlock({ commit }, userBlock) {
+    const { data } = await updateUserBlock(userBlock)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Block was updated',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('UPDATE_USER_BLOCK', data.data)
+    }
+
+    return data.success
+  },
+  async deleteUserBlock({ commit }, id) {
+    const { data } = await deleteUserBlock(id)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Block was deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('DELETE_USER_BLOCK', id)
+    }
+
+    return data.success
   }
 }
 export default actions

@@ -5,7 +5,7 @@ const URI = '/email'
 export function makeDraftGMail(rawId) {
   return axios.get(`/google/authorize`, {
     params: {
-      redirectUri: process.env.VUE_APP_API_DOMAIN_LOCAL + `${URI}/draft/gmail`,
+      redirectUri: process.env.VUE_APP_API_DOMAIN + `${URI}/draft/gmail`,
       rawId
     }
   })

@@ -116,15 +116,16 @@
       <vx-card style="min-height: 500px; margin: auto">
         <vs-row class="mb-5" vs-align="center">
           <vs-col vs-type="flex" vs-align="center" vs-w="3  ">
-            <span>Tutorial name: &nbsp;</span>
+            <span class="mr-3">Tutorial name:</span>
             <vs-input v-model="name" placeholder="Name" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="3">
-            <span>Tutorial description: &nbsp;</span>
+            <span class="mr-3">Tutorial description:</span>
             <vs-input v-model="description" placeholder="Description" />
           </vs-col>
           <vs-col
             id="file-uploader"
+            class="mx-1"
             style="margin-left: auto"
             vs-type="flex"
             vs-align="center"
@@ -252,13 +253,11 @@ export default {
           'imageSize'
         ],
         quickInsertTags: [''],
-        imageManagerLoadURL:
-          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageManagerLoadURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageManagerPageSize: 100,
-        imageManagerDeleteURL:
-          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageManagerDeleteURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageManagerDeleteMethod: 'DELETE',
-        imageUploadURL: process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageUploadURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageUploadParam: 'files',
         requestHeaders: {
           AUTHORIZATION: ''

@@ -6,7 +6,7 @@ export function getUserBlocks() {
   return axios.get(`${URI}`)
 }
 
-export function createUserbBlock(block) {
+export function createUserBlock(block) {
   return axios.post(`${URI}`, block)
 }
 

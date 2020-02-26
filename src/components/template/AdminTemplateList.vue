@@ -86,54 +86,49 @@
           </vs-row>
         </div>
       </div>
-
-      <CustomPopup
-        id="update-popup"
-        title="UPDATE TEMPLATE"
-        :active.sync="popup"
-      >
-        <div>
-          Enter name:
-          <vs-input
-            v-model="name"
-            placeholder="Name"
-            style="width: 100%"
-            class="mt-1 mb-4"
-          />
-          Enter description:
-          <vs-input
-            v-model="description"
-            placeholder="Description"
-            style="width: 100%"
-            class="mt-1 mb-5"
-          />
-          Enter workspaces:
-          <multiselect
-            v-model="categories"
-            track-by="id"
-            label="name"
-            selectLabel=""
-            selectedLabel=""
-            deselectLabel=""
-            :options="categoriesNoTemplate"
-            :multiple="true"
-            :close-on-select="false"
-            :searchable="false"
-          >
-            <template slot="singleLabel" slot-scope="{ item }">
-              {{ item.name }} - {{ item.noOfTemplates }} templates`
-            </template>
-          </multiselect>
-          <vs-button
-            color="primary"
-            type="filled"
-            class="float-right mt-5"
-            @click="handleUpdate"
-            >Update</vs-button
-          >
-        </div>
-      </CustomPopup>
     </template>
+
+    <CustomPopup id="update-popup" title="UPDATE TEMPLATE" :active.sync="popup">
+      <div>
+        Enter name:
+        <vs-input
+          v-model="name"
+          placeholder="Name"
+          style="width: 100%"
+          class="mt-1 mb-4"
+        />
+        Enter description:
+        <vs-input
+          v-model="description"
+          placeholder="Description"
+          style="width: 100%"
+          class="mt-1 mb-5"
+        />
+        Enter workspaces:
+        <multiselect
+          v-model="categories"
+          track-by="id"
+          label="name"
+          selectLabel=""
+          selectedLabel=""
+          deselectLabel=""
+          group-values="categories"
+          group-label="group"
+          :options="categoriesNoTemplateSelect"
+          :multiple="true"
+          :close-on-select="false"
+          :searchable="false"
+        >
+        </multiselect>
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-5"
+          @click="handleUpdate"
+          >Update</vs-button
+        >
+      </div>
+    </CustomPopup>
   </vx-card>
 </template>
 
@@ -160,7 +155,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentTemplate', 'categoriesNoTemplate'])
+    ...mapGetters(['currentTemplate', 'categoriesNoTemplate']),
+    categoriesNoTemplateSelect() {
+      const active = this.categoriesNoTemplate.filter(c => c.active)
+      const locked = this.categoriesNoTemplate.filter(c => !c.active)
+      return [
+        { group: 'Active', categories: active },
+        { group: 'Locked', categories: locked }
+      ]
+    }
   },
   methods: {
     ...mapActions(['getTemplate', 'deleteTemplate', 'updateTemplate']),
@@ -184,7 +187,7 @@ export default {
       this.id = template.id
       this.name = template.name
       this.description = template.description
-      this.categories = template.categories.map(c => c.id)
+      this.categories = template.categories
       this.popup = true
     },
     async handleUpdate() {
@@ -208,7 +211,7 @@ export default {
         id: this.id,
         name: this.name,
         description: this.description,
-        categoryIds: this.categories,
+        categoryIds: this.categories.map(c => c.id),
         active: true
       }
 

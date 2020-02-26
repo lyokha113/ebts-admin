@@ -3,7 +3,7 @@ import store from '@/store/store'
 import { getToken } from '@/plugins/auth'
 
 // eslint-disable-next-line no-undef
-const api_local = 'http://18.140.138.198/'
+const api_local = 'http://localhost:5000/'
 
 const service = axios.create({
   baseURL: api_local,

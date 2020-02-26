@@ -133,6 +133,14 @@ const router = new Router({
           }
         },
         {
+          path: '/user/block',
+          name: 'UserBlock',
+          component: () => import('@/views/user/userblock/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/',
           name: 'Home',
           component: () => import('@/views/home/index.vue'),

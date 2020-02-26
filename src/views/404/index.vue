@@ -15,7 +15,7 @@
         There are something you need to find ? Maybe you went to wrong way !!!
         Try to find in others path
       </p>
-      <vs-button size="large" :to="back">Back to Home</vs-button>
+      <vs-button size="large" @click="back">Back to Home</vs-button>
     </div>
   </div>
 </template>
@@ -24,12 +24,14 @@
 import { mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['permission']),
+    ...mapGetters(['permission'])
+  },
+  methods: {
     back() {
       if (this.permission) {
-        return this.permission == 1 ? '/admin' : '/user'
+        this.$router.push(this.permission == 1 ? '/admin' : '/user')
       }
-      return '/'
+      this.$router.push('/')
     }
   }
 }

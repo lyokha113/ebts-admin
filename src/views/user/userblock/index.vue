@@ -1,13 +1,40 @@
 <template>
   <div style="background-color: white; padding: 10px;">
     <vs-row class="mt-5" vs-type="flex" vs-align="center" vs-w="12">
-      <vs-col vs-type="flex" vs-align="center" vs-w="2">
-        <vx-card class="grid-view-item mb-base overflow-hidden">
+      <vs-col
+        vs-type="flex"
+        vs-align="center"
+        vs-w="1"
+        v-for="block in userBlocks"
+        :key="block.id"
+      >
+        <vx-card class="grid-view-item mb-base overflow-hidden cursor-pointer">
           <template slot="no-body">
             <div
-              class="flex items-center justify-center align-center cursor-pointer"
-              style="height: 250px"
-              @click="handlePopupAddRaw"
+              style="text-align: center"
+              class="m-2"
+              @click="handlePopupUpdate(block)"
+            >
+              <div class="my-2 font-medium truncate" style="font-size: 16px">
+                {{ block.name }}
+              </div>
+              <i
+                class="mb-2 fa"
+                :class="`fa-${block.icon}`"
+                style="font-size: 80px"
+              ></i>
+            </div>
+          </template>
+        </vx-card>
+      </vs-col>
+
+      <vs-col vs-type="flex" vs-align="center" vs-w="1">
+        <vx-card class="grid-view-item mb-base overflow-hidden cursor-pointer">
+          <template slot="no-body">
+            <div
+              class="flex items-center justify-center align-center"
+              style="height: 125px"
+              @click="handlePopupAdd"
             >
               <div
                 id="new-box"
@@ -27,31 +54,113 @@
       title="CREATE NEW BLOCK"
       :active.sync="popupCreate"
     >
-      <div>
-        Enter block name:
-        <vs-input
-          v-model="name"
-          placeholder="Name"
-          style="width: 270px"
-          class="my-2"
-        />
-        Choose workspace:
-        <vs-select v-model="workspace" class="mt-1 mb-4" style="width: 270px">
-          <vs-select-item
-            v-for="(item, index) in icons"
-            :key="index"
-            :value="'fa ' + item"
-            :text="item"
+      <vs-row>
+        <vs-col vs-w="12">
+          Enter block name:
+          <vs-input
+            class="mt-3"
+            v-model="name"
+            placeholder="Name"
+            style="width: 100%"
           />
-        </vs-select>
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-2"
-          @click="handleAdd"
-          >Create</vs-button
+        </vs-col>
+        <vs-col
+          class="my-5"
+          vs-w="12"
+          style="max-height: 200px; overflow: auto"
         >
-      </div>
+          <vs-row>
+            <vs-col
+              class="icon-wrapper"
+              vs-type="flex"
+              vs-justify="center"
+              vs-w="2"
+              v-for="(i, index) in iconsDisplay"
+              :key="index"
+            >
+              <input
+                v-model="icon"
+                :id="i"
+                :value="i"
+                type="radio"
+                name="icon"
+                style="display: none"
+              />
+              <label :for="i">
+                <i
+                  class="m-3 cursor-pointer fa"
+                  :class="`fa-${i}`"
+                  style="font-size: 42px"
+                ></i
+              ></label>
+            </vs-col>
+          </vs-row>
+        </vs-col>
+        <vs-col vs-w="12">
+          <vs-button
+            color="primary"
+            type="filled"
+            class="float-right my-3"
+            @click="handleAdd"
+            >Create</vs-button
+          >
+        </vs-col>
+      </vs-row>
+    </vs-popup>
+
+    <vs-popup id="update-popup" title="UPDATE BLOCK" :active.sync="popupUpdate">
+      <vs-row>
+        <vs-col vs-w="12">
+          Enter block name:
+          <vs-input
+            class="mt-3"
+            v-model="nameUpdate"
+            placeholder="Name"
+            style="width: 100%"
+          />
+        </vs-col>
+        <vs-col
+          class="my-5"
+          vs-w="12"
+          style="max-height: 200px; overflow: auto"
+        >
+          <vs-row>
+            <vs-col
+              class="icon-wrapper"
+              vs-type="flex"
+              vs-justify="center"
+              vs-w="2"
+              v-for="(i, index) in iconsDisplay"
+              :key="index"
+            >
+              <input
+                v-model="iconUpdate"
+                :id="i"
+                :value="i"
+                type="radio"
+                name="icon"
+                style="display: none"
+              />
+              <label :for="i">
+                <i
+                  class="m-3 cursor-pointer fa"
+                  :class="`fa-${i}`"
+                  style="font-size: 42px"
+                ></i
+              ></label>
+            </vs-col>
+          </vs-row>
+        </vs-col>
+        <vs-col vs-w="12">
+          <vs-button
+            color="primary"
+            type="filled"
+            class="float-right my-3"
+            @click="handleUpdate"
+            >Update</vs-button
+          >
+        </vs-col>
+      </vs-row>
     </vs-popup>
   </div>
 </template>
@@ -62,31 +171,44 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data() {
     return {
+      id: '',
       name: '',
+      nameUpdate: '',
       icon: '',
+      iconUpdate: '',
       popupCreate: false,
       popupUpdate: false
     }
   },
   computed: {
-    ...mapGetters(['userBlocks'])
+    ...mapGetters(['userBlocks']),
+    iconsDisplay() {
+      return icons
+    }
   },
   methods: {
-    ...mapActions(['getUserBlocks']),
+    ...mapActions([
+      'getUserBlocks',
+      'createUserBlock',
+      'updateUserBlock',
+      'deleteUserBlock'
+    ]),
     handlePopupAdd() {
       this.name = ''
+      this.icon = ''
       this.popupCreate = true
     },
-    handlePopupUpdate() {
-      const ws = this.workspaces.find(w => w.id == this.workspace)
-      this.name = ws.name
+    handlePopupUpdate(block) {
+      this.nameUpdate = block.name
+      this.iconUpdate = block.icon
+      this.id = block.id
       this.popupUpdate = true
     },
     async handleAdd() {
-      if (!this.name) {
+      if (!this.name || !this.icon) {
         this.$vs.notify({
           title: 'Empty value',
-          text: 'Please enter workspace name',
+          text: 'Please enter all information',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -98,22 +220,24 @@ export default {
         type: 'confirm',
         color: 'danger',
         title: `Confirm`,
-        text: `Do you want to create new workspace ?`,
+        text: `Do you want to create new block ?`,
         accept: async () => {
-          this.workspace = await this.handleCallAPI(this.createWorkspace, {
-            name: this.name
-          })
-          if (this.workspace != undefined) {
+          if (
+            await this.handleCallAPI(this.createUserBlock, {
+              name: this.name,
+              icon: this.icon
+            })
+          ) {
             this.popupCreate = false
           }
         }
       })
     },
     async handleUpdate() {
-      if (!this.name) {
+      if (!this.nameUpdate || !this.iconUpdate) {
         this.$vs.notify({
           title: 'Empty value',
-          text: 'Please enter workspace name',
+          text: 'Please enter all information',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -125,12 +249,13 @@ export default {
         type: 'confirm',
         color: 'danger',
         title: `Confirm`,
-        text: `Do you want to update this workspace ?`,
+        text: `Do you want to update this block ?`,
         accept: async () => {
           if (
-            await this.handleCallAPI(this.updateWorkspace, {
-              id: this.workspace,
-              name: this.name
+            await this.handleCallAPI(this.updateUserBlock, {
+              id: this.id,
+              name: this.nameUpdate,
+              icon: this.iconUpdate
             })
           ) {
             this.popupUpdate = false
@@ -166,7 +291,8 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .vs-popup {
-  width: 300px;
+  width: 800px;
+  height: 420px;
 }
 #create-popup,
 #update-popup {
@@ -180,5 +306,13 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(/img/new.cdb0a76b.png);
+}
+
+.icon-wrapper:hover {
+  box-shadow: 0px 0px 3px 3px #7367f0;
+}
+
+input[type='radio']:checked + label {
+  color: #7367f0;
 }
 </style>

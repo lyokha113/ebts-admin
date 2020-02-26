@@ -26,9 +26,7 @@ export function sendMessage(vueInstance, app, data) {
 }
 
 function connectWS(vueInstance, topic, handleData) {
-  vueInstance.socket = new SockJS(
-    process.env.VUE_APP_API_DOMAIN_LOCAL + ENDPOINT
-  )
+  vueInstance.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
   vueInstance.stompClient = Stomp.over(vueInstance.socket, { debug: false })
   vueInstance.stompClient.connect(
     {},

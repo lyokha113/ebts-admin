@@ -227,10 +227,7 @@ const mutations = {
     state.currentBlock = userBlock
   },
   CREATE_USER_BLOCK(state, userBlock) {
-    const current = state.userBlocks.find(ub => ub.id === userBlock.id)
-    if (!current) {
-      state.userBlocks.push(userBlock)
-    }
+    state.userBlocks.push(userBlock)
   },
   UPDATE_USER_BLOCK(state, userBlock) {
     const current = state.userBlocks.find(ub => ub.id === userBlock.id)

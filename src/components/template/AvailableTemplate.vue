@@ -36,37 +36,30 @@
       <vx-card style="min-height: 500px; margin: auto">
         <vs-row class="mb-5" vs-align="center">
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
-            <span>Name: &nbsp;</span>
+            <span class="mr-3">Name:</span>
             <vs-input v-model="name" style="width: 400px" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
-            <span>Description: &nbsp;</span>
+            <span class="mr-3">Description:</span>
             <vs-input v-model="description" style="width: 400px" />
           </vs-col>
           <vs-col vs-type="flex" vs-align="center" vs-w="4">
-            <span>Categories: &nbsp;</span>
-            <vs-select v-model="categories" width="400px" multiple>
-              <div>
-                <vs-select-group title="Active">
-                  <vs-select-item
-                    v-for="item in categoriesNoTemplate.filter(c => c.active)"
-                    :key="item.id"
-                    :value="item.id"
-                    :text="item.name"
-                  />
-                </vs-select-group>
-              </div>
-              <div>
-                <vs-select-group title="Locked">
-                  <vs-select-item
-                    v-for="item in categoriesNoTemplate.filter(c => !c.active)"
-                    :key="item.id"
-                    :value="item.id"
-                    :text="item.name"
-                  />
-                </vs-select-group>
-              </div>
-            </vs-select>
+            <span class="mr-3">Categories:</span>
+            <multiselect
+              v-model="categories"
+              track-by="id"
+              label="name"
+              selectLabel=""
+              selectedLabel=""
+              deselectLabel=""
+              group-values="categories"
+              group-label="group"
+              :options="categoriesNoTemplateSelect"
+              :multiple="true"
+              :close-on-select="false"
+              :searchable="false"
+            >
+            </multiselect>
           </vs-col>
         </vs-row>
         <div>
@@ -172,13 +165,11 @@ export default {
           'imageSize'
         ],
         quickInsertTags: [''],
-        imageManagerLoadURL:
-          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageManagerLoadURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageManagerPageSize: 100,
-        imageManagerDeleteURL:
-          process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageManagerDeleteURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageManagerDeleteMethod: 'DELETE',
-        imageUploadURL: process.env.VUE_APP_API_DOMAIN_LOCAL + '/editor/file',
+        imageUploadURL: process.env.VUE_APP_API_DOMAIN + '/editor/file',
         imageUploadParam: 'files',
         requestHeaders: {
           AUTHORIZATION: ''
@@ -201,7 +192,15 @@ export default {
       'accessToken',
       'templates',
       'categoriesNoTemplate'
-    ])
+    ]),
+    categoriesNoTemplateSelect() {
+      const active = this.categoriesNoTemplate.filter(c => c.active)
+      const locked = this.categoriesNoTemplate.filter(c => !c.active)
+      return [
+        { group: 'Active', categories: active },
+        { group: 'Locked', categories: locked }
+      ]
+    }
   },
   methods: {
     ...mapActions(['getTemplates', 'createTemplate']),
@@ -248,7 +247,7 @@ export default {
         authorId: this.activeUser.id,
         content: this.content,
         description: this.description,
-        categoryIds: this.categories
+        categoryIds: this.categories.map(c => c.id)
       }
 
       this.$vs.dialog({
@@ -276,5 +275,8 @@ export default {
 <style lang="scss" scoped>
 #create-popup {
   z-index: 51100;
+}
+/deep/ .multiselect {
+  z-index: 100001;
 }
 </style>
