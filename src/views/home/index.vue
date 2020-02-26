@@ -26,8 +26,8 @@
             icon="EditIcon"
           ></feather-icon>
           <div class="text-xl self-center font-medium" @click="handleDesign">
-            <!-- Start To Design -->
-            {{ process.env.VUE_APP_API_DOMAIN }}
+            Start To Design
+            {{ test }}
           </div>
         </div>
       </vs-col>
@@ -96,6 +96,7 @@ export default {
       filtereditems: [],
       items: [],
       searchQuery: '',
+      test: process.env.VUE_APP_API_DOMAIN,
       elasticlunrIndex: null
     }
   },
