@@ -452,4 +452,17 @@ export default function(editor, options) {
   addCommands()
   addRTE()
   addButtons()
+
+  vueInstance.userBlocks.forEach(block => {
+    blockManager.add(`${block.id}-${block.name}`, {
+      label: block.name,
+      category: 'User Blocks',
+      attributes: { class: `fa fa-${block.icon}` },
+      content: {
+        type: 'user block',
+        content: block.content,
+        droppable: false
+      }
+    })
+  })
 }

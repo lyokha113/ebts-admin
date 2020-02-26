@@ -170,7 +170,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Please check all information to create new account`,
         accept: async () => {

@@ -4,18 +4,19 @@
       <vs-col
         vs-type="flex"
         vs-align="center"
-        vs-w="1"
+        vs-w="2"
         v-for="block in userBlocks"
         :key="block.id"
       >
-        <vx-card class="grid-view-item mb-base overflow-hidden cursor-pointer">
+        <vx-card
+          class="grid-view-item mb-base overflow-hidden cursor-pointer user-block"
+        >
           <template slot="no-body">
-            <div
-              style="text-align: center"
-              class="m-2"
-              @click="handlePopupUpdate(block)"
-            >
-              <div class="my-2 font-medium truncate" style="font-size: 16px">
+            <div style="text-align: center" class="m-2">
+              <div
+                class="my-2 px-5 font-medium truncate"
+                style="font-size: 16px"
+              >
                 {{ block.name }}
               </div>
               <i
@@ -24,12 +25,39 @@
                 style="font-size: 80px"
               ></i>
             </div>
+            <div class="mb-3 flex justify-center">
+              <vs-button
+                class="mx-2"
+                type="gradient"
+                icon="edit"
+                radius
+                @click="handlePopupUpdate(block)"
+              />
+              <vs-button
+                class="mx-2"
+                type="gradient"
+                icon="sync"
+                radius
+                color="success"
+                @click="handleSync(block.id)"
+              />
+              <vs-button
+                class="ml-2"
+                type="gradient"
+                icon="delete"
+                radius
+                color="danger"
+                @click="handleDelete(block.id)"
+              />
+            </div>
           </template>
         </vx-card>
       </vs-col>
 
       <vs-col vs-type="flex" vs-align="center" vs-w="1">
-        <vx-card class="grid-view-item mb-base overflow-hidden cursor-pointer">
+        <vx-card
+          class="grid-view-item mb-base overflow-hidden cursor-pointer new-box-wrapper"
+        >
           <template slot="no-body">
             <div
               class="flex items-center justify-center align-center"
@@ -40,7 +68,7 @@
                 id="new-box"
                 :style="{
                   backgroundImage:
-                    'url(' + require('@/assets/images/new.png') + ')'
+                    'url(' + require('@/assets/images/add.png') + ')'
                 }"
               />
             </div>
@@ -80,13 +108,13 @@
             >
               <input
                 v-model="icon"
-                :id="i"
+                :id="`add-${i}`"
                 :value="i"
                 type="radio"
                 name="icon"
                 style="display: none"
               />
-              <label :for="i">
+              <label :for="`add-${i}`">
                 <i
                   class="m-3 cursor-pointer fa"
                   :class="`fa-${i}`"
@@ -135,13 +163,13 @@
             >
               <input
                 v-model="iconUpdate"
-                :id="i"
+                :id="`update-${i}`"
                 :value="i"
                 type="radio"
                 name="icon"
                 style="display: none"
               />
-              <label :for="i">
+              <label :for="`update-${i}`">
                 <i
                   class="m-3 cursor-pointer fa"
                   :class="`fa-${i}`"
@@ -162,6 +190,43 @@
         </vs-col>
       </vs-row>
     </vs-popup>
+
+    <vs-popup id="sync-popup" title="UPDATE BLOCK" :active.sync="popupSync">
+      <vs-row>
+        <vs-col vs-w="12">
+          Choose template to sync:
+          <multiselect
+            v-model="templates"
+            track-by="id"
+            label="name"
+            selectLabel=""
+            selectedLabel=""
+            deselectLabel=""
+            group-values="raw"
+            group-label="workspace"
+            :options="templatesDisplay"
+            :multiple="true"
+            :close-on-select="false"
+            :searchable="false"
+          >
+          </multiselect>
+        </vs-col>
+        <vs-col vs-w="12">
+          <vs-button
+            color="primary"
+            class="float-right my-5 ml-2"
+            @click="handleAll"
+            >{{ titleDisplay }}</vs-button
+          >
+          <vs-button
+            color="primary"
+            class="float-right my-5 mr-2"
+            @click="handleUpdate"
+            >Update</vs-button
+          >
+        </vs-col>
+      </vs-row>
+    </vs-popup>
   </div>
 </template>
 
@@ -176,14 +241,26 @@ export default {
       nameUpdate: '',
       icon: '',
       iconUpdate: '',
+      templates: [],
       popupCreate: false,
-      popupUpdate: false
+      popupUpdate: false,
+      popupSync: false
     }
   },
   computed: {
-    ...mapGetters(['userBlocks']),
+    ...mapGetters(['userBlocks', 'workspaces']),
     iconsDisplay() {
       return icons
+    },
+    templatesDisplay() {
+      return this.workspaces.map(w => {
+        return { workspace: w.name, raw: w.rawTemplates }
+      })
+    },
+    titleDisplay() {
+      let count = 0
+      this.workspaces.forEach(w => (count += w.rawTemplates.length))
+      return this.templates.length != count ? 'Select All' : 'Deselect All'
     }
   },
   methods: {
@@ -191,7 +268,8 @@ export default {
       'getUserBlocks',
       'createUserBlock',
       'updateUserBlock',
-      'deleteUserBlock'
+      'deleteUserBlock',
+      'getWorkspaces'
     ]),
     handlePopupAdd() {
       this.name = ''
@@ -203,6 +281,23 @@ export default {
       this.iconUpdate = block.icon
       this.id = block.id
       this.popupUpdate = true
+    },
+    handleSync() {
+      this.templates = []
+      this.popupSync = true
+    },
+    handleAll() {
+      let count = 0
+      this.workspaces.forEach(w => (count += w.rawTemplates.length))
+
+      if (this.templates.length == count) {
+        this.templates = []
+      } else {
+        this.templates = []
+        this.workspaces.forEach(w => {
+          this.templates = [...this.templates, ...w.rawTemplates]
+        })
+      }
     },
     async handleAdd() {
       if (!this.name || !this.icon) {
@@ -218,7 +313,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to create new block ?`,
         accept: async () => {
@@ -247,7 +341,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to update this block ?`,
         accept: async () => {
@@ -263,24 +356,32 @@ export default {
         }
       })
     },
-    async handleDelete() {
+    async handleDelete(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
-        text: `This action can't be undo. Do you want to delete this workspace ?`,
-        accept: async () => {
-          const ws = this.workspaces.find(w => w.id == this.workspace)
-          await this.handleCallAPI(this.deleteWorkspace, ws)
-          this.workspace = this.workspaces.find(
-            w => w.name == 'Default workspace'
-          ).id
-        }
+        text: `This action can't be undo. Do you want to delete this block ?`,
+        accept: async () => await this.handleCallAPI(this.deleteUserBlock, id)
       })
     }
   },
   async mounted() {
-    await this.handleCallAPI(this.getUserBlocks, null)
+    let loader = this.$loading.show({
+      color: '#7367f0',
+      loader: 'spinner',
+      width: 64,
+      height: 64,
+      backgroundColor: '#ffffff',
+      opacity: 0.8,
+      zIndex: 110000
+    })
+
+    await Promise.all([
+      this.handleCallAPI(this.getWorkspaces, null, false),
+      this.handleCallAPI(this.getUserBlocks, null, false)
+    ])
+
+    loader.hide()
   },
   destroyed() {
     this.popupCreate = false
@@ -290,13 +391,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .vs-popup {
-  width: 800px;
-  height: 420px;
-}
 #create-popup,
 #update-popup {
   z-index: 51100;
+
+  /deep/ .vs-popup {
+    width: 800px;
+    height: 420px;
+  }
+}
+
+#sync-popup {
+  z-index: 51100;
+
+  /deep/ .vs-popup {
+    height: 200px;
+  }
+}
+
+.new-box-wrapper,
+.user-block {
+  transition: ease-in-out 0.5s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
+  }
 }
 
 #new-box {
@@ -305,7 +425,6 @@ export default {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/img/new.cdb0a76b.png);
 }
 
 .icon-wrapper:hover {

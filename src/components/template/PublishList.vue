@@ -249,7 +249,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to approve this publish request ?`,
         accept: async () => {
@@ -262,7 +261,6 @@ export default {
     async handleCancel(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to deny this publish request ?`,
         accept: async () => await this.handleCallAPI(this.denyPublish, id)

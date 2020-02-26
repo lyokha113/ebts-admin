@@ -310,7 +310,6 @@ export default {
     async handleDeleteEmail(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to delete this email ?`,
         accept: async () => await this.handleCallAPI(this.deleteUserEmail, id)

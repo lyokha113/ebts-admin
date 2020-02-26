@@ -178,7 +178,6 @@ export default {
       if (this.selected) {
         this.$vs.dialog({
           type: 'confirm',
-          color: 'danger',
           title: `Confirm`,
           text: `Please check all information to create new account`,
           accept: async () => {
@@ -196,7 +195,6 @@ export default {
       } else {
         this.$vs.dialog({
           type: 'confirm',
-          color: 'danger',
           title: `Confirm`,
           text: `Please check all information to update account`,
           accept: async () => {

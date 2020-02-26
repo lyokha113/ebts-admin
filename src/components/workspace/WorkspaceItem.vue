@@ -101,7 +101,6 @@ export default {
     async handleDelete(raw) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `This action can't be undo. Do you want to delete this template ?`,
         accept: async () =>
@@ -111,7 +110,6 @@ export default {
     async handlePublish(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `We are really appreciate if you want to contribute this template. Are you sure to do that ?`,
         accept: async () => {
@@ -130,7 +128,6 @@ export default {
     handleEdit(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to design with this template ?`,
         accept: async () => {

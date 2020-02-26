@@ -381,7 +381,6 @@ export default {
     async handleSendMail() {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Send test email ?`,
         accept: async () => {

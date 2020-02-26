@@ -33,7 +33,9 @@ function connectWS(vueInstance, topic, handleData) {
     // eslint-disable-next-line no-unused-vars
     frame => {
       vueInstance.wsConnected = true
-      vueInstance.stompClient.subscribe(topic, data => handleData(data))
+      vueInstance.stompClient.subscribe(topic, data =>
+        handleData(JSON.parse(data.body))
+      )
     }
   )
 }

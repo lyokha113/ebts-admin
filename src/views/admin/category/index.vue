@@ -10,7 +10,7 @@
         <vs-input
           v-model="name"
           placeholder="Name"
-          style="width: 270px"
+          style="width: 100%"
           class="my-2"
         />
         <vs-button
@@ -33,7 +33,7 @@
         <vs-input
           v-model="updateName"
           placeholder="Name"
-          style="width: 270px"
+          style="width: 100%"
           class="my-2"
         />
         <vs-button
@@ -214,7 +214,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to create new category ?`,
         accept: async () => {
@@ -240,7 +239,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to update this category ?`,
         accept: async () => {
@@ -256,7 +254,6 @@ export default {
       const actionMsg = category.active ? 'lock' : 'unlock'
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `This action could be affect to other parts. Do you want to ${actionMsg} this category ?`,
         accept: async () => {

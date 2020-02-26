@@ -107,7 +107,6 @@ export default {
         : 'This action could be affect to designs which using it. File will be temporary moved to "Deleted" and permanently delete later.'
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: message,
         accept: async () =>

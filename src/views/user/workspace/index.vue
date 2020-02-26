@@ -50,7 +50,7 @@
         <WorkspaceItem :raw="item" @updateRaw="handlePopupUpdateRaw($event)" />
       </vs-col>
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
-        <vx-card class="grid-view-item mb-base overflow-hidden">
+        <vx-card class="grid-view-item mb-base overflow-hidden new-box-wrapper">
           <template slot="no-body">
             <div
               class="flex items-center justify-center align-center cursor-pointer"
@@ -61,7 +61,7 @@
                 id="new-box"
                 :style="{
                   backgroundImage:
-                    'url(' + require('@/assets/images/new.png') + ')'
+                    'url(' + require('@/assets/images/add.png') + ')'
                 }"
               />
             </div>
@@ -76,7 +76,7 @@
         <vs-input
           v-model="name"
           placeholder="Name"
-          style="width: 250px"
+          style="width: 100%"
           class="my-2"
         />
         <vs-button
@@ -95,7 +95,7 @@
         <vs-input
           v-model="name"
           placeholder="Name"
-          style="width: 250px"
+          style="width: 100%"
           class="my-2"
         />
         <vs-button
@@ -118,14 +118,14 @@
         <vs-input
           v-model="templateName"
           placeholder="Name"
-          style="width: 250px"
+          style="width: 100%"
           class="mt-1 mb-4"
         />
         Enter description:
         <vs-input
           v-model="templateDescription"
           placeholder="Description"
-          style="width: 250px"
+          style="width: 100%"
           class="mt-1 mb-4"
         />
         <vs-checkbox v-model="templateBlank">Set blank content</vs-checkbox>
@@ -314,7 +314,6 @@ export default {
       } else {
         this.$vs.dialog({
           type: 'confirm',
-          color: 'danger',
           title: `Confirm`,
           text: `Do you want to create a blank template ?`,
           accept: async () => {
@@ -351,7 +350,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to update this workspace ?`,
         accept: async () => {
@@ -379,7 +377,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to create new workspace ?`,
         accept: async () => {
@@ -406,7 +403,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to update this workspace ?`,
         accept: async () => {
@@ -424,9 +420,8 @@ export default {
     async handleDelete() {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
-        text: `This action can't be undo. Do you want to delete this workspace ?`,
+        text: `All template on this workspace will be moved to 'Default Workspace'. Do you want to delete this workspace ?`,
         accept: async () => {
           const ws = this.workspaces.find(w => w.id == this.workspace)
           await this.handleCallAPI(this.deleteWorkspace, ws)
@@ -468,12 +463,20 @@ export default {
   z-index: 51100;
 }
 
+.new-box-wrapper {
+  transition: ease-in-out 0.5s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
+  }
+}
+
 #new-box {
   height: 50%;
   width: 50%;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/img/new.cdb0a76b.png);
 }
 </style>

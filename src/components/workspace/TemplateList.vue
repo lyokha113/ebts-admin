@@ -76,7 +76,6 @@ export default {
     handleTemplate(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Use this template for your content ?`,
         accept: () => this.$emit('getTemplate', id)

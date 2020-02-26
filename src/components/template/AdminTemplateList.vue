@@ -177,7 +177,6 @@ export default {
     async handleDelete(id) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `This action can't be undo. Do you want to delete this template ?`,
         accept: async () => await this.handleCallAPI(this.deleteTemplate, id)
@@ -217,7 +216,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to update this template ?`,
         accept: async () => {

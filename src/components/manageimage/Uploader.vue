@@ -56,6 +56,18 @@ export default {
     handleUpload() {
       this.files = []
       const selectedFiles = [...this.$refs.uploader.files]
+
+      if (selectedFiles.length > 10) {
+        this.$vs.notify({
+          title: 'Maximum file limit',
+          text: `Please select maximum 10 files`,
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       selectedFiles.forEach(file => {
         if (/image.*/.test(file.type)) {
           this.files.push(file)

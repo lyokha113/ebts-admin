@@ -56,7 +56,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'currentRaw', 'editorFiles', 'editorChange'])
+    ...mapGetters([
+      'accessToken',
+      'currentRaw',
+      'editorFiles',
+      'editorChange',
+      'userBlocks'
+    ])
   },
   async mounted() {
     if (!this.currentRaw) {
@@ -76,7 +82,8 @@ export default {
 
     await Promise.all([
       this.handleCallAPI(this.getFiles, null, false),
-      this.handleCallAPI(this.getUserEmails, null, false)
+      this.handleCallAPI(this.getUserEmails, null, false),
+      this.handleCallAPI(this.getUserBlocks, null, false)
     ])
 
     loader.hide()
@@ -138,11 +145,12 @@ export default {
   methods: {
     ...mapActions([
       'getFiles',
+      'getUserBlocks',
+      'getUserEmails',
       'createFile',
       'updateRawContent',
       'autoUpdateRawContent',
-      'setEditorChange',
-      'getUserEmails'
+      'setEditorChange'
     ]),
 
     getFileNameFromAM(src, assetManager) {
@@ -161,7 +169,6 @@ export default {
     handleApplyEditconfirm(imageEditor, imageModel) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: 'Do you want to apply these changes ?',
         accept: () => {
@@ -196,6 +203,7 @@ export default {
         rawId: this.currentRaw.id,
         content
       })
+      this.setEditorChange(false)
     },
 
     async handleAutoSave() {
@@ -296,7 +304,6 @@ export default {
     if (this.editorChange > 0) {
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Your template haven't saved. Do you want to leave it ?`,
         'accept-text': 'Leave',

@@ -165,7 +165,6 @@ export default {
       const actionMsg = account.active ? 'lock' : 'unlock'
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `This action could be affect to other parts. Do you want to ${actionMsg} this account ?`,
         accept: this.handleStatusConfirm

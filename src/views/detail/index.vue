@@ -263,7 +263,6 @@ export default {
 
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to create with this template content ?`,
         accept: async () => {

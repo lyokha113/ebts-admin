@@ -125,11 +125,10 @@
           </vs-col>
           <vs-col
             id="file-uploader"
-            class="mx-1"
             style="margin-left: auto"
             vs-type="flex"
             vs-align="center"
-            vs-w="3"
+            vs-w="6"
           >
             <input
               id="file"
@@ -334,7 +333,6 @@ export default {
       if (this.isCreating) {
         this.$vs.dialog({
           type: 'confirm',
-          color: 'danger',
           title: `Confirm`,
           text: `${
             !this.thumbnail
@@ -354,7 +352,6 @@ export default {
         }
         this.$vs.dialog({
           type: 'confirm',
-          color: 'danger',
           title: `Confirm`,
           text: `Please check all informations before update tutorial.`,
           accept: async () => {
@@ -369,7 +366,6 @@ export default {
       const actionMsg = tutorial.active ? 'lock' : 'unlock'
       this.$vs.dialog({
         type: 'confirm',
-        color: 'danger',
         title: `Confirm`,
         text: `Do you want to ${actionMsg} this tutorial ?`,
         accept: async () => {
