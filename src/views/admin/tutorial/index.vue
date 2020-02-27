@@ -157,10 +157,19 @@
           <prism language="html">{{ content }}</prism>
         </div>
         <div class="flex justify-end mt-3">
-          <vs-button class="flex mx-2" type="gradient" @click="handleSubmit">
+          <vs-button
+            class="flex mx-2"
+            type="gradient"
+            @click="handleSubmit"
+            :disabled="!name && !description && !content"
+          >
             {{ isCreating ? 'Create' : 'Update' }}
           </vs-button>
-          <vs-button class="flex mx-2" type="gradient" @click="handlePreview"
+          <vs-button
+            class="flex mx-2"
+            type="gradient"
+            @click="handlePreview"
+            :disabled="!content"
             >Preview</vs-button
           >
           <vs-button type="border" class="flex mx-2" @click="handleCloseContent"

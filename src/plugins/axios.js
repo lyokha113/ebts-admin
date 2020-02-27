@@ -2,8 +2,7 @@ import axios from 'axios'
 import store from '@/store/store'
 import { getToken } from '@/plugins/auth'
 
-// eslint-disable-next-line no-undef
-const api_local = 'http://localhost:5000/'
+const api_local = process.env.VUE_APP_API_DOMAIN || 'https://etbs.ml'
 
 const service = axios.create({
   baseURL: api_local,

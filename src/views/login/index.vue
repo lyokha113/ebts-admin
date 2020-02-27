@@ -102,6 +102,7 @@
             type="filled"
             class="float-right"
             @click="handleRecoveryConfirm"
+            :disabled="!emailRecovery"
             >Submit</vs-button
           >
         </div>

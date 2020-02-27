@@ -48,7 +48,7 @@ export default function(editor, options) {
   }
 
   const addTypes = () => {
-    domComponents.addType('dynamic text', {
+    domComponents.addType('dynamic-text', {
       isComponent: el => {
         return (
           el instanceof HTMLElement &&
@@ -74,7 +74,7 @@ export default function(editor, options) {
       }
     })
 
-    domComponents.addType('dynamic link', {
+    domComponents.addType('dynamic-link', {
       isComponent: el => {
         return (
           el instanceof HTMLElement &&
@@ -110,20 +110,6 @@ export default function(editor, options) {
         handleTextChange() {
           const text = this.getAttributes().text
           editor.getSelected().set('content', text)
-        }
-      }
-    })
-
-    domComponents.addType('user block', {
-      isComponent: el => {
-        return (
-          el instanceof HTMLElement &&
-          el.getAttribute('datatype') == 'user block'
-        )
-      },
-      model: {
-        defaults: {
-          attributes: { datatype: 'user block' }
         }
       }
     })
@@ -454,12 +440,26 @@ export default function(editor, options) {
   addButtons()
 
   vueInstance.userBlocks.forEach(block => {
+    domComponents.addType(`user-block-${block.name}`, {
+      isComponent: el => {
+        return (
+          el instanceof HTMLElement &&
+          el.getAttribute('datatype') == 'user block'
+        )
+      },
+      model: {
+        defaults: {
+          attributes: { datatype: 'user block', name: block.name }
+        }
+      }
+    })
+
     blockManager.add(`${block.id}-${block.name}`, {
       label: block.name,
       category: 'User Blocks',
       attributes: { class: `fa fa-${block.icon}` },
       content: {
-        type: 'user block',
+        type: `user-block-${block.name}`,
         content: block.content,
         droppable: false
       }

@@ -78,7 +78,8 @@ import {
   createUserBlock,
   updateUserBlock,
   updateUserBlockContent,
-  deleteUserBlock
+  deleteUserBlock,
+  synchronizeContent
 } from '@/service/userblock'
 
 import router from '@/router'
@@ -838,6 +839,19 @@ const actions = {
         position: 'top-right'
       })
       commit('DELETE_USER_BLOCK', id)
+    }
+
+    return data.success
+  },
+  async synchronizeContent({ commit }, request) {
+    const { data } = await synchronizeContent(request)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Block content was synchronized to designs',
+        color: 'success',
+        position: 'top-right'
+      })
     }
 
     return data.success

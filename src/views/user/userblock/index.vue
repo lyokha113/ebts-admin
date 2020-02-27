@@ -39,7 +39,7 @@
                 icon="sync"
                 radius
                 color="success"
-                @click="handleSync(block.id)"
+                @click="handlePopupSync(block.id)"
               />
               <vs-button
                 class="ml-2"
@@ -130,6 +130,7 @@
             type="filled"
             class="float-right my-3"
             @click="handleAdd"
+            :disabled="!name && !icon"
             >Create</vs-button
           >
         </vs-col>
@@ -184,6 +185,7 @@
             color="primary"
             type="filled"
             class="float-right my-3"
+            :disabled="!nameUpdate && !iconUpdate"
             @click="handleUpdate"
             >Update</vs-button
           >
@@ -221,8 +223,9 @@
           <vs-button
             color="primary"
             class="float-right my-5 mr-2"
-            @click="handleUpdate"
-            >Update</vs-button
+            :disabled="!templates.length"
+            @click="handleSync"
+            >Sync</vs-button
           >
         </vs-col>
       </vs-row>
@@ -269,7 +272,8 @@ export default {
       'createUserBlock',
       'updateUserBlock',
       'deleteUserBlock',
-      'getWorkspaces'
+      'getWorkspaces',
+      'synchronizeContent'
     ]),
     handlePopupAdd() {
       this.name = ''
@@ -282,7 +286,8 @@ export default {
       this.id = block.id
       this.popupUpdate = true
     },
-    handleSync() {
+    handlePopupSync(id) {
+      this.id = id
       this.templates = []
       this.popupSync = true
     },
@@ -352,6 +357,34 @@ export default {
             })
           ) {
             this.popupUpdate = false
+          }
+        }
+      })
+    },
+    async handleSync() {
+      if (!this.templates.length) {
+        this.$vs.notify({
+          title: 'Empty value',
+          text: 'Please choose template to sync',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: `Do you want to synchronize this block content to selected design tempalates ?`,
+        accept: async () => {
+          if (
+            await this.handleCallAPI(this.synchronizeContent, {
+              blockId: this.id,
+              rawIds: this.templates.map(t => t.id)
+            })
+          ) {
+            this.popupSync = false
           }
         }
       })

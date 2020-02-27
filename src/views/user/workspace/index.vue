@@ -83,6 +83,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
+          :disabled="!name"
           @click="handleAdd"
           >Create</vs-button
         >
@@ -102,6 +103,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
+          :disabled="!name"
           @click="handleUpdate"
           >Update</vs-button
         >
@@ -133,6 +135,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
+          :disabled="!templateName && !templateDescription"
           @click="handlePopupCreateTemplate"
           >Create</vs-button
         >
@@ -187,6 +190,9 @@
           type="filled"
           class="float-right mt-5"
           @click="handleUpdateRaw"
+          :disabled="
+            !templateName && !templateDescription && !templateWorkspace.length
+          "
           >Update</vs-button
         >
       </div>

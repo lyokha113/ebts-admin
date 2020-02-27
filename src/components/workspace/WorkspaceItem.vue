@@ -91,9 +91,7 @@ export default {
   methods: {
     ...mapActions(['getRawTemplate', 'deleteRawTemplate', 'createPublish']),
     async handlePreview(id) {
-      if (this.currentRaw == null || this.currentRaw.id != id) {
-        await this.handleCallAPI(this.getRawTemplate, id)
-      }
+      await this.handleCallAPI(this.getRawTemplate, id)
 
       const preview = window.open('', '_blank')
       preview.document.write(this.currentRaw.content)
@@ -113,9 +111,7 @@ export default {
         title: `Confirm`,
         text: `We are really appreciate if you want to contribute this template. Are you sure to do that ?`,
         accept: async () => {
-          if (this.currentRaw == null || this.currentRaw.id != id) {
-            await this.handleCallAPI(this.getRawTemplate, id)
-          }
+          await this.handleCallAPI(this.getRawTemplate, id)
           await this.handleCallAPI(this.createPublish, {
             content: this.currentRaw.content
           })
@@ -131,9 +127,7 @@ export default {
         title: `Confirm`,
         text: `Do you want to design with this template ?`,
         accept: async () => {
-          if (this.currentRaw == null || this.currentRaw.id != id) {
-            await this.handleCallAPI(this.getRawTemplate, id)
-          }
+          await this.handleCallAPI(this.getRawTemplate, id)
           this.$router.push(`/user/editor/`)
         }
       })

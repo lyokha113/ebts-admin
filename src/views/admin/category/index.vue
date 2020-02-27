@@ -17,6 +17,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
+          :disabled="!name"
           @click="handleAdd"
           >Add</vs-button
         >
@@ -40,6 +41,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
+          :disabled="!updateName"
           @click="handleUpdate"
           >Update</vs-button
         >

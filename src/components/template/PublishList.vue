@@ -147,6 +147,7 @@
           color="primary"
           type="filled"
           class="float-right mt-5"
+          :disabled="!name && !description && !categories.length"
           @click="handlePublish"
           >Publish</vs-button
         >

@@ -21,3 +21,7 @@ export function updateUserBlockContent(block) {
 export function deleteUserBlock(id) {
   return axios.delete(`${URI}/${id}`)
 }
+
+export function synchronizeContent(request) {
+  return axios.post(`${URI}/sync`, request)
+}
