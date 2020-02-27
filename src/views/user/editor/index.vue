@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="left-panel"></div>
     <div id="editor"></div>
 
     <ExportPopup :open.sync="exportPopup" :editor="editor" />
@@ -93,7 +94,7 @@ export default {
     this.editor = grapesjs.init({
       components: this.currentRaw && this.currentRaw.content,
       container: '#editor',
-      height: '780px',
+      height: '750px',
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
         editor => configEditor(editor, { vueInstance: this }),
@@ -130,6 +131,15 @@ export default {
       storageManager: { type: null },
       richTextEditor: {
         actions: ['bold', 'italic', 'underline', 'strikethrough']
+      },
+      selectorManager: {
+        appendTo: '#left-panel'
+      },
+      styleManager: {
+        appendTo: '#left-panel'
+      },
+      traitManager: {
+        appendTo: '#left-panel'
       }
     })
 
@@ -413,5 +423,33 @@ export default {
   .gjs-dropzone {
     display: none !important;
   }
+}
+
+/deep/ .gjs-cv-canvas {
+  width: 70%;
+  left: 15%;
+}
+
+/deep/ .gjs-pn-commands {
+  width: 70%;
+  left: 15%;
+  display: flex;
+  justify-content: center;
+}
+
+/deep/ .gjs-pn-devices-c {
+  left: 15%;
+}
+
+/deep/ .gjs-trt-traits {
+  padding: 10px 15px 10px 10px;
+}
+
+#left-panel {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 15%;
+  height: 300px;
+  position: absolute;
+  z-index: 1;
 }
 </style>

@@ -25,7 +25,12 @@ import {
   deleteTemplate
 } from '@/service/template'
 
-import { getFiles, createFile, changeStatusFile } from '@/service/file'
+import {
+  getFiles,
+  createFile,
+  changeStatusFile,
+  changeAccessibleFile
+} from '@/service/file'
 
 import {
   getTutorials,
@@ -388,6 +393,22 @@ const actions = {
       this._vm.$vs.notify({
         title: 'Successfully',
         text: file.active ? 'File was restored' : 'File was deleted',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async changeAccessibleFile({ commit }, file) {
+    const { data } = await changeAccessibleFile(file.id, file.open)
+    if (data.success) {
+      commit('CHANGE_STATUS_FILE', file)
+      this._vm.$vs.notify({
+        title: 'Successfully',
+        text: file.open
+          ? 'File was changed to public'
+          : 'File was changed to private',
         color: 'success',
         position: 'top-right'
       })

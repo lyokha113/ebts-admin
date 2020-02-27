@@ -18,3 +18,9 @@ export function changeStatusFile(id, active) {
     params: { active }
   })
 }
+
+export function changeAccessibleFile(id, open) {
+  return axios.patch(`${URI}/${id}`, null, {
+    params: { open }
+  })
+}

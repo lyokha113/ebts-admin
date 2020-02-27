@@ -127,6 +127,7 @@ export default function(editor, options) {
           margin: 'auto',
           padding: '10px 20px 10px 20px',
           color: 'white',
+          display: 'inline-block',
           'font-weight': 'bold',
           'box-sizing': 'border-box',
           'background-color': '#44d1b3',
@@ -399,45 +400,45 @@ export default function(editor, options) {
     })
   }
 
-  const addButtons = () => {
-    panelManager.addButton('options', {
-      id: 'save',
-      label: ' Save',
-      className: 'fa fa-upload',
-      attributes: { title: 'Save' },
-      active: false,
-      command: () => vueInstance.handleSaveContent()
-    })
+  // const addButtons = () => {
+  //   panelManager.addButton('options', {
+  //     id: 'save',
+  //     label: ' Save',
+  //     className: 'fa fa-upload',
+  //     attributes: { title: 'Save' },
+  //     active: false,
+  //     command: () => vueInstance.handleSaveContent()
+  //   })
 
-    panelManager.addButton('options', {
-      id: 'export',
-      label: ' Export',
-      className: 'fa fa-cloud-download',
-      attributes: { title: 'Export' },
-      active: false,
-      command: () => vueInstance.handleExportPopup()
-    })
+  //   panelManager.addButton('options', {
+  //     id: 'export',
+  //     label: ' Export',
+  //     className: 'fa fa-cloud-download',
+  //     attributes: { title: 'Export' },
+  //     active: false,
+  //     command: () => vueInstance.handleExportPopup()
+  //   })
 
-    panelManager.addButton('options', {
-      id: 'sendmail',
-      label: ' Test',
-      className: 'fa fa-paper-plane',
-      attributes: { title: 'Test' },
-      active: false,
-      command: () => {
-        const wrapper = domComponents.getWrapper().find('[datatype^=dynamic ')
-        const attr = wrapper.map(c => c.getAttributes())
-        vueInstance.handleSendMailPopup(attr)
-      }
-    })
-  }
+  //   panelManager.addButton('options', {
+  //     id: 'sendmail',
+  //     label: ' Test',
+  //     className: 'fa fa-paper-plane',
+  //     attributes: { title: 'Test' },
+  //     active: false,
+  //     command: () => {
+  //       const wrapper = domComponents.getWrapper().find('[datatype^=dynamic ')
+  //       const attr = wrapper.map(c => c.getAttributes())
+  //       vueInstance.handleSendMailPopup(attr)
+  //     }
+  //   })
+  // }
 
   setInitConfig()
   addTypes()
   addBlocks()
   addCommands()
   addRTE()
-  addButtons()
+  // addButtons()
 
   vueInstance.userBlocks.forEach(block => {
     domComponents.addType(`user-block-${block.name}`, {
@@ -465,4 +466,9 @@ export default function(editor, options) {
       }
     })
   })
+
+  // panelManager.removeButton('views', 'open-tm')
+  // panelManager.removeButton('views', 'open-sm')
+
+  console.log(panelManager.getPanels())
 }

@@ -17,6 +17,13 @@
         <Uploader @uploaded="type = 'Active'" />
       </vs-col>
     </vs-row>
+    <vs-row v-if="type != 'Active'">
+      <vs-col vs-w="12">
+        <p class="text-center text-xl font-semibold mt-10">
+          Files moved here will be deleted permanently after 24 hours.
+        </p>
+      </vs-col>
+    </vs-row>
     <vs-row v-if="filteredFiles.length">
       <vs-col
         v-for="file in filteredFiles"

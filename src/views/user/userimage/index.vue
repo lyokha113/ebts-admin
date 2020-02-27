@@ -9,6 +9,13 @@
         <Uploader @uploaded="type = 'Active'" />
       </vs-col>
     </vs-row>
+    <vs-row v-if="type != 'Active'">
+      <vs-col vs-w="12">
+        <p class="text-center text-xl font-semibold mt-10">
+          Files moved here will be deleted permanently after 24 hours.
+        </p>
+      </vs-col>
+    </vs-row>
     <vs-row v-if="filteredFiles.length">
       <vs-col
         v-for="file in filteredFiles"
@@ -27,7 +34,13 @@
           <vs-divider border-style="dashed" />
           <div class="px-3 text-center">
             <div>
-              <h6 class="truncate font-semibold mb-1">{{ file.name }}</h6>
+              <h6 class="truncate font-semibold mb-3">{{ file.name }}</h6>
+              <span
+                class="cursor-pointer"
+                :style="[file.open ? { color: 'teal' } : { color: 'orange' }]"
+                @click="handleChangeOpen(file)"
+                >{{ file.open ? 'Public' : 'Private' }}</span
+              >
             </div>
             <vs-row class="my-2">
               <vs-col
@@ -96,7 +109,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getFiles', 'changeStatusFile']),
+    ...mapActions(['getFiles', 'changeStatusFile', 'changeAccessibleFile']),
     handleChangeStatusFile(selected, active) {
       const file = {
         id: selected.id,
@@ -111,6 +124,20 @@ export default {
         text: message,
         accept: async () =>
           await this.handleCallAPI(this.changeStatusFile, file)
+      })
+    },
+    handleChangeOpen(selected) {
+      const file = {
+        id: selected.id,
+        open: !selected.open
+      }
+
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: 'Do you want to change accessible of this file ?',
+        accept: async () =>
+          await this.handleCallAPI(this.changeAccessibleFile, file)
       })
     }
   },
