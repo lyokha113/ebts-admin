@@ -469,6 +469,4 @@ export default function(editor, options) {
 
   // panelManager.removeButton('views', 'open-tm')
   // panelManager.removeButton('views', 'open-sm')
-
-  console.log(panelManager.getPanels())
 }

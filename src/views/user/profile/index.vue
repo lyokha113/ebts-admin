@@ -111,6 +111,12 @@
       <vs-col vs-type="flex" vs-align="center" vs-w="6" vs-offset="3">
         <vs-row class="p-3" style="background: white">
           <vs-col vs-type="flex" vs-w="12">
+            <span
+              ><strong>Limitation: </strong>{{ getUserEmails.length }}/5
+              emails</span
+            >
+          </vs-col>
+          <vs-col vs-type="flex" vs-w="12">
             <h1 style="margin: auto">Email list</h1>
           </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-w="12">
@@ -257,10 +263,10 @@ export default {
         return
       }
 
-      if (this.userEmails.length > 5) {
+      if (this.userEmails.length >= 5) {
         this.$vs.notify({
           title: 'Maximum emails',
-          text: 'We currenly support 5 emails for each user',
+          text: 'We currently support 5 emails for each user',
           color: 'warning',
           icon: 'error',
           position: 'top-right'

@@ -4,6 +4,10 @@
     class="data-list-container mt-3"
     style="background-color: white; padding: 10px;"
   >
+    <span
+      ><strong>Limitation pending: </strong
+      >{{ publishes.filter(p => p.status == 'PENDING').length }}/3 today</span
+    >
     <vs-table
       ref="table"
       pagination
