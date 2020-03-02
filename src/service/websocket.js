@@ -1,7 +1,7 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 
-const ENDPOINT = '/ws-etbs'
+const ENDPOINT = '/ws'
 const PUBLISH_TOPIC = '/topic/get-publish'
 const WUSEREMAIL_TOPIC = '/topic/get-useremail'
 

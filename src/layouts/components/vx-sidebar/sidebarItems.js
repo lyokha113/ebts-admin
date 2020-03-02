@@ -22,5 +22,11 @@ export default [
     name: 'Template',
     slug: 'template',
     icon: 'FileTextIcon'
+  },
+  {
+    url: '/admin/publish',
+    name: 'Publish',
+    slug: 'publish',
+    icon: 'UploadCloudIcon'
   }
 ]

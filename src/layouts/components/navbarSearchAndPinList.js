@@ -29,6 +29,13 @@ export default {
       url: '/admin/template',
       labelIcon: 'FileTextIcon',
       highlightAction: false
+    },
+    {
+      index: 4,
+      label: 'Publish',
+      url: '/admin/publish',
+      labelIcon: 'UploadCloudIcon',
+      highlightAction: false
     }
   ]
 }

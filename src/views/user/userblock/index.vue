@@ -12,7 +12,11 @@
           class="grid-view-item mb-base overflow-hidden cursor-pointer user-block"
         >
           <template slot="no-body">
-            <div style="text-align: center" class="m-2">
+            <div
+              style="text-align: center"
+              class="m-2"
+              @click="handleEdit(block.id)"
+            >
               <div
                 class="my-2 px-5 font-medium truncate"
                 style="font-size: 16px"
@@ -269,6 +273,7 @@ export default {
   methods: {
     ...mapActions([
       'getUserBlocks',
+      'getUserBlock',
       'createUserBlock',
       'updateUserBlock',
       'deleteUserBlock',
@@ -395,6 +400,17 @@ export default {
         title: `Confirm`,
         text: `This action can't be undo. Do you want to delete this block ?`,
         accept: async () => await this.handleCallAPI(this.deleteUserBlock, id)
+      })
+    },
+    handleEdit(id) {
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: `Do you want to design this block ?`,
+        accept: async () => {
+          await this.handleCallAPI(this.getUserBlock, id)
+          this.$router.push(`/user/block/editor/`)
+        }
       })
     }
   },

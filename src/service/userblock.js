@@ -6,6 +6,10 @@ export function getUserBlocks() {
   return axios.get(`${URI}`)
 }
 
+export function getUserBlock(id) {
+  return axios.get(`${URI}/${id}`)
+}
+
 export function createUserBlock(block) {
   return axios.post(`${URI}`, block)
 }
@@ -15,7 +19,7 @@ export function updateUserBlock(block) {
 }
 
 export function updateUserBlockContent(block) {
-  return axios.patch(`${URI}/${block.id}`, block.content)
+  return axios.patch(`${URI}/${block.id}`, { string: block.content })
 }
 
 export function deleteUserBlock(id) {

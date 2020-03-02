@@ -190,16 +190,6 @@ const mutations = {
   },
 
   // ////////////////////////////////////////////
-  // VERSION
-  // ////////////////////////////////////////////
-  SAVE_CONTENT(state, content) {
-    state.currentRaw.content = content
-  },
-  SET_EDITOR_CHANGE(state, status) {
-    state.editorChange = status
-  },
-
-  // ////////////////////////////////////////////
   // USER EMAILS
   // ////////////////////////////////////////////
   SET_USER_EMAILS(state, userEmails) {
@@ -239,6 +229,19 @@ const mutations = {
   DELETE_USER_BLOCK(state, id) {
     const idx = state.userBlocks.findIndex(ub => ub.id == id)
     state.userBlocks.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
+  // EDITOR
+  // ////////////////////////////////////////////
+  SAVE_CONTENT(state, content) {
+    state.currentRaw.content = content
+  },
+  SAVE__USER_BLOCK_CONTENT(state, content) {
+    state.currentBlock.content = content
+  },
+  SET_EDITOR_CHANGE(state, status) {
+    state.editorChange = status
   }
 }
 

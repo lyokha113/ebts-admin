@@ -4,10 +4,9 @@
     class="data-list-container mt-3"
     style="background-color: white; padding: 10px;"
   >
-    <span
-      ><strong>Limitation pending: </strong
-      >{{ publishes.filter(p => p.status == 'PENDING').length }}/3 today</span
-    >
+    <div class="p-4 ml-4">
+      <span><strong>Limitation publish: </strong>{{ limitation }}/3 Today</span>
+    </div>
     <vs-table
       ref="table"
       pagination
@@ -136,6 +135,13 @@ export default {
         return this.$refs.table.currentx
       }
       return 0
+    },
+    limitation() {
+      return this.publishes.filter(
+        p =>
+          p.status != 'PUBLISHED' &&
+          this.$moment(p.requestDate).isSame(this.$moment(), 'day')
+      ).length
     }
   },
   methods: {

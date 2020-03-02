@@ -16,19 +16,18 @@ function rgbToHex(rgb) {
   )
 }
 
-export default function(editor, options) {
-  const vueInstance = options.vueInstance
+export default function(editor) {
   const panelManager = editor.Panels
   const blockManager = editor.BlockManager
   const commands = editor.Commands
-  const domComponents = editor.DomComponents
   const rte = editor.RichTextEditor
+  const canvas = editor.Canvas
 
   const sectionBlocksIds = ['sect100', 'sect50', 'sect30', 'sect37']
   const basicBlocksIds = ['text', 'divider', 'image', 'link']
   const structuredBlocksIds = ['text-sect']
 
-  const setInitConfig = () => {
+  const initConfig = () => {
     blockManager.remove('quote')
     blockManager.remove('button')
     blockManager.remove('link-block')
@@ -47,123 +46,7 @@ export default function(editor, options) {
     panelManager.removeButton('options', 'gjs-toggle-images')
   }
 
-  const addTypes = () => {
-    domComponents.addType('dynamic-text', {
-      isComponent: el => {
-        return (
-          el instanceof HTMLElement &&
-          el.getAttribute('datatype') == 'dynamic text'
-        )
-      },
-      model: {
-        defaults: {
-          traits: [
-            { name: 'name', placeholder: 'Field name' },
-            { name: 'text', placeholder: 'Default text' }
-          ],
-          attributes: { datatype: 'dynamic text' }
-        },
-        init() {
-          this.on('change:attributes:text', this.handleTextChange)
-        },
-
-        handleTextChange() {
-          const text = this.getAttributes().text
-          editor.getSelected().set('content', text)
-        }
-      }
-    })
-
-    domComponents.addType('dynamic-link', {
-      isComponent: el => {
-        return (
-          el instanceof HTMLElement &&
-          el.getAttribute('datatype') == 'dynamic link'
-        )
-      },
-      model: {
-        defaults: {
-          tagName: 'a',
-          traits: [
-            { name: 'name', placeholder: 'Field name' },
-            { name: 'text', placeholder: 'Default text' },
-            { name: 'href', placeholder: 'Default link' },
-            {
-              type: 'select',
-              name: 'target',
-              options: [
-                { name: 'New windows', value: '_blank' },
-                { name: 'This window', value: '_top' }
-              ]
-            }
-          ],
-          attributes: {
-            datatype: 'dynamic link',
-            href: 'about:blank',
-            target: '_blank'
-          }
-        },
-        init() {
-          this.on('change:attributes:text', this.handleTextChange)
-        },
-
-        handleTextChange() {
-          const text = this.getAttributes().text
-          editor.getSelected().set('content', text)
-        }
-      }
-    })
-  }
-
   const addBlocks = () => {
-    blockManager.add('button', {
-      label: 'Button',
-      category: 'Basic',
-      content: {
-        type: 'link',
-        content: 'Button',
-        style: {
-          cursor: 'pointer',
-          margin: 'auto',
-          padding: '10px 20px 10px 20px',
-          color: 'white',
-          display: 'inline-block',
-          'font-weight': 'bold',
-          'box-sizing': 'border-box',
-          'background-color': '#44d1b3',
-          'letter-spacing': '2px',
-          'text-decoration': 'none',
-          'border-radius': '5px'
-        },
-        droppable: false
-      },
-      attributes: { class: 'gjs-fonts gjs-f-button' }
-    })
-
-    blockManager.add('dynamic text', {
-      label: 'Dynamic Text',
-      category: 'Dynamic Content',
-      attributes: { class: 'gjs-fonts gjs-f-text' },
-      content: {
-        type: 'dynamic text',
-        content: 'Dynamic Text',
-        style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
-        droppable: false
-      }
-    })
-
-    blockManager.add('dynamic link', {
-      label: 'Dynamic Link',
-      category: 'Dynamic Content',
-      attributes: { class: 'fa fa-external-link' },
-      content: {
-        type: 'dynamic link',
-        content: 'Dynamic Link',
-        style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
-        droppable: false
-      }
-    })
-
     let productItem = `
     <div class="card" style="height:300px;max-width:300px;margin-bottom:30px;font-weight:100;border: double 2px whitesmoke;border-radius:5px;overflow:hidden;">
       <div class="card-header" style="height:155px;background-image:url('https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2F350x150.png?alt=media&token=485e296d-fe1e-4d40-93c4-236aa63df81a');background-size:cover;background-position:center center;"></div>
@@ -400,73 +283,16 @@ export default function(editor, options) {
     })
   }
 
-  // const addButtons = () => {
-  //   panelManager.addButton('options', {
-  //     id: 'save',
-  //     label: ' Save',
-  //     className: 'fa fa-upload',
-  //     attributes: { title: 'Save' },
-  //     active: false,
-  //     command: () => vueInstance.handleSaveContent()
-  //   })
-
-  //   panelManager.addButton('options', {
-  //     id: 'export',
-  //     label: ' Export',
-  //     className: 'fa fa-cloud-download',
-  //     attributes: { title: 'Export' },
-  //     active: false,
-  //     command: () => vueInstance.handleExportPopup()
-  //   })
-
-  //   panelManager.addButton('options', {
-  //     id: 'sendmail',
-  //     label: ' Test',
-  //     className: 'fa fa-paper-plane',
-  //     attributes: { title: 'Test' },
-  //     active: false,
-  //     command: () => {
-  //       const wrapper = domComponents.getWrapper().find('[datatype^=dynamic ')
-  //       const attr = wrapper.map(c => c.getAttributes())
-  //       vueInstance.handleSendMailPopup(attr)
-  //     }
-  //   })
-  // }
-
-  setInitConfig()
-  addTypes()
+  initConfig()
   addBlocks()
   addCommands()
   addRTE()
-  // addButtons()
 
-  vueInstance.userBlocks.forEach(block => {
-    domComponents.addType(`user-block-${block.name}`, {
-      isComponent: el => {
-        return (
-          el instanceof HTMLElement &&
-          el.getAttribute('datatype') == 'user block'
-        )
-      },
-      model: {
-        defaults: {
-          attributes: { datatype: 'user block', name: block.name }
-        }
-      }
-    })
+  editor.on('load', async () => {
+    panelManager.removeButton('views', 'open-tm')
+    panelManager.removeButton('views', 'open-sm')
 
-    blockManager.add(`${block.id}-${block.name}`, {
-      label: block.name,
-      category: 'User Blocks',
-      attributes: { class: `fa fa-${block.icon}` },
-      content: {
-        type: `user-block-${block.name}`,
-        content: block.content,
-        droppable: false
-      }
-    })
+    const wrapper = canvas.getWrapperEl()
+    editor.select(wrapper)
   })
-
-  // panelManager.removeButton('views', 'open-tm')
-  // panelManager.removeButton('views', 'open-sm')
 }

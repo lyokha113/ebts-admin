@@ -80,6 +80,7 @@ import {
 
 import {
   getUserBlocks,
+  getUserBlock,
   createUserBlock,
   updateUserBlock,
   updateUserBlockContent,
@@ -822,6 +823,15 @@ const actions = {
       commit('SET_USER_BLOCKS', data.data)
     }
   },
+
+  async getUserBlock({ commit }, id) {
+    const { data } = await getUserBlock(id)
+    if (data.success) {
+      commit('SET_CURRENT_USER_BLOCK', data.data)
+      return data.data
+    }
+  },
+
   async createUserBlock({ commit }, userBlock) {
     const { data } = await createUserBlock(userBlock)
     if (data.success) {
@@ -862,6 +872,19 @@ const actions = {
       commit('DELETE_USER_BLOCK', id)
     }
 
+    return data.success
+  },
+  async updateUserBlockContent({ commit }, block) {
+    const { data } = await updateUserBlockContent(block)
+    if (data.success) {
+      commit('SAVE__USER_BLOCK_CONTENT', block.content)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Block was saved',
+        color: 'success',
+        position: 'top-right'
+      })
+    }
     return data.success
   },
   async synchronizeContent({ commit }, request) {

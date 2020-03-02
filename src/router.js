@@ -78,6 +78,18 @@ const router = new Router({
             ],
             pageTitle: 'Template Management'
           }
+        },
+        {
+          path: '/admin/publish',
+          name: 'AdminPublish',
+          component: () => import('./views/admin/publish/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: 'Home', url: '/admin' },
+              { title: 'AdminPublish', active: true }
+            ],
+            pageTitle: 'Publish Management'
+          }
         }
       ],
       meta: {
@@ -136,6 +148,14 @@ const router = new Router({
           path: '/user/block',
           name: 'UserBlock',
           component: () => import('@/views/user/userblock/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/block/editor',
+          name: 'UserBlockEditor',
+          component: () => import('@/views/user/userblock/editor.vue'),
           meta: {
             permission: 2
           }

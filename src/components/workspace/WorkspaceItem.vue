@@ -92,7 +92,6 @@ export default {
     ...mapActions(['getRawTemplate', 'deleteRawTemplate', 'createPublish']),
     async handlePreview(id) {
       await this.handleCallAPI(this.getRawTemplate, id)
-
       const preview = window.open('', '_blank')
       preview.document.write(this.currentRaw.content)
     },
@@ -113,7 +112,7 @@ export default {
         accept: async () => {
           await this.handleCallAPI(this.getRawTemplate, id)
           await this.handleCallAPI(this.createPublish, {
-            content: this.currentRaw.content
+            string: this.currentRaw.content
           })
         }
       })
@@ -125,7 +124,7 @@ export default {
       this.$vs.dialog({
         type: 'confirm',
         title: `Confirm`,
-        text: `Do you want to design with this template ?`,
+        text: `Do you want to design this template ?`,
         accept: async () => {
           await this.handleCallAPI(this.getRawTemplate, id)
           this.$router.push(`/user/editor/`)

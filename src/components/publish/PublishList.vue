@@ -95,14 +95,14 @@
               <span
                 v-if="tr.status == 'PENDING'"
                 class="action-icon mx-2"
-                @click="handlePopup(tr.id)"
+                @click="handlePublish(tr.id)"
               >
                 <vs-icon size="small" icon="publish" />
               </span>
               <span
                 v-if="tr.status == 'PENDING'"
                 class="action-icon ml-2"
-                @click="handleCancel(tr.id)"
+                @click="handleDeny(tr.id)"
               >
                 <vs-icon size="small" icon="cancel" />
               </span>
@@ -111,65 +111,20 @@
         </tbody>
       </template>
     </vs-table>
-
-    <CustomPopup id="create-popup" title="Publish info" :active.sync="popup">
-      <div>
-        Enter name:
-        <vs-input
-          v-model="name"
-          placeholder="Name"
-          style="width: 100%"
-          class="mt-1 mb-4"
-        />Enter description:
-        <vs-input
-          v-model="description"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-5"
-        />
-        Enter workspaces:
-        <multiselect
-          v-model="categories"
-          track-by="id"
-          label="name"
-          selectLabel=""
-          selectedLabel=""
-          deselectLabel=""
-          group-values="categories"
-          group-label="group"
-          :options="categoriesNoTemplateSelect"
-          :multiple="true"
-          :close-on-select="false"
-          :searchable="false"
-        >
-        </multiselect>
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-5"
-          :disabled="!name && !description && !categories.length"
-          @click="handlePublish"
-          >Publish</vs-button
-        >
-      </div>
-    </CustomPopup>
   </div>
 </template>
 
 <script>
 import ProgressBar from 'vue-simple-progress'
-import CustomPopup from '@/components/CustomPopup.vue'
-import { connectWSPublish, disconnectWS } from '@/service/websocket'
-import { mapGetters, mapActions } from 'vuex'
 export default {
+  props: ['publishes'],
   components: {
-    ProgressBar,
-    CustomPopup
+    ProgressBar
   },
   filters: {
     duplicationRate(rate) {
       if (rate <= 60) return '#28c76f'
-      if (rate <= 89) return '#fe9f43'
+      if (rate < 90) return '#fe9f43'
       return '#fe485a'
     },
     publishStatus(status) {
@@ -180,107 +135,32 @@ export default {
   },
   data() {
     return {
-      id: '',
-      name: '',
-      authorId: '',
-      content: '',
-      description: '',
-      popup: false,
-      categories: [],
-      selected: null,
       itemsPerPage: 10,
       isMounted: false
     }
   },
   computed: {
-    ...mapGetters(['publishes', 'categoriesNoTemplate']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
       }
       return 0
-    },
-    categoriesNoTemplateSelect() {
-      const active = this.categoriesNoTemplate.filter(c => c.active)
-      const locked = this.categoriesNoTemplate.filter(c => !c.active)
-      return [
-        { group: 'Active', categories: active },
-        { group: 'Locked', categories: locked }
-      ]
     }
   },
   methods: {
-    ...mapActions([
-      'getPublishes',
-      'denyPublish',
-      'approvePublish',
-      'setPublish'
-    ]),
-    handlePopup(id) {
-      this.id = id
-      this.name = ''
-      this.description = ''
-      this.categories = []
-      this.popup = true
-    },
-    async handlePublish() {
-      if (
-        !this.id ||
-        !this.name ||
-        !this.description ||
-        !this.categories.length
-      ) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
-
-      const request = {
-        id: this.id,
-        name: this.name,
-        content: this.content,
-        description: this.description,
-        categoryIds: this.categories.map(c => c.id)
-      }
-
-      this.$vs.dialog({
-        type: 'confirm',
-        title: `Confirm`,
-        text: `Do you want to approve this publish request ?`,
-        accept: async () => {
-          if (await this.handleCallAPI(this.approvePublish, request)) {
-            this.popup = false
-          }
-        }
-      })
-    },
-    async handleCancel(id) {
-      this.$vs.dialog({
-        type: 'confirm',
-        title: `Confirm`,
-        text: `Do you want to deny this publish request ?`,
-        accept: async () => await this.handleCallAPI(this.denyPublish, id)
-      })
-    },
     handlePreview(content) {
       const preview = window.open('', '_blank')
       preview.document.write(content)
+    },
+    handlePublish(id) {
+      this.$emit('publish', id)
+    },
+    handleDeny(id) {
+      this.$emit('deny', id)
     }
-  },
-  async created() {
-    connectWSPublish(this, this.setPublish)
   },
   mounted() {
     this.isMounted = true
-  },
-  destroyed() {
-    disconnectWS(this)
-    this.popup = false
   }
 }
 </script>
@@ -297,13 +177,5 @@ export default {
 
 .action-icon:hover {
   color: mediumslateblue;
-}
-
-#create-popup {
-  z-index: 51100;
-}
-
-#update-popup {
-  z-index: 51100;
 }
 </style>

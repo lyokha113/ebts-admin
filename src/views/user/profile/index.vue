@@ -111,13 +111,13 @@
       <vs-col vs-type="flex" vs-align="center" vs-w="6" vs-offset="3">
         <vs-row class="p-3" style="background: white">
           <vs-col vs-type="flex" vs-w="12">
+            <h1 style="margin: auto">Email list</h1>
+          </vs-col>
+          <vs-col class="p-4" vs-type="flex" vs-w="12" vs-justify="center">
             <span
-              ><strong>Limitation: </strong>{{ getUserEmails.length }}/5
+              ><strong>Limitation: </strong>{{ userEmails.length }}/5
               emails</span
             >
-          </vs-col>
-          <vs-col vs-type="flex" vs-w="12">
-            <h1 style="margin: auto">Email list</h1>
           </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-w="12">
             <vs-input

@@ -66,11 +66,6 @@ const getters = {
   currentRaw: state => state.currentRaw,
 
   // ////////////////////////////////////////////
-  // VERSION
-  // ////////////////////////////////////////////
-  editorChange: state => state.editorChange,
-
-  // ////////////////////////////////////////////
   // USER EMAIL
   // ////////////////////////////////////////////
   userEmails: state => state.userEmails,
@@ -79,7 +74,12 @@ const getters = {
   // USER BLOCK
   // ////////////////////////////////////////////
   userBlocks: state => state.userBlocks,
-  currentBlock: state => state.currentBlock
+  currentBlock: state => state.currentBlock,
+
+  // ////////////////////////////////////////////
+  // EDITOR
+  // ////////////////////////////////////////////
+  editorChange: state => state.editorChange
 }
 
 export default getters

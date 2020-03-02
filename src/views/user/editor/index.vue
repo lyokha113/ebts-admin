@@ -1,6 +1,60 @@
 <template>
-  <div>
-    <div id="left-panel"></div>
+  <div class="flex flex-wrap">
+    <div id="top-panel" class="w-full shadow-md flex">
+      <div class="p-2 flex self-center" style="width: 13%">
+        <multiselect
+          class="w-10/12"
+          v-model="timeoutSave"
+          track-by="time"
+          label="name"
+          selectLabel=""
+          selectedLabel=""
+          deselectLabel=""
+          @input="handleTimeoutSave"
+          :options="timeoutSaves"
+          :searchable="false"
+        >
+        </multiselect>
+        <div class="w-2/12 flex justify-center ml-4">
+          <vs-button
+            class="btn-command"
+            icon="save"
+            @click="handleSaveContent"
+          />
+        </div>
+      </div>
+      <div class="p-3 flex justify-center self-center" style="width: 74%"></div>
+      <div class="p-3 flex self-center" style="width: 13%">
+        <div class="w-1/2 flex justify-center">
+          <vs-button
+            class="btn-command"
+            size="large"
+            icon="cloud_download"
+            @click="handleExportPopup"
+          ></vs-button>
+        </div>
+        <div class="w-1/2 flex justify-center">
+          <vs-button
+            class="btn-command"
+            size="large"
+            icon="drafts"
+            @click="handleSendMailPopup"
+          ></vs-button>
+        </div>
+      </div>
+    </div>
+    <div id="left-panel">
+      <div class="p-4 font-medium text-xl text-white text-center">
+        SETTING
+      </div>
+      <div id="trait-manager">
+        <div class="px-4" style="font-size: 10.5px; color: #DDDDDD">
+          Data:
+        </div>
+      </div>
+      <div id="selector"></div>
+      <div id="style-manager"></div>
+    </div>
     <div id="editor"></div>
 
     <ExportPopup :open.sync="exportPopup" :editor="editor" />
@@ -53,7 +107,15 @@ export default {
       uploadPercent: 0,
       dynamicAttrs: [],
       exportPopup: false,
-      sendmailPopup: false
+      sendmailPopup: false,
+      autosaveInterval: null,
+      timeoutSaves: [
+        { name: 'Autosave-15 mins', time: 90000 },
+        { name: 'Autosave-30 mins', time: 180000 },
+        { name: 'Autosave-60 mins', time: 360000 },
+        { name: 'No autosave', time: 0 }
+      ],
+      timeoutSave: { name: 'No autosave', time: 0 }
     }
   },
   computed: {
@@ -77,7 +139,7 @@ export default {
       width: 64,
       height: 64,
       backgroundColor: '#ffffff',
-      opacity: 0.8,
+      opacity: 1,
       zIndex: 110000
     })
 
@@ -94,10 +156,10 @@ export default {
     this.editor = grapesjs.init({
       components: this.currentRaw && this.currentRaw.content,
       container: '#editor',
-      height: '750px',
+      height: '700px',
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
-        editor => configEditor(editor, { vueInstance: this }),
+        editor => configEditor(editor),
         editor =>
           tUIImageEditor(editor, {
             includeUI: {
@@ -133,13 +195,13 @@ export default {
         actions: ['bold', 'italic', 'underline', 'strikethrough']
       },
       selectorManager: {
-        appendTo: '#left-panel'
+        appendTo: '#selector'
       },
       styleManager: {
-        appendTo: '#left-panel'
+        appendTo: '#style-manager'
       },
       traitManager: {
-        appendTo: '#left-panel'
+        appendTo: '#trait-manager'
       }
     })
 
@@ -148,8 +210,151 @@ export default {
     })
 
     this.editor.on('load', async () => {
+      const blockManager = this.editor.BlockManager
+      const domComponents = this.editor.DomComponents
+
+      domComponents.addType('dynamic-text', {
+        isComponent: el => {
+          return (
+            el instanceof HTMLElement &&
+            el.getAttribute('datatype') == 'dynamic text'
+          )
+        },
+        model: {
+          defaults: {
+            traits: [
+              { name: 'name', placeholder: 'Field name' },
+              { name: 'text', placeholder: 'Default text' }
+            ],
+            attributes: { datatype: 'dynamic text' }
+          },
+          init() {
+            this.on('change:attributes:text', this.handleTextChange)
+          },
+
+          handleTextChange() {
+            const text = this.getAttributes().text
+            this.editor.getSelected().set('content', text)
+          }
+        }
+      })
+
+      domComponents.addType('dynamic-link', {
+        isComponent: el => {
+          return (
+            el instanceof HTMLElement &&
+            el.getAttribute('datatype') == 'dynamic link'
+          )
+        },
+        model: {
+          defaults: {
+            tagName: 'a',
+            traits: [
+              { name: 'name', placeholder: 'Field name' },
+              { name: 'text', placeholder: 'Default text' },
+              { name: 'href', placeholder: 'Default link' },
+              {
+                type: 'select',
+                name: 'target',
+                options: [
+                  { name: 'New windows', value: '_blank' },
+                  { name: 'This window', value: '_top' }
+                ]
+              }
+            ],
+            attributes: {
+              datatype: 'dynamic link',
+              href: 'about:blank',
+              target: '_blank'
+            }
+          },
+          init() {
+            this.on('change:attributes:text', this.handleTextChange)
+          },
+
+          handleTextChange() {
+            const text = this.getAttributes().text
+            this.editor.getSelected().set('content', text)
+          }
+        }
+      })
+
+      blockManager.add('button', {
+        label: 'Button',
+        category: 'Basic',
+        content: {
+          type: 'link',
+          content: 'Button',
+          style: {
+            cursor: 'pointer',
+            margin: 'auto',
+            padding: '10px 20px 10px 20px',
+            color: 'white',
+            display: 'inline-block',
+            'font-weight': 'bold',
+            'box-sizing': 'border-box',
+            'background-color': '#44d1b3',
+            'letter-spacing': '2px',
+            'text-decoration': 'none',
+            'border-radius': '5px'
+          },
+          droppable: false
+        },
+        attributes: { class: 'gjs-fonts gjs-f-button' }
+      })
+
+      blockManager.add('dynamic text', {
+        label: 'Dynamic Text',
+        category: 'Dynamic Content',
+        attributes: { class: 'gjs-fonts gjs-f-text' },
+        content: {
+          type: 'dynamic text',
+          content: 'Dynamic Text',
+          style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
+          droppable: false
+        }
+      })
+
+      blockManager.add('dynamic link', {
+        label: 'Dynamic Link',
+        category: 'Dynamic Content',
+        attributes: { class: 'fa fa-external-link' },
+        content: {
+          type: 'dynamic link',
+          content: 'Dynamic Link',
+          style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
+          droppable: false
+        }
+      })
+
+      this.userBlocks.forEach(block => {
+        domComponents.addType(`user-block-${block.name}`, {
+          isComponent: el => {
+            return (
+              el instanceof HTMLElement &&
+              el.getAttribute('datatype') == 'user block'
+            )
+          },
+          model: {
+            defaults: {
+              attributes: { datatype: 'user block', name: block.name }
+            }
+          }
+        })
+
+        blockManager.add(`${block.id}-${block.name}`, {
+          label: block.name,
+          category: 'User Blocks',
+          attributes: { class: `fa fa-${block.icon}` },
+          content: {
+            type: `user-block-${block.name}`,
+            content: block.content,
+            droppable: false
+          }
+        })
+      })
+
       window.setTimeout(() => this.setEditorChange(false), 1000)
-      // window.setInterval(this.handleAutoSave, 1000 * 60 * 3)
     })
   },
   methods: {
@@ -162,6 +367,16 @@ export default {
       'autoUpdateRawContent',
       'setEditorChange'
     ]),
+
+    handleTimeoutSave() {
+      clearInterval(this.autosaveInterval)
+      if (this.timeoutSave.name != 'None') {
+        this.autosaveInterval = setInterval(
+          this.handleAutoSave,
+          this.timeoutSave.time
+        )
+      }
+    },
 
     getFileNameFromAM(src, assetManager) {
       let files = assetManager.getAll()
@@ -202,7 +417,11 @@ export default {
       this.exportPopup = true
     },
 
-    handleSendMailPopup(attr) {
+    handleSendMailPopup() {
+      const wrapper = this.editor.DomComponents.getWrapper().find(
+        '[datatype^=dynamic '
+      )
+      const attr = wrapper.map(c => c.getAttributes())
       this.dynamicAttrs = attr
       this.sendmailPopup = true
     },
@@ -217,31 +436,32 @@ export default {
     },
 
     async handleAutoSave() {
-      if (this.editorChange) {
-        const content = this.editor.runCommand('gjs-get-inlined-html')
-        if (
-          await this.handleCallAPI(
-            this.autoUpdateRawContent,
-            { rawId: this.currentRaw.id, content },
-            false
-          )
-        ) {
-          this.setEditorChange(false)
-          this.$vs.notify({
-            title: 'Information',
-            text: 'Auto saved',
-            color: 'success',
-            position: 'top-right'
-          })
-        } else {
-          this.$vs.notify({
-            title: 'Information',
-            text: 'Auto failed',
-            color: 'warning',
-            position: 'top-right'
-          })
-        }
-      }
+      console.log('Auto save')
+      // if (this.editorChange) {
+      //   const content = this.editor.runCommand('gjs-get-inlined-html')
+      //   if (
+      //     await this.handleCallAPI(
+      //       this.autoUpdateRawContent,
+      //       { rawId: this.currentRaw.id, content },
+      //       false
+      //     )
+      //   ) {
+      //     this.setEditorChange(false)
+      //     this.$vs.notify({
+      //       title: 'Information',
+      //       text: 'Auto saved',
+      //       color: 'success',
+      //       position: 'top-right'
+      //     })
+      //   } else {
+      //     this.$vs.notify({
+      //       title: 'Information',
+      //       text: 'Auto failed',
+      //       color: 'warning',
+      //       position: 'top-right'
+      //     })
+      //   }
+      // }
     },
 
     async handleApplyEditFile(file, name, imageModel, assetManager) {
@@ -304,11 +524,11 @@ export default {
       }
     }
   },
-  destroyed() {
+  beforeDestroy() {
     this.uploadPopup = false
     this.exportPopup = false
     this.sendmailPopup = false
-    // window.clearInterval(this.handleAutoSave)
+    clearInterval(this.autosaveInterval)
   },
   beforeRouteLeave(to, from, next) {
     if (this.editorChange > 0) {
@@ -425,31 +645,65 @@ export default {
   }
 }
 
-/deep/ .gjs-cv-canvas {
-  width: 70%;
-  left: 15%;
-}
-
 /deep/ .gjs-pn-commands {
-  width: 70%;
-  left: 15%;
   display: flex;
   justify-content: center;
 }
 
-/deep/ .gjs-pn-devices-c {
-  left: 15%;
+/deep/ .gjs-trt-traits {
+  padding: 5px;
 }
 
-/deep/ .gjs-trt-traits {
-  padding: 10px 15px 10px 10px;
+/deep/ .gjs-pn-panel.gjs-pn-views {
+  .gjs-pn-buttons {
+    justify-content: center;
+    .gjs-pn-btn {
+      &.fa-bars:before {
+        content: 'STRUCTURE';
+        font-size: 17px;
+        padding: 5px;
+      }
+      &.fa-th-large:before {
+        content: 'BLOCK';
+        font-size: 17px;
+        padding: 5px;
+      }
+    }
+  }
+}
+#top-panel {
+  width: 100%;
+  height: 80px;
+  background-color: white;
+  margin-bottom: 15px;
 }
 
 #left-panel {
+  width: 13%;
   font-family: Arial, Helvetica, sans-serif;
-  width: 15%;
-  height: 300px;
-  position: absolute;
+  background-color: #373d49;
   z-index: 1;
+  overflow: scroll;
+  max-height: 700px;
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  #selector {
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 5px;
+  }
+}
+#editor {
+  width: 87% !important;
+}
+.btn-command {
+  width: 90% !important;
+
+  /deep/ i {
+    font-size: 23px !important;
+  }
 }
 </style>
