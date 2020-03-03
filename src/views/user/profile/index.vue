@@ -199,7 +199,7 @@ import { connectWSUseremail, disconnectWS } from '@/service/websocket'
 export default {
   name: 'UserProfile',
   computed: {
-    ...mapGetters(['activeUser', 'userEmails']),
+    ...mapGetters(['activeUser', 'accessToken', 'userEmails']),
     user_displayName() {
       return this.activeUser && this.activeUser.fullName
     },
@@ -347,7 +347,7 @@ export default {
     this.name = this.user_displayName
     this.imageUrl = this.user_displayImage
     await this.handleCallAPI(this.getUserEmails)
-    connectWSUseremail(this, this.setApprovedUserEmails)
+    connectWSUseremail(this, this.accessToken, this.setApprovedUserEmails)
   },
   destroyed() {
     disconnectWS(this)

@@ -2,15 +2,15 @@ import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 
 const ENDPOINT = '/ws'
-const PUBLISH_TOPIC = '/topic/publish'
-const WUSEREMAIL_USER = '/user/useremail'
+const PUBLISH_TOPIC = '/topic/publish/'
+const WUSEREMAIL_USER = '/user/queue/useremail/'
 
 export function connectWSPublish(vue, handleData) {
   connectWS(vue, PUBLISH_TOPIC, handleData)
 }
 
-export function connectWSUseremail(vue, token, user, handleData) {
-  connectUserWS(vue, WUSEREMAIL_USER, handleData)
+export function connectWSUseremail(vue, token, handleData) {
+  connectUserWS(vue, token, WUSEREMAIL_USER, handleData)
 }
 
 export function disconnectWS(vue) {
@@ -40,15 +40,15 @@ function connectWS(vue, topic, handleData) {
   )
 }
 
-function connectUserWS(vue, token, , handleData) {
+function connectUserWS(vue, token, queue, handleData) {
   vue.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
   vue.stompClient = Stomp.over(vue.socket, { debug: false })
   vue.stompClient.connect(
-    {},
+    { AccessToken: token },
     // eslint-disable-next-line no-unused-vars
     frame => {
       vue.wsConnected = true
-      vue.stompClient.subscribe(topic, data =>
+      vue.stompClient.subscribe(queue, data =>
         handleData(JSON.parse(data.body))
       )
     }
