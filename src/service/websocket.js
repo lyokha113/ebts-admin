@@ -2,38 +2,53 @@ import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 
 const ENDPOINT = '/ws'
-const PUBLISH_TOPIC = '/topic/get-publish'
-const WUSEREMAIL_TOPIC = '/topic/get-useremail'
+const PUBLISH_TOPIC = '/topic/publish'
+const WUSEREMAIL_USER = '/user/useremail'
 
-export function connectWSPublish(vueInstance, handleData) {
-  connectWS(vueInstance, PUBLISH_TOPIC, handleData)
+export function connectWSPublish(vue, handleData) {
+  connectWS(vue, PUBLISH_TOPIC, handleData)
 }
 
-export function connectWSUseremail(vueInstance, handleData) {
-  connectWS(vueInstance, WUSEREMAIL_TOPIC, handleData)
+export function connectWSUseremail(vue, token, user, handleData) {
+  connectUserWS(vue, WUSEREMAIL_USER, handleData)
 }
 
-export function disconnectWS(vueInstance) {
-  if (vueInstance.stompClient) {
-    vueInstance.stompClient.disconnect()
+export function disconnectWS(vue) {
+  if (vue.stompClient) {
+    vue.stompClient.disconnect()
   }
 }
 
-export function sendMessage(vueInstance, app, data) {
-  if (vueInstance.stompClient) {
-    vueInstance.stompClient.send(app, {}, JSON.stringify(data))
+export function sendMessage(vue, app, data) {
+  if (vue.stompClient) {
+    vue.stompClient.send(app, {}, JSON.stringify(data))
   }
 }
 
-function connectWS(vueInstance, topic, handleData) {
-  vueInstance.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
-  vueInstance.stompClient = Stomp.over(vueInstance.socket, { debug: false })
-  vueInstance.stompClient.connect(
+function connectWS(vue, topic, handleData) {
+  vue.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
+  vue.stompClient = Stomp.over(vue.socket, { debug: false })
+  vue.stompClient.connect(
     {},
     // eslint-disable-next-line no-unused-vars
     frame => {
-      vueInstance.wsConnected = true
-      vueInstance.stompClient.subscribe(topic, data =>
+      vue.wsConnected = true
+      vue.stompClient.subscribe(topic, data =>
+        handleData(JSON.parse(data.body))
+      )
+    }
+  )
+}
+
+function connectUserWS(vue, token, , handleData) {
+  vue.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
+  vue.stompClient = Stomp.over(vue.socket, { debug: false })
+  vue.stompClient.connect(
+    {},
+    // eslint-disable-next-line no-unused-vars
+    frame => {
+      vue.wsConnected = true
+      vue.stompClient.subscribe(topic, data =>
         handleData(JSON.parse(data.body))
       )
     }

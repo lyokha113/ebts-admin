@@ -15,7 +15,7 @@ export function updateRawTemplate(raw) {
 }
 
 export function updateRawContent(raw) {
-  return axios.patch(`${URI}/${raw.rawId}`, { string: raw.content })
+  return axios.patch(`${URI}/${raw.rawId}`, raw)
 }
 
 export function deleteRawTemplate(id) {

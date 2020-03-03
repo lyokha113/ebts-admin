@@ -430,19 +430,19 @@ export default {
       const content = this.editor.runCommand('gjs-get-inlined-html')
       await this.handleCallAPI(this.updateRawContent, {
         rawId: this.currentRaw.id,
+        autoSave: false,
         content
       })
       this.setEditorChange(false)
     },
 
     async handleAutoSave() {
-      console.log('Auto save')
       // if (this.editorChange) {
       //   const content = this.editor.runCommand('gjs-get-inlined-html')
       //   if (
       //     await this.handleCallAPI(
       //       this.autoUpdateRawContent,
-      //       { rawId: this.currentRaw.id, content },
+      //       { rawId: this.currentRaw.id, autoSave: true, content },
       //       false
       //     )
       //   ) {
