@@ -279,36 +279,12 @@ export default {
         }
       })
 
-      blockManager.add('button', {
-        label: 'Button',
-        category: 'Basic',
-        content: {
-          type: 'link',
-          content: 'Button',
-          style: {
-            cursor: 'pointer',
-            margin: 'auto',
-            padding: '10px 20px 10px 20px',
-            color: 'white',
-            display: 'inline-block',
-            'font-weight': 'bold',
-            'box-sizing': 'border-box',
-            'background-color': '#44d1b3',
-            'letter-spacing': '2px',
-            'text-decoration': 'none',
-            'border-radius': '5px'
-          },
-          droppable: false
-        },
-        attributes: { class: 'gjs-fonts gjs-f-button' }
-      })
-
       blockManager.add('dynamic text', {
         label: 'Dynamic Text',
         category: 'Dynamic Content',
         attributes: { class: 'gjs-fonts gjs-f-text' },
         content: {
-          type: 'dynamic text',
+          type: 'dynamic-text',
           content: 'Dynamic Text',
           style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
           droppable: false
@@ -320,7 +296,7 @@ export default {
         category: 'Dynamic Content',
         attributes: { class: 'fa fa-external-link' },
         content: {
-          type: 'dynamic link',
+          type: 'dynamic-link',
           content: 'Dynamic Link',
           style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
           droppable: false

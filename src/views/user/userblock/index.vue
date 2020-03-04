@@ -381,7 +381,7 @@ export default {
       this.$vs.dialog({
         type: 'confirm',
         title: `Confirm`,
-        text: `Do you want to synchronize this block content to selected design tempalates ?`,
+        text: `Do you want to synchronize this block content to selected design tempalates ?. This action can make a conflict to design content if any contributor is editing it`,
         accept: async () => {
           if (
             await this.handleCallAPI(this.synchronizeContent, {

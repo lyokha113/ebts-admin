@@ -5,12 +5,14 @@ const ENDPOINT = '/ws'
 const PUBLISH_TOPIC = '/topic/publish/'
 const WUSEREMAIL_USER = '/user/queue/useremail/'
 
-export function connectWSPublish(vue, handleData) {
-  connectWS(vue, PUBLISH_TOPIC, handleData)
+export function connectWSPublish(vue, token, handleData) {
+  const channels = [{ name: PUBLISH_TOPIC, handler: handleData }]
+  connectWS(vue, token, channels)
 }
 
 export function connectWSUseremail(vue, token, handleData) {
-  connectUserWS(vue, token, WUSEREMAIL_USER, handleData)
+  const channels = [{ name: WUSEREMAIL_USER, handler: handleData }]
+  connectWS(vue, token, channels)
 }
 
 export function disconnectWS(vue) {
@@ -19,28 +21,13 @@ export function disconnectWS(vue) {
   }
 }
 
-export function sendMessage(vue, app, data) {
+export function sendMessage(vue, channel, data) {
   if (vue.stompClient) {
-    vue.stompClient.send(app, {}, JSON.stringify(data))
+    vue.stompClient.send(channel, {}, JSON.stringify(data))
   }
 }
 
-function connectWS(vue, topic, handleData) {
-  vue.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
-  vue.stompClient = Stomp.over(vue.socket, { debug: false })
-  vue.stompClient.connect(
-    {},
-    // eslint-disable-next-line no-unused-vars
-    frame => {
-      vue.wsConnected = true
-      vue.stompClient.subscribe(topic, data =>
-        handleData(JSON.parse(data.body))
-      )
-    }
-  )
-}
-
-function connectUserWS(vue, token, queue, handleData) {
+function connectWS(vue, token, channels) {
   vue.socket = new SockJS(process.env.VUE_APP_API_DOMAIN + ENDPOINT)
   vue.stompClient = Stomp.over(vue.socket, { debug: false })
   vue.stompClient.connect(
@@ -48,9 +35,11 @@ function connectUserWS(vue, token, queue, handleData) {
     // eslint-disable-next-line no-unused-vars
     frame => {
       vue.wsConnected = true
-      vue.stompClient.subscribe(queue, data =>
-        handleData(JSON.parse(data.body))
-      )
+      channels.forEach(channel => {
+        vue.stompClient.subscribe(channel.name, data =>
+          channel.handler(JSON.parse(data.body))
+        )
+      })
     }
   )
 }

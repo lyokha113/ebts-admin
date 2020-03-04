@@ -317,6 +317,18 @@ export default {
         }
         return { email, attrs }
       })
+
+      if (!data.email) {
+        this.$vs.notify({
+          title: 'Wrong formation',
+          text: `Must have 'Reciver Email' in sheet`,
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
       this.dynamicForm.forEach(row => {
         const matched = data.find(d => row.email.trim() === d.email.trim())
         if (matched) {
@@ -329,6 +341,15 @@ export default {
         } else {
           row.attrs.forEach(r => (r.value = ''))
         }
+      })
+
+      this.excelPopup = false
+      this.$vs.notify({
+        title: 'Dynamic data',
+        text: `Data were imported`,
+        color: 'success',
+        icon: 'success',
+        position: 'top-right'
       })
     },
 
@@ -355,14 +376,6 @@ export default {
         })
         let data = XLSX.utils.sheet_to_json(workbook.Sheets['Dynamic Data'])
         this.handleImportExcelData(data)
-        this.excelPopup = false
-        this.$vs.notify({
-          title: 'Dynamic data',
-          text: `Data were imported`,
-          color: 'success',
-          icon: 'success',
-          position: 'top-right'
-        })
       }
       reader.readAsArrayBuffer(excelFile)
     },

@@ -46,6 +46,32 @@ export default function(editor) {
     panelManager.removeButton('options', 'gjs-toggle-images')
   }
 
+  const addButtons = () => {
+    blockManager.add('button', {
+      label: 'Button',
+      category: 'Basic',
+      content: {
+        type: 'link',
+        content: 'Button',
+        style: {
+          cursor: 'pointer',
+          margin: 'auto',
+          padding: '10px 20px 10px 20px',
+          color: 'white',
+          display: 'inline-block',
+          'font-weight': 'bold',
+          'box-sizing': 'border-box',
+          'background-color': '#44d1b3',
+          'letter-spacing': '2px',
+          'text-decoration': 'none',
+          'border-radius': '5px'
+        },
+        droppable: false
+      },
+      attributes: { class: 'gjs-fonts gjs-f-button' }
+    })
+  }
+
   const addBlocks = () => {
     let productItem = `
     <div class="card" style="height:300px;max-width:300px;margin-bottom:30px;font-weight:100;border: double 2px whitesmoke;border-radius:5px;overflow:hidden;">
@@ -285,6 +311,7 @@ export default function(editor) {
 
   initConfig()
   addBlocks()
+  addButtons()
   addCommands()
   addRTE()
 
