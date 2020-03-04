@@ -1,45 +1,59 @@
 <template>
   <div class="flex flex-wrap">
     <div id="top-panel" class="w-full shadow-md flex">
-      <div class="p-2 flex self-center" style="width: 13%">
-        <multiselect
-          class="w-10/12"
-          v-model="timeoutSave"
-          track-by="time"
-          label="name"
-          selectLabel=""
-          selectedLabel=""
-          deselectLabel=""
-          @input="handleTimeoutSave"
-          :options="timeoutSaves"
-          :searchable="false"
-        >
-        </multiselect>
-        <div class="w-2/12 flex justify-center ml-4">
-          <vs-button
-            class="btn-command"
-            icon="save"
-            @click="handleSaveContent"
-          />
-        </div>
+      <div class="p-3 flex" style="width: 65%">
+        <DesignSession />
       </div>
-      <div class="p-3 flex justify-center self-center" style="width: 74%"></div>
-      <div class="p-3 flex self-center" style="width: 13%">
-        <div class="w-1/2 flex justify-center">
-          <vs-button
-            class="btn-command"
-            size="large"
-            icon="cloud_download"
-            @click="handleExportPopup"
-          ></vs-button>
+      <div class="p-3 flex" style="width: 35%">
+        <div class="flex justify-center self-center" style="width: 60%">
+          <div class="w-1/3">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="cloud_download"
+              @click="handleExportPopup"
+            ></vs-button>
+          </div>
+          <div class="w-1/3">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="drafts"
+              @click="handleSendMailPopup"
+            ></vs-button>
+          </div>
+          <div class="w-1/3">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="dvr"
+              @click="handleSendMailPopup"
+            ></vs-button>
+          </div>
         </div>
-        <div class="w-1/2 flex justify-center">
-          <vs-button
-            class="btn-command"
-            size="large"
-            icon="drafts"
-            @click="handleSendMailPopup"
-          ></vs-button>
+        <div class="flex justify-end self-center" style="width: 40%">
+          <div style="width: 20%">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="save"
+              @click="handleSaveContent"
+            ></vs-button>
+          </div>
+          <div style="width: 70%">
+            <multiselect
+              v-model="timeoutSave"
+              track-by="time"
+              label="name"
+              selectLabel=""
+              selectedLabel=""
+              deselectLabel=""
+              @input="handleTimeoutSave"
+              :options="timeoutSaves"
+              :searchable="false"
+            >
+            </multiselect>
+          </div>
         </div>
       </div>
     </div>
@@ -89,6 +103,7 @@ import tUIImageEditor from 'grapesjs-tui-image-editor'
 import CustomPopup from '@/components/CustomPopup.vue'
 import ExportPopup from '@/components/editor/ExportPopup.vue'
 import SendMailPopup from '@/components/editor/SendMailPopup.vue'
+import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -98,7 +113,8 @@ export default {
   components: {
     CustomPopup,
     ExportPopup,
-    SendMailPopup
+    SendMailPopup,
+    DesignSession
   },
   data() {
     return {
@@ -156,7 +172,7 @@ export default {
     this.editor = grapesjs.init({
       components: this.currentRaw && this.currentRaw.content,
       container: '#editor',
-      height: '700px',
+      height: '660px',
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
         editor => configEditor(editor),
@@ -346,7 +362,7 @@ export default {
 
     handleTimeoutSave() {
       clearInterval(this.autosaveInterval)
-      if (this.timeoutSave.name != 'None') {
+      if (this.timeoutSave && this.timeoutSave.name != 'None') {
         this.autosaveInterval = setInterval(
           this.handleAutoSave,
           this.timeoutSave.time
@@ -649,7 +665,7 @@ export default {
 }
 #top-panel {
   width: 100%;
-  height: 80px;
+  height: 90px;
   background-color: white;
   margin-bottom: 15px;
 }
@@ -660,7 +676,7 @@ export default {
   background-color: #373d49;
   z-index: 1;
   overflow: scroll;
-  max-height: 700px;
+  max-height: 660px;
   &::-webkit-scrollbar {
     width: 0px;
     background: transparent;

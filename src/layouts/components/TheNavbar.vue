@@ -139,7 +139,7 @@
                     icon="TrelloIcon"
                     svg-classes="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-4">User Block</span>
+                  <span class="ml-4">Userblock</span>
                 </li>
                 <li
                   v-if="activeUser"

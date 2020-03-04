@@ -318,19 +318,10 @@ export default {
         return { email, attrs }
       })
 
-      if (!data.email) {
-        this.$vs.notify({
-          title: 'Wrong formation',
-          text: `Must have 'Reciver Email' in sheet`,
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
-
       this.dynamicForm.forEach(row => {
-        const matched = data.find(d => row.email.trim() === d.email.trim())
+        const matched = data.find(
+          d => d.email && row.email.trim() === d.email.trim()
+        )
         if (matched) {
           row.attrs.forEach(r => {
             const attr = matched.attrs.find(m => m.name === r.name)
@@ -375,6 +366,16 @@ export default {
           type: 'array'
         })
         let data = XLSX.utils.sheet_to_json(workbook.Sheets['Dynamic Data'])
+        if (!data.length) {
+          this.$vs.notify({
+            title: 'Wrong formation',
+            text: `File don't have any sheet with name "Dynamic Data"`,
+            color: 'warning',
+            icon: 'error',
+            position: 'top-right'
+          })
+          return
+        }
         this.handleImportExcelData(data)
       }
       reader.readAsArrayBuffer(excelFile)
