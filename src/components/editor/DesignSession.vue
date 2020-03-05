@@ -25,7 +25,12 @@
 </template>
 
 <script>
-export default {}
+import { mapActions } from 'vuex'
+export default {
+  methods: {
+    ...mapActions([''])
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -41,18 +46,25 @@ export default {}
   list-style-type: none;
   align-items: center;
   padding-left: 0;
+  border-width: 2px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, #7367f0, #44d1b3) 1 round;
 
   li {
     flex: 0 0 50%;
     cursor: pointer;
+
+    &:hover {
+      color: red;
+    }
   }
 
   .online {
-    color: teal;
+    color: royalblue;
   }
 
   .offine {
-    color: darkorange;
+    color: darkgrey;
   }
 }
 </style>

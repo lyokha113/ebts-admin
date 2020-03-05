@@ -100,7 +100,7 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/profile')"
+                  @click="$router.push('/user/profile').catch(err => {})"
                 >
                   <feather-icon
                     icon="UserIcon"
@@ -111,7 +111,7 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-                  @click="$router.push('/user/image')"
+                  @click="$router.push('/user/image').catch(err => {})"
                 >
                   <feather-icon
                     icon="ImageIcon"

@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-wrap">
-    <div id="top-panel" class="w-full shadow-md flex">
-      <div class="p-3 flex" style="width: 65%">
+    <div id="top-panel" class="w-full flex justify-between">
+      <div class="p-3 flex shadow-md bg-white" style="width: 63%">
         <DesignSession />
       </div>
-      <div class="p-3 flex" style="width: 35%">
+      <div class="p-3 flex shadow-md bg-white" style="width: 35%">
         <div class="flex justify-center self-center" style="width: 60%">
           <div class="w-1/3">
             <vs-button
@@ -666,7 +666,6 @@ export default {
 #top-panel {
   width: 100%;
   height: 90px;
-  background-color: white;
   margin-bottom: 15px;
 }
 

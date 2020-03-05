@@ -87,6 +87,7 @@ import {
   deleteUserBlock,
   synchronizeContent
 } from '@/service/userblock'
+import { createSession } from '@/service/designsession'
 
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugins/auth'
