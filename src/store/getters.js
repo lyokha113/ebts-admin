@@ -77,6 +77,13 @@ const getters = {
   currentBlock: state => state.currentBlock,
 
   // ////////////////////////////////////////////
+  // DESIGN SESSION
+  // ////////////////////////////////////////////
+  sessions: state => state.sessions,
+  sessionContributors: state => state.sessionContributors,
+  currentSession: state => state.currentSession,
+
+  // ////////////////////////////////////////////
   // EDITOR
   // ////////////////////////////////////////////
   editorChange: state => state.editorChange

@@ -109,7 +109,7 @@ export default {
             }
 
             .product-img {
-              height: 110px;
+              height: 120px;
             }
           }
         }

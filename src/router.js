@@ -129,14 +129,6 @@ const router = new Router({
           }
         },
         {
-          path: '/user/publish',
-          name: 'Publish',
-          component: () => import('@/views/user/publish/index.vue'),
-          meta: {
-            permission: 2
-          }
-        },
-        {
           path: '/user/editor',
           name: 'Editor',
           component: () => import('@/views/user/editor/index.vue'),
@@ -156,6 +148,22 @@ const router = new Router({
           path: '/user/block/editor',
           name: 'UserBlockEditor',
           component: () => import('@/views/user/userblock/editor.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/invitation',
+          name: 'Invitation',
+          component: () => import('@/views/user/invitation/index.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
+          path: '/user/publish',
+          name: 'Publish',
+          component: () => import('@/views/user/publish/index.vue'),
           meta: {
             permission: 2
           }

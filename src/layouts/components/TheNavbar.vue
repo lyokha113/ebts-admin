@@ -155,6 +155,17 @@
                 <li
                   v-if="activeUser"
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+                  @click="$router.push('/user/invitation').catch(err => {})"
+                >
+                  <feather-icon
+                    icon="Share2Icon"
+                    svg-classes="w-4 h-4"
+                  ></feather-icon>
+                  <span class="ml-4">Invitation</span>
+                </li>
+                <li
+                  v-if="activeUser"
+                  class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="handleLogout"
                 >
                   <feather-icon

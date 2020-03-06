@@ -226,7 +226,7 @@ export default {
       'getUserEmails',
       'createUserEmail',
       'deleteUserEmail',
-      'setApprovedUserEmails'
+      'userEmailWS'
     ]),
     handleChangePassword() {
       if (!this.password || !this.confirm) {
@@ -347,7 +347,7 @@ export default {
     this.name = this.user_displayName
     this.imageUrl = this.user_displayImage
     await this.handleCallAPI(this.getUserEmails)
-    connectWSUseremail(this, this.accessToken, this.setApprovedUserEmails)
+    connectWSUseremail(this, this.accessToken, this.userEmailWS)
   },
   destroyed() {
     disconnectWS(this)

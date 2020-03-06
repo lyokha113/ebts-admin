@@ -93,7 +93,7 @@ const mutations = {
     Object.assign(current, template)
   },
   DELETE_TEMPLATE(state, id) {
-    const idx = state.templates.findIndex(t => t.id == id)
+    const idx = state.templates.findIndex(t => t.id === id)
     state.templates.splice(idx, 1)
   },
 
@@ -185,7 +185,7 @@ const mutations = {
   },
   DELETE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
-    const idx = ws.rawTemplates.findIndex(t => t.id == raw.id)
+    const idx = ws.rawTemplates.findIndex(t => t.id === raw.id)
     ws.rawTemplates.splice(idx, 1)
   },
 
@@ -203,7 +203,7 @@ const mutations = {
     Object.assign(current, userEmail)
   },
   DELETE_USER_EMAIL(state, id) {
-    const idx = state.userEmails.findIndex(e => e.id == id)
+    const idx = state.userEmails.findIndex(e => e.id === id)
     state.userEmails.splice(idx, 1)
   },
 
@@ -227,8 +227,34 @@ const mutations = {
     state.currentBlock.content = content
   },
   DELETE_USER_BLOCK(state, id) {
-    const idx = state.userBlocks.findIndex(ub => ub.id == id)
+    const idx = state.userBlocks.findIndex(ub => ub.id === id)
     state.userBlocks.splice(idx, 1)
+  },
+
+  // ////////////////////////////////////////////
+  // DESIGN SESSION
+  // ////////////////////////////////////////////
+  CREATE_SESSIONS(state, contributor) {
+    state.sessionContributors.push(contributor)
+  },
+  SET_SESSIONS_CONTRIBUTOR(state, contributors) {
+    state.sessionContributors = contributors
+  },
+  INVITE_SESSION(state, session) {
+    state.sessions.unshift(session)
+  },
+  SET_SESSIONS(state, sessions) {
+    state.sessions = sessions
+  },
+  KICK_CONTRIBUTOR(state, id) {
+    const idx = state.sessionContributors.findIndex(
+      sc => sc.contributorId === id
+    )
+    state.sessionContributors.splice(idx, 1)
+  },
+  LEAVE_SESSION(state, id) {
+    const idx = state.sessions.findIndex(s => s.rawId === id)
+    state.sessions.splice(idx, 1)
   },
 
   // ////////////////////////////////////////////

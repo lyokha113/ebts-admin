@@ -87,7 +87,15 @@ import {
   deleteUserBlock,
   synchronizeContent
 } from '@/service/userblock'
-import { createSession } from '@/service/designsession'
+
+import {
+  createSession,
+  getContributors,
+  kickContributor,
+  kickContributors,
+  getSessionsForUser,
+  leaveSession
+} from '@/service/designsession'
 
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugins/auth'
@@ -774,8 +782,9 @@ const actions = {
   // ////////////////////////////////////////////
   // USER EMAIL
   // ////////////////////////////////////////////
-  async setApprovedUserEmails({ commit }, userEmail) {
-    commit('UPDATE_USER_EMAIL', userEmail)
+  async userEmailWS({ commit }, message) {
+    message = JSON.parse(message)
+    commit('UPDATE_USER_EMAIL', message)
   },
 
   async getUserEmails({ commit }) {
@@ -900,6 +909,94 @@ const actions = {
     }
 
     return data.success
+  },
+
+  // ////////////////////////////////////////////
+  // DESIGN SESSION
+  // ////////////////////////////////////////////
+  async invitationWS({ commit }, message) {
+    message = JSON.parse(message)
+    if (message.command == 'add') {
+      commit('INVITE_SESSION', message.data)
+    } else {
+      commit('LEAVE_SESSION', message.data)
+    }
+  },
+
+  async contributorWS({ commit }, message) {
+    commit('KICK_CONTRIBUTOR', message)
+  },
+
+  async getContributors({ commit }, id) {
+    const { data } = await getContributors(id)
+    if (data.success) {
+      commit('SET_SESSIONS_CONTRIBUTOR', data.data)
+    }
+  },
+
+  async createSession({ commit }, session) {
+    const { data } = await createSession(session)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Invitation was sent',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('CREATE_SESSIONS', data.data)
+    }
+
+    return data.success
+  },
+
+  async kickContributors({ commit }, rawId) {
+    const { data } = await kickContributors(rawId)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'All contributors were kicked',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('SET_SESSIONS_CONTRIBUTOR', [])
+    }
+
+    return data.success
+  },
+
+  async kickContributor({ commit }, request) {
+    const { data } = await kickContributor(request.rawId, request.contributorId)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Contributor was kicked',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('KICK_CONTRIBUTOR', request.contributorId)
+    }
+
+    return data.success
+  },
+
+  async getSessionsForUser({ commit }) {
+    const { data } = await getSessionsForUser()
+    if (data.success) {
+      commit('SET_SESSIONS', data.data)
+    }
+  },
+
+  async leaveSession({ commit }, id) {
+    const { data } = await leaveSession(id)
+    if (data.success) {
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: 'Design invitation was removed',
+        color: 'success',
+        position: 'top-right'
+      })
+      commit('LEAVE_SESSION', id)
+    }
   }
 }
 export default actions

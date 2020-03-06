@@ -140,7 +140,8 @@ export default {
       'currentRaw',
       'editorFiles',
       'editorChange',
-      'userBlocks'
+      'userBlocks',
+      'sessionContributors'
     ])
   },
   async mounted() {
@@ -162,7 +163,8 @@ export default {
     await Promise.all([
       this.handleCallAPI(this.getFiles, null, false),
       this.handleCallAPI(this.getUserEmails, null, false),
-      this.handleCallAPI(this.getUserBlocks, null, false)
+      this.handleCallAPI(this.getUserBlocks, null, false),
+      this.handleCallAPI(this.getContributors, this.currentRaw.id, false)
     ])
 
     loader.hide()
@@ -354,6 +356,7 @@ export default {
       'getFiles',
       'getUserBlocks',
       'getUserEmails',
+      'getContributors',
       'createFile',
       'updateRawContent',
       'autoUpdateRawContent',
@@ -429,31 +432,31 @@ export default {
     },
 
     async handleAutoSave() {
-      // if (this.editorChange) {
-      //   const content = this.editor.runCommand('gjs-get-inlined-html')
-      //   if (
-      //     await this.handleCallAPI(
-      //       this.autoUpdateRawContent,
-      //       { rawId: this.currentRaw.id, autoSave: true, content },
-      //       false
-      //     )
-      //   ) {
-      //     this.setEditorChange(false)
-      //     this.$vs.notify({
-      //       title: 'Information',
-      //       text: 'Auto saved',
-      //       color: 'success',
-      //       position: 'top-right'
-      //     })
-      //   } else {
-      //     this.$vs.notify({
-      //       title: 'Information',
-      //       text: 'Auto failed',
-      //       color: 'warning',
-      //       position: 'top-right'
-      //     })
-      //   }
-      // }
+      if (this.editorChange) {
+        const content = this.editor.runCommand('gjs-get-inlined-html')
+        if (
+          await this.handleCallAPI(
+            this.autoUpdateRawContent,
+            { rawId: this.currentRaw.id, autoSave: true, content },
+            false
+          )
+        ) {
+          this.setEditorChange(false)
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto saved',
+            color: 'success',
+            position: 'top-right'
+          })
+        } else {
+          this.$vs.notify({
+            title: 'Information',
+            text: 'Auto failed',
+            color: 'warning',
+            position: 'top-right'
+          })
+        }
+      }
     },
 
     async handleApplyEditFile(file, name, imageModel, assetManager) {
