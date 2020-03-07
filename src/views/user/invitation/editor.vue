@@ -21,6 +21,7 @@ import grapesjs from 'grapesjs'
 import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import configEditor from '@/components/editor/configEditor.js'
+import { connectWSDesignSession, disconnectWS } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 
 import 'grapesjs/dist/css/grapes.min.css'
@@ -36,39 +37,19 @@ export default {
   computed: {
     ...mapGetters([
       'accessToken',
-      'currentBlock',
-      'editorFiles',
-      'editorChange',
-      'userBlocks'
+      'currentSession',
+      'currentSessionFiles',
+      'editorChange'
     ])
   },
   async mounted() {
-    if (!this.currentBlock) {
-      this.$router.push('/user/block')
+    if (!this.currentSession) {
+      this.$router.push('/user/invitation')
       return
     }
 
-    let loader = this.$loading.show({
-      color: '#7367f0',
-      loader: 'spinner',
-      width: 64,
-      height: 64,
-      backgroundColor: '#ffffff',
-      opacity: 1,
-      zIndex: 110000
-    })
-
-    await Promise.all([
-      this.handleCallAPI(this.getFiles, null, false),
-      this.handleCallAPI(this.getUserBlocks, null, false)
-    ])
-
-    loader.hide()
-
-    this.setEditorChange(false)
-
     this.editor = grapesjs.init({
-      components: this.currentBlock && this.currentBlock.content,
+      components: this.currentSession && this.currentSession.rawContent,
       container: '#editor',
       height: '780px',
       plugins: [
@@ -92,7 +73,7 @@ export default {
           })
       ],
       assetManager: {
-        assets: [...this.editorFiles],
+        assets: [...this.currentSessionFiles],
         noAssets: `<div class="no-image">You haven't upload any image.</div>`,
         dropzone: false,
         openAssetsOnDrop: false,
@@ -133,119 +114,120 @@ export default {
         command: () => this.handleSaveContent()
       })
     })
+
+    const message = {
+      online: true,
+      ownerId: this.currentSession.ownerId,
+      rawId: this.currentSession.rawId
+    }
+    connectWSDesignSession(this, this.accessToken, message)
   },
   methods: {
-    ...mapActions([
-      'getFiles',
-      'createFile',
-      'getUserBlocks',
-      'updateUserBlockContent',
-      'setEditorChange'
-    ]),
+    ...mapActions(['getSessionForUser', 'setEditorChange'])
 
-    getFileNameFromAM(src, assetManager) {
-      let files = assetManager.getAll()
-      files = [...files.models]
-      const file = files.find(f => f.attributes.src == src)
-      return file && file.attributes.name
-    },
+    // getFileNameFromAM(src, assetManager) {
+    //   let files = assetManager.getAll()
+    //   files = [...files.models]
+    //   const file = files.find(f => f.attributes.src == src)
+    //   return file && file.attributes.name
+    // },
 
-    handleOnUploaddProgress(progressEvent) {
-      this.uploadPercent = parseInt(
-        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      )
-    },
+    // handleOnUploaddProgress(progressEvent) {
+    //   this.uploadPercent = parseInt(
+    //     Math.round((progressEvent.loaded * 100) / progressEvent.total)
+    //   )
+    // },
 
-    handleApplyEditconfirm(imageEditor, imageModel) {
-      this.$vs.dialog({
-        type: 'confirm',
-        title: `Confirm`,
-        text: 'Do you want to create new image with these changes ?',
-        accept: () => {
-          const assetManager = this.editor.AssetManager
-          const name = this.getFileNameFromAM(
-            imageModel.attributes.src,
-            assetManager
-          )
-          const file = this.base64ImageToBlob(imageEditor.toDataURL())
-          this.handleApplyEditFile(
-            file,
-            name,
-            imageModel,
-            this.editor.AssetManager
-          )
-        }
-      })
-    },
+    // handleApplyEditconfirm(imageEditor, imageModel) {
+    //   this.$vs.dialog({
+    //     type: 'confirm',
+    //     title: `Confirm`,
+    //     text: 'Do you want to create new image with these changes ?',
+    //     accept: () => {
+    //       const assetManager = this.editor.AssetManager
+    //       const name = this.getFileNameFromAM(
+    //         imageModel.attributes.src,
+    //         assetManager
+    //       )
+    //       const file = this.base64ImageToBlob(imageEditor.toDataURL())
+    //       this.handleApplyEditFile(
+    //         file,
+    //         name,
+    //         imageModel,
+    //         this.editor.AssetManager
+    //       )
+    //     }
+    //   })
+    // },
 
-    async handleSaveContent() {
-      const content = this.editor.runCommand('gjs-get-inlined-html')
-      await this.handleCallAPI(this.updateUserBlockContent, {
-        id: this.currentBlock.id,
-        content
-      })
-      this.setEditorChange(false)
-    },
+    // async handleSaveContent() {
+    //   const content = this.editor.runCommand('gjs-get-inlined-html')
+    //   await this.handleCallAPI(this.updateUserBlockContent, {
+    //     id: this.currentBlock.id,
+    //     content
+    //   })
+    //   this.setEditorChange(false)
+    // },
 
-    async handleApplyEditFile(file, name, imageModel, assetManager) {
-      this.uploadPopup = true
-      this.uploadPercent = 0
+    // async handleApplyEditFile(file, name, imageModel, assetManager) {
+    //   this.uploadPopup = true
+    //   this.uploadPercent = 0
 
-      if (name) {
-        const dot = name.lastIndexOf('.')
-        name =
-          dot != -1
-            ? name.substring(0, dot) + '-edited' + name.substring(dot)
-            : name + '-edited'
-      } else {
-        name = 'edited'
-      }
+    //   if (name) {
+    //     const dot = name.lastIndexOf('.')
+    //     name =
+    //       dot != -1
+    //         ? name.substring(0, dot) + '-edited' + name.substring(dot)
+    //         : name + '-edited'
+    //   } else {
+    //     name = 'edited'
+    //   }
 
-      let formData = new FormData()
-      formData.append('files', file, name)
-      const uploader = {
-        file: formData,
-        onUploadProgress: this.handleOnUploaddProgress
-      }
-      const uploaded = await this.handleCallAPI(this.createFile, uploader)
-      assetManager.add([...this.editorFiles])
-      imageModel.set('src', uploaded[0].link)
-      this.uploadPercent = 0
-      this.uploadPopup = false
-      this.editor.Modal.close()
-    },
+    //   let formData = new FormData()
+    //   formData.append('files', file, name)
+    //   const uploader = {
+    //     file: formData,
+    //     onUploadProgress: this.handleOnUploaddProgress
+    //   }
+    //   const uploaded = await this.handleCallAPI(this.createFile, uploader)
+    //   assetManager.add([...this.editorFiles])
+    //   imageModel.set('src', uploaded[0].link)
+    //   this.uploadPercent = 0
+    //   this.uploadPopup = false
+    //   this.editor.Modal.close()
+    // },
 
-    async handleUploadFile(files, assetManager) {
-      this.uploadPopup = true
-      this.uploadPercent = 0
-      files = [...files]
+    // async handleUploadFile(files, assetManager) {
+    //   this.uploadPopup = true
+    //   this.uploadPercent = 0
+    //   files = [...files]
 
-      let formData = new FormData()
-      files.forEach(file => {
-        if (/image.*/.test(file.type)) {
-          formData.append('files', file)
-        } else {
-          this.$vs.notify({
-            title: 'File not supported',
-            text: `Can't upload ${file.name}`,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
-        }
-      })
+    //   let formData = new FormData()
+    //   files.forEach(file => {
+    //     if (/image.*/.test(file.type)) {
+    //       formData.append('files', file)
+    //     } else {
+    //       this.$vs.notify({
+    //         title: 'File not supported',
+    //         text: `Can't upload ${file.name}`,
+    //         color: 'warning',
+    //         icon: 'error',
+    //         position: 'top-right'
+    //       })
+    //     }
+    //   })
 
-      if (formData.getAll('files').length) {
-        const uploader = {
-          file: formData,
-          onUploadProgress: this.handleOnUploaddProgress
-        }
-        await this.handleCallAPI(this.createFile, uploader)
-        assetManager.add([...this.editorFiles])
-        this.uploadPercent = 0
-        this.uploadPopup = false
-      }
-    }
+    //   if (formData.getAll('files').length) {
+    //     const uploader = {
+    //       file: formData,
+    //       onUploadProgress: this.handleOnUploaddProgress
+    //     }
+    //     await this.handleCallAPI(this.createFile, uploader)
+    //     assetManager.add([...this.editorFiles])
+    //     this.uploadPercent = 0
+    //     this.uploadPopup = false
+    //   }
+    // }
   },
   beforeDestroy() {
     this.uploadPopup = false
@@ -263,6 +245,9 @@ export default {
     } else {
       next()
     }
+  },
+  destroyed() {
+    disconnectWS(this)
   }
 }
 </script>

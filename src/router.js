@@ -161,6 +161,14 @@ const router = new Router({
           }
         },
         {
+          path: '/user/invitation/editor',
+          name: 'InvitationEditor',
+          component: () => import('@/views/user/invitation/editor.vue'),
+          meta: {
+            permission: 2
+          }
+        },
+        {
           path: '/user/publish',
           name: 'Publish',
           component: () => import('@/views/user/publish/index.vue'),

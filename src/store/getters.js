@@ -82,6 +82,15 @@ const getters = {
   sessions: state => state.sessions,
   sessionContributors: state => state.sessionContributors,
   currentSession: state => state.currentSession,
+  currentSessionFiles: state =>
+    state.currentSession.files.map(f => {
+      return {
+        id: f.id,
+        name: f.name,
+        src: f.link,
+        type: 'image'
+      }
+    }),
 
   // ////////////////////////////////////////////
   // EDITOR

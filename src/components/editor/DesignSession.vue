@@ -15,7 +15,7 @@
     </div>
     <div class="flex w-4/5 px-5 text-center justify-center">
       <div>
-        <span class="text-lg font-semibold">Online: 0/4</span>
+        <span class="text-lg font-semibold">Online: {{ countOnline }}/4</span>
         <vs-button
           class="w-2/3 mt-1 font-bold"
           :disabled="!sessionContributors.length"
@@ -28,6 +28,7 @@
       <ul class="sessions w-3/4">
         <li
           class="truncate"
+          :class="{ online: contributor.online }"
           v-for="contributor in sessionContributors"
           :key="contributor.contributorId"
           @click="handleKick(contributor.contributorId)"
@@ -41,7 +42,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { connectWSContributor, disconnectWS } from '@/service/websocket'
 export default {
   data() {
     return {
@@ -49,7 +49,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentRaw', 'sessionContributors', 'accessToken'])
+    ...mapGetters(['currentRaw', 'sessionContributors', 'accessToken']),
+    countOnline() {
+      return this.sessionContributors.filter(s => s.online).length
+    }
   },
   methods: {
     ...mapActions([
@@ -127,16 +130,6 @@ export default {
   },
   mounted() {
     this.isMounted = true
-    this.currentRaw &&
-      connectWSContributor(
-        this,
-        this.accessToken,
-        this.contributorWS,
-        this.currentRaw.id
-      )
-  },
-  destroyed() {
-    disconnectWS(this)
   }
 }
 </script>

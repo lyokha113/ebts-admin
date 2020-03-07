@@ -6,6 +6,7 @@
       search
       :max-items="itemsPerPage"
       :data="sessions"
+      @selected="handleEdit"
     >
       <div
         slot="header"
@@ -60,7 +61,7 @@
               <img :src="tr.rawThumbnail" />
             </vs-td>
 
-            <vs-td style="width: 35%;">
+            <vs-td style="width: 30%;">
               <div class="font-semibold truncate">{{ tr.rawName }}</div>
               <p class="break-words truncate-six">{{ tr.rawDescription }}</p>
             </vs-td>
@@ -83,7 +84,7 @@
             </vs-td>
 
             <vs-td style="width: 5%">
-              <span class="action-icon" @click="handleLeave(tr.rawId)">
+              <span class="action-icon" @click.stop="handleLeave(tr.rawId)">
                 <vs-icon size="small" icon="delete" />
               </span>
             </vs-td>
@@ -114,7 +115,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getSessionsForUser', 'leaveSession', 'invitationWS']),
+    ...mapActions([
+      'getSessionsForUser',
+      'getSessionForUser',
+      'leaveSession',
+      'invitationWS'
+    ]),
     handleLeave(id) {
       this.$vs.dialog({
         type: 'confirm',
@@ -123,8 +129,20 @@ export default {
         accept: () => this.handleLeaveConfirm(id)
       })
     },
-    async handleLeaveConfirm(id) {
-      await this.handleCallAPI(this.leaveSession, id)
+    handleEdit(row) {
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: `Do you want to start design this template ?`,
+        accept: () => this.handleEditConfirm(row.rawId)
+      })
+    },
+    async handleLeaveConfirm(rawId) {
+      await this.handleCallAPI(this.leaveSession, rawId)
+    },
+    async handleEditConfirm(rawId) {
+      await this.handleCallAPI(this.getSessionForUser, rawId)
+      this.$router.push('/user/invitation/editor')
     }
   },
   async created() {
@@ -133,7 +151,6 @@ export default {
   async mounted() {
     this.isMounted = true
     connectWSInvitation(this, this.accessToken, this.invitationWS)
-    // sendContributor(this, this.accessToken, true)
   },
   destroyed() {
     disconnectWS(this)

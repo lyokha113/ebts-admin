@@ -22,6 +22,10 @@ export function getSessionsForUser() {
   return axios.get(`${URI}/user`)
 }
 
+export function getSessionForUser(rawId) {
+  return axios.get(`${URI}/user/${rawId}`)
+}
+
 export function leaveSession(id) {
   return axios.put(`${URI}/user/${id}`)
 }

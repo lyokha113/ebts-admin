@@ -94,6 +94,7 @@ import {
   kickContributor,
   kickContributors,
   getSessionsForUser,
+  getSessionForUser,
   leaveSession
 } from '@/service/designsession'
 
@@ -918,13 +919,19 @@ const actions = {
     message = JSON.parse(message)
     if (message.command == 'add') {
       commit('INVITE_SESSION', message.data)
-    } else {
+    } else if (message.command == 'remove') {
       commit('LEAVE_SESSION', message.data)
     }
   },
 
-  async contributorWS({ commit }, message) {
-    commit('KICK_CONTRIBUTOR', message)
+  async rawWS({ commit }, message) {
+    console.log(message)
+    message = JSON.parse(message)
+    if (message.command == 'edit') {
+      commit('ON_OFF_SESSION', message.data)
+    } else if (message.command == 'leave') {
+      commit('KICK_CONTRIBUTOR', message.data)
+    }
   },
 
   async getContributors({ commit }, id) {
@@ -983,6 +990,13 @@ const actions = {
     const { data } = await getSessionsForUser()
     if (data.success) {
       commit('SET_SESSIONS', data.data)
+    }
+  },
+
+  async getSessionForUser({ commit }, rawId) {
+    const { data } = await getSessionForUser(rawId)
+    if (data.success) {
+      commit('SET_CURRENT_SESSION', data.data)
     }
   },
 

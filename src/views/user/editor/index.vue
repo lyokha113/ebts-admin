@@ -105,6 +105,7 @@ import ExportPopup from '@/components/editor/ExportPopup.vue'
 import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
+import { connectWSRaw, disconnectWS } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 
 import 'grapesjs/dist/css/grapes.min.css'
@@ -350,6 +351,8 @@ export default {
 
       window.setTimeout(() => this.setEditorChange(false), 1000)
     })
+
+    connectWSRaw(this, this.accessToken, this.rawWS, this.currentRaw.id)
   },
   methods: {
     ...mapActions([
@@ -360,7 +363,8 @@ export default {
       'createFile',
       'updateRawContent',
       'autoUpdateRawContent',
-      'setEditorChange'
+      'setEditorChange',
+      'rawWS'
     ]),
 
     handleTimeoutSave() {
@@ -538,6 +542,9 @@ export default {
     } else {
       next()
     }
+  },
+  destroyed() {
+    disconnectWS(this)
   }
 }
 </script>
@@ -561,8 +568,13 @@ export default {
 
     #gjs-am-title {
       padding: 0px;
-      position: relative;
       top: 40%;
+    }
+
+    #gjs-am-uploadFile {
+      padding: 0px;
+      height: 100%;
+      cursor: pointer;
     }
   }
 }

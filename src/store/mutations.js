@@ -243,14 +243,24 @@ const mutations = {
   INVITE_SESSION(state, session) {
     state.sessions.unshift(session)
   },
-  SET_SESSIONS(state, sessions) {
-    state.sessions = sessions
+  ON_OFF_SESSION(state, session) {
+    console.log(session)
+    const current = state.sessionContributors.find(
+      sc => sc.contributorId === session.contributorId
+    )
+    Object.assign(current, { online: session.online })
   },
   KICK_CONTRIBUTOR(state, id) {
     const idx = state.sessionContributors.findIndex(
       sc => sc.contributorId === id
     )
     state.sessionContributors.splice(idx, 1)
+  },
+  SET_SESSIONS(state, sessions) {
+    state.sessions = sessions
+  },
+  SET_CURRENT_SESSION(state, session) {
+    state.currentSession = session
   },
   LEAVE_SESSION(state, id) {
     const idx = state.sessions.findIndex(s => s.rawId === id)
