@@ -3,6 +3,7 @@ import Stomp from 'webstomp-client'
 
 const ENDPOINT = '/ws'
 const CONTRIBUTOR_APP = '/app/contributor/'
+const CONTENT_APP = '/app/content/'
 const PUBLISH_TOPIC = '/topic/publish/'
 const USEREMAIL_USER = '/user/queue/useremail/'
 const INVITATION_USER = '/user/queue/invitation/'
@@ -18,19 +19,33 @@ export function connectWSUseremail(vue, token, handleData) {
   connectWS(vue, token, channels, [])
 }
 
-export function connectWSRaw(vue, token, handleData, rawId) {
-  const channels = [{ name: RAW_USER + rawId, handler: handleData }]
-  connectWS(vue, token, channels, [])
-}
-
 export function connectWSInvitation(vue, token, handleData) {
   const channels = [{ name: INVITATION_USER, handler: handleData }]
   connectWS(vue, token, channels, [])
 }
 
-export function connectWSDesignSession(vue, token, message) {
+export function connectWSOwnerRaw(vue, token, handleData, rawId) {
+  const channels = [{ name: RAW_USER + rawId, handler: handleData }]
+  connectWS(vue, token, channels, [])
+}
+
+export function connectWSContributorRaw(
+  vue,
+  token,
+  handleData,
+  rawId,
+  message
+) {
+  const channels = [{ name: RAW_USER + rawId, handler: handleData }]
   const messages = [{ name: CONTRIBUTOR_APP, data: message }]
-  connectWS(vue, token, [], messages)
+  connectWS(vue, token, channels, messages)
+}
+
+export function sendOfflineSession(vue, message) {
+  sendMessage(vue, CONTRIBUTOR_APP, message)
+}
+export function sendDesignContent(vue, message) {
+  sendMessage(vue, CONTENT_APP, message)
 }
 
 export function disconnectWS(vue) {
@@ -60,8 +75,8 @@ function connectWS(vue, token, channels, messages) {
   )
 }
 
-// function sendMessage(vue, message, data) {
-//   if (vue.stompClient) {
-//     vue.stompClient.send(message, {}, JSON.stringify(data))
-//   }
-// }
+function sendMessage(vue, app, message) {
+  if (vue.stompClient && vue.stompClient.connected) {
+    vue.stompClient.send(app, JSON.stringify(message), {})
+  }
+}

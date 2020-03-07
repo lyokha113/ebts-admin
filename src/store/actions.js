@@ -888,7 +888,7 @@ const actions = {
   async updateUserBlockContent({ commit }, block) {
     const { data } = await updateUserBlockContent(block)
     if (data.success) {
-      commit('SAVE__USER_BLOCK_CONTENT', block.content)
+      commit('SAVE_USER_BLOCK_CONTENT', block.content)
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Block was saved',
@@ -924,13 +924,18 @@ const actions = {
     }
   },
 
-  async rawWS({ commit }, message) {
-    console.log(message)
+  async rawWS({ commit, getters }, message) {
     message = JSON.parse(message)
-    if (message.command == 'edit') {
+    if (message.command == 'contributor') {
       commit('ON_OFF_SESSION', message.data)
     } else if (message.command == 'leave') {
       commit('KICK_CONTRIBUTOR', message.data)
+    } else if (message.command == 'edit') {
+      if (getters.activeUser.id == message.data.owner) {
+        commit('SAVE_CONTENT', message.data.content)
+      } else {
+        commit('SAVE_CURRENT_SESSION_CONTENT', message.data.content)
+      }
     }
   },
 

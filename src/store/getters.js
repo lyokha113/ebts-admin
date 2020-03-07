@@ -34,6 +34,7 @@ const getters = {
   // ////////////////////////////////////////////
   files: state => state.files,
   editorFiles: state =>
+    state.files &&
     state.files
       .filter(f => f.active)
       .map(f => {
@@ -83,6 +84,7 @@ const getters = {
   sessionContributors: state => state.sessionContributors,
   currentSession: state => state.currentSession,
   currentSessionFiles: state =>
+    state.currentSession &&
     state.currentSession.files.map(f => {
       return {
         id: f.id,

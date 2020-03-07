@@ -223,9 +223,6 @@ const mutations = {
     const current = state.userBlocks.find(ub => ub.id === userBlock.id)
     Object.assign(current, userBlock)
   },
-  SAVE_USER_BLOCK_CONTENT(state, content) {
-    state.currentBlock.content = content
-  },
   DELETE_USER_BLOCK(state, id) {
     const idx = state.userBlocks.findIndex(ub => ub.id === id)
     state.userBlocks.splice(idx, 1)
@@ -244,11 +241,12 @@ const mutations = {
     state.sessions.unshift(session)
   },
   ON_OFF_SESSION(state, session) {
-    console.log(session)
-    const current = state.sessionContributors.find(
+    const idx = state.sessionContributors.findIndex(
       sc => sc.contributorId === session.contributorId
     )
-    Object.assign(current, { online: session.online })
+    let current = state.sessionContributors.splice(idx, 1)
+    current[0].online = session.online
+    state.sessionContributors.unshift(current[0])
   },
   KICK_CONTRIBUTOR(state, id) {
     const idx = state.sessionContributors.findIndex(
@@ -273,7 +271,12 @@ const mutations = {
   SAVE_CONTENT(state, content) {
     state.currentRaw.content = content
   },
-  SAVE__USER_BLOCK_CONTENT(state, content) {
+  SAVE_CURRENT_SESSION_CONTENT(state, content) {
+    let current = state.currentSession
+    current.rawContent = content
+    state.currentSession = Object.assign({}, current)
+  },
+  SAVE_USER_BLOCK_CONTENT(state, content) {
     state.currentBlock.content = content
   },
   SET_EDITOR_CHANGE(state, status) {

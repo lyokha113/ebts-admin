@@ -105,7 +105,11 @@ import ExportPopup from '@/components/editor/ExportPopup.vue'
 import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
-import { connectWSRaw, disconnectWS } from '@/service/websocket'
+import {
+  connectWSOwnerRaw,
+  sendDesignContent,
+  disconnectWS
+} from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 
 import 'grapesjs/dist/css/grapes.min.css'
@@ -138,6 +142,7 @@ export default {
   computed: {
     ...mapGetters([
       'accessToken',
+      'activeUser',
       'currentRaw',
       'editorFiles',
       'editorChange',
@@ -226,6 +231,17 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
+      if (this.currentRaw) {
+        const message = {
+          content: this.editor.runCommand('gjs-get-inlined-html'),
+          ownerId: this.activeUser.id,
+          rawId: this.currentRaw.id,
+          contributors: this.sessionContributors.map(c => c.contributorId)
+        }
+        if (message.content) {
+          sendDesignContent(this, message)
+        }
+      }
     })
 
     this.editor.on('load', async () => {
@@ -352,7 +368,7 @@ export default {
       window.setTimeout(() => this.setEditorChange(false), 1000)
     })
 
-    connectWSRaw(this, this.accessToken, this.rawWS, this.currentRaw.id)
+    connectWSOwnerRaw(this, this.accessToken, this.rawWS, this.currentRaw.id)
   },
   methods: {
     ...mapActions([

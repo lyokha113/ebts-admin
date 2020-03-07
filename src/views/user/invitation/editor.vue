@@ -21,7 +21,12 @@ import grapesjs from 'grapesjs'
 import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import configEditor from '@/components/editor/configEditor.js'
-import { connectWSDesignSession, disconnectWS } from '@/service/websocket'
+import {
+  connectWSContributorRaw,
+  sendOfflineSession,
+  sendDesignContent,
+  disconnectWS
+} from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 
 import 'grapesjs/dist/css/grapes.min.css'
@@ -37,6 +42,7 @@ export default {
   computed: {
     ...mapGetters([
       'accessToken',
+      'activeUser',
       'currentSession',
       'currentSessionFiles',
       'editorChange'
@@ -102,6 +108,16 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
+      if (this.currentSession) {
+        const message = {
+          content: this.editor.runCommand('gjs-get-inlined-html'),
+          ownerId: this.currentSession.ownerId,
+          rawId: this.currentSession.rawId
+        }
+        if (message.content) {
+          sendDesignContent(this, message)
+        }
+      }
     })
 
     this.editor.on('load', () => {
@@ -120,10 +136,16 @@ export default {
       ownerId: this.currentSession.ownerId,
       rawId: this.currentSession.rawId
     }
-    connectWSDesignSession(this, this.accessToken, message)
+    connectWSContributorRaw(
+      this,
+      this.accessToken,
+      this.rawWS,
+      this.currentSession.rawId,
+      message
+    )
   },
   methods: {
-    ...mapActions(['getSessionForUser', 'setEditorChange'])
+    ...mapActions(['getSessionForUser', 'setEditorChange', 'rawWS'])
 
     // getFileNameFromAM(src, assetManager) {
     //   let files = assetManager.getAll()
@@ -247,7 +269,21 @@ export default {
     }
   },
   destroyed() {
+    if (this.currentSession) {
+      const message = {
+        online: false,
+        ownerId: this.currentSession.ownerId,
+        rawId: this.currentSession.rawId
+      }
+      sendOfflineSession(this, message)
+    }
+
     disconnectWS(this)
+  },
+  watch: {
+    currentSession: function(session) {
+      this.editor.setComponents(session.rawContent)
+    }
   }
 }
 </script>
