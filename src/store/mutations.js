@@ -269,12 +269,18 @@ const mutations = {
   // EDITOR
   // ////////////////////////////////////////////
   SAVE_CONTENT(state, content) {
-    state.currentRaw.content = content
+    let current = state.currentRaw
+    if (current.content != content) {
+      current.content = content
+      state.currentRaw = Object.assign({}, current)
+    }
   },
   SAVE_CURRENT_SESSION_CONTENT(state, content) {
     let current = state.currentSession
-    current.rawContent = content
-    state.currentSession = Object.assign({}, current)
+    if (current.rawContent != content) {
+      current.rawContent = content
+      state.currentSession = Object.assign({}, current)
+    }
   },
   SAVE_USER_BLOCK_CONTENT(state, content) {
     state.currentBlock.content = content

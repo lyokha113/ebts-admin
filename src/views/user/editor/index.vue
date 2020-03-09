@@ -561,6 +561,11 @@ export default {
   },
   destroyed() {
     disconnectWS(this)
+  },
+  watch: {
+    currentRaw: function(raw) {
+      this.editor.setComponents(raw.content)
+    }
   }
 }
 </script>
