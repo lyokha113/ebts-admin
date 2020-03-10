@@ -6,7 +6,7 @@ export function getContributors(id) {
   return axios.get(`${URI}/raw/${id}`)
 }
 
-export function createSession(request) {
+export function createContributor(request) {
   return axios.post(`${URI}/raw`, request)
 }
 

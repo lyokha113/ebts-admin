@@ -94,7 +94,9 @@ const mutations = {
   },
   DELETE_TEMPLATE(state, id) {
     const idx = state.templates.findIndex(t => t.id === id)
-    state.templates.splice(idx, 1)
+    if (idx != -1) {
+      state.templates.splice(idx, 1)
+    }
   },
 
   // ////////////////////////////////////////////
@@ -152,20 +154,19 @@ const mutations = {
   DELETE_WORKSPACE(state, workspace) {
     const defaultWs = state.workspaces.find(w => w.name == 'Default workspace')
     const idx = state.workspaces.findIndex(w => w.id === workspace.id)
-    const current = state.workspaces[idx]
-    defaultWs.rawTemplates = [
-      ...defaultWs.rawTemplates,
-      ...current.rawTemplates
-    ]
-    state.workspaces.splice(idx, 1)
+    if (idx != -1) {
+      const current = state.workspaces[idx]
+      defaultWs.rawTemplates = [
+        ...defaultWs.rawTemplates,
+        ...current.rawTemplates
+      ]
+      state.workspaces.splice(idx, 1)
+    }
   },
 
   // ////////////////////////////////////////////
   // RAW TEMPLATE
   // ////////////////////////////////////////////
-  SET_CURRENT_RAW(state, currentRaw) {
-    state.currentRaw = currentRaw
-  },
   CREATE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     ws.rawTemplates.unshift(raw)
@@ -179,14 +180,18 @@ const mutations = {
       Object.assign(current, raw.data)
     } else {
       const idx = curentWS.rawTemplates.findIndex(r => r.id === raw.data.id)
-      curentWS.rawTemplates.splice(idx, 1)
-      ws.rawTemplates.unshift(raw.data)
+      if (idx != -1) {
+        curentWS.rawTemplates.splice(idx, 1)
+        ws.rawTemplates.unshift(raw.data)
+      }
     }
   },
   DELETE_RAW(state, raw) {
     const ws = state.workspaces.find(w => w.id === raw.workspaceId)
     const idx = ws.rawTemplates.findIndex(t => t.id === raw.id)
-    ws.rawTemplates.splice(idx, 1)
+    if (idx != -1) {
+      ws.rawTemplates.splice(idx, 1)
+    }
   },
 
   // ////////////////////////////////////////////
@@ -204,7 +209,9 @@ const mutations = {
   },
   DELETE_USER_EMAIL(state, id) {
     const idx = state.userEmails.findIndex(e => e.id === id)
-    state.userEmails.splice(idx, 1)
+    if (idx != -1) {
+      state.userEmails.splice(idx, 1)
+    }
   },
 
   // ////////////////////////////////////////////
@@ -225,61 +232,76 @@ const mutations = {
   },
   DELETE_USER_BLOCK(state, id) {
     const idx = state.userBlocks.findIndex(ub => ub.id === id)
-    state.userBlocks.splice(idx, 1)
+    if (idx != -1) {
+      state.userBlocks.splice(idx, 1)
+    }
   },
 
   // ////////////////////////////////////////////
   // DESIGN SESSION
   // ////////////////////////////////////////////
-  CREATE_SESSIONS(state, contributor) {
-    state.sessionContributors.push(contributor)
-  },
-  SET_SESSIONS_CONTRIBUTOR(state, contributors) {
-    state.sessionContributors = contributors
-  },
   INVITE_SESSION(state, session) {
     state.sessions.unshift(session)
-  },
-  ON_OFF_SESSION(state, session) {
-    const idx = state.sessionContributors.findIndex(
-      sc => sc.contributorId === session.contributorId
-    )
-    let current = state.sessionContributors.splice(idx, 1)
-    current[0].online = session.online
-    state.sessionContributors.unshift(current[0])
-  },
-  KICK_CONTRIBUTOR(state, id) {
-    const idx = state.sessionContributors.findIndex(
-      sc => sc.contributorId === id
-    )
-    state.sessionContributors.splice(idx, 1)
   },
   SET_SESSIONS(state, sessions) {
     state.sessions = sessions
   },
-  SET_CURRENT_SESSION(state, session) {
-    state.currentSession = session
-  },
   LEAVE_SESSION(state, id) {
     const idx = state.sessions.findIndex(s => s.rawId === id)
-    state.sessions.splice(idx, 1)
+    if (idx != -1) {
+      state.sessions.splice(idx, 1)
+    }
+  },
+  CREATE_CONTRIBUTOR(state, contributor) {
+    state.contributors.push(contributor)
+  },
+  SET_CONTRIBUTOR(state, contributors) {
+    state.contributors = contributors
+  },
+  KICK_CONTRIBUTOR(state, id) {
+    const idx = state.contributors.findIndex(sc => sc.contributorId === id)
+    if (idx != -1) {
+      state.contributors.splice(idx, 1)
+    }
+  },
+  SET_ONLINE(state, session) {
+    if (session instanceof Array) {
+      session.forEach(s => {
+        const idx = state.contributors.findIndex(sc => sc.contributorId === s)
+        if (idx != -1) {
+          let current = state.contributors.splice(idx, 1)
+          current[0].online = true
+          state.contributors.unshift(current[0])
+        }
+      })
+    } else {
+      const idx = state.contributors.findIndex(
+        sc => sc.contributorId === session.contributorId
+      )
+      if (idx != -1) {
+        let current = state.contributors.splice(idx, 1)
+        current[0].online = session.online
+        state.contributors.unshift(current[0])
+      }
+    }
   },
 
   // ////////////////////////////////////////////
   // EDITOR
   // ////////////////////////////////////////////
-  SAVE_CONTENT(state, content) {
-    let current = state.currentRaw
-    if (current.content != content) {
-      current.content = content
-      state.currentRaw = Object.assign({}, current)
-    }
+  SET_EDITOR(state, raw) {
+    state.editorRawId = raw.id
+    state.editorContent = raw.content
   },
-  SAVE_CURRENT_SESSION_CONTENT(state, content) {
-    let current = state.currentSession
-    if (current.rawContent != content) {
-      current.rawContent = content
-      state.currentSession = Object.assign({}, current)
+  SET_EDITOR_CONTRIBUTOR(state, session) {
+    state.editorRawId = session.rawId
+    state.editorOwnerId = session.ownerId
+    state.editorContent = session.rawContent
+    state.sessionFiles = session.files
+  },
+  SAVE_EDITOR_CONTENT(state, content) {
+    if (state.editorContent != content) {
+      state.editorContent = content
     }
   },
   SAVE_USER_BLOCK_CONTENT(state, content) {
@@ -287,6 +309,9 @@ const mutations = {
   },
   SET_EDITOR_CHANGE(state, status) {
     state.editorChange = status
+  },
+  SET_FORCE_KICK(state, status) {
+    state.forceKick = status
   }
 }
 

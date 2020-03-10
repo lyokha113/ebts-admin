@@ -106,8 +106,8 @@ import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import {
-  connectWSOwnerRaw,
-  sendDesignContent,
+  connectWSRaw,
+  // sendDesignContent,
   disconnectWS
 } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
@@ -143,15 +143,16 @@ export default {
     ...mapGetters([
       'accessToken',
       'activeUser',
-      'currentRaw',
+      'editorRawId',
+      'editorContent',
       'editorFiles',
       'editorChange',
       'userBlocks',
-      'sessionContributors'
+      'contributors'
     ])
   },
   async mounted() {
-    if (!this.currentRaw) {
+    if (!this.editorRawId) {
       this.$router.push('/user/workspace')
       return
     }
@@ -170,7 +171,7 @@ export default {
       this.handleCallAPI(this.getFiles, null, false),
       this.handleCallAPI(this.getUserEmails, null, false),
       this.handleCallAPI(this.getUserBlocks, null, false),
-      this.handleCallAPI(this.getContributors, this.currentRaw.id, false)
+      this.handleCallAPI(this.getContributors, this.editorRawId, false)
     ])
 
     loader.hide()
@@ -178,7 +179,7 @@ export default {
     this.setEditorChange(false)
 
     this.editor = grapesjs.init({
-      components: this.currentRaw && this.currentRaw.content,
+      components: this.editorRawId && this.editorContent,
       container: '#editor',
       height: '660px',
       plugins: [
@@ -231,17 +232,16 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
-      if (this.currentRaw) {
-        const message = {
-          content: this.editor.runCommand('gjs-get-inlined-html'),
-          ownerId: this.activeUser.id,
-          rawId: this.currentRaw.id,
-          contributors: this.sessionContributors.map(c => c.contributorId)
-        }
-        if (message.content) {
-          sendDesignContent(this, message)
-        }
-      }
+      // if (this.editorRawId) {
+      //   const message = {
+      //     content: this.editor.runCommand('gjs-get-inlined-html'),
+      //     ownerId: this.activeUser.id,
+      //     rawId: this.editorRawId
+      //   }
+      //   if (message.content) {
+      //     sendDesignContent(this, message)
+      //   }
+      // }
     })
 
     this.editor.on('load', async () => {
@@ -368,7 +368,12 @@ export default {
       window.setTimeout(() => this.setEditorChange(false), 1000)
     })
 
-    connectWSOwnerRaw(this, this.accessToken, this.rawWS, this.currentRaw.id)
+    const message = {
+      online: true,
+      ownerId: this.activeUser.id,
+      rawId: this.editorRawId
+    }
+    connectWSRaw(this, this.accessToken, this.rawWS, this.editorRawId, message)
   },
   methods: {
     ...mapActions([
@@ -444,7 +449,7 @@ export default {
     async handleSaveContent() {
       const content = this.editor.runCommand('gjs-get-inlined-html')
       await this.handleCallAPI(this.updateRawContent, {
-        rawId: this.currentRaw.id,
+        rawId: this.editorRawId,
         autoSave: false,
         content
       })
@@ -457,7 +462,7 @@ export default {
         if (
           await this.handleCallAPI(
             this.autoUpdateRawContent,
-            { rawId: this.currentRaw.id, autoSave: true, content },
+            { rawId: this.editorRawId, autoSave: true, content },
             false
           )
         ) {
@@ -561,12 +566,12 @@ export default {
   },
   destroyed() {
     disconnectWS(this)
-  },
-  watch: {
-    currentRaw: function(raw) {
-      this.editor.setComponents(raw.content)
-    }
   }
+  // watch: {
+  //   editorContent: function(raw) {
+  //     this.editor.setComponents(raw.content)
+  //   }
+  // }
 }
 </script>
 

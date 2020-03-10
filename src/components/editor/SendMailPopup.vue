@@ -217,7 +217,8 @@ export default {
       'accessToken',
       'activeUser',
       'editorChange',
-      'currentRaw',
+      'editorRawId',
+      'editorRawId',
       'userEmails'
     ]),
     disableDynamic() {
@@ -304,7 +305,7 @@ export default {
         new Blob([this.strToArrayBuffer(out)], {
           type: 'application/octet-stream'
         }),
-        `ETBS-${this.currentRaw.name}.xlsx`
+        `ETBS-${this.editorRawId}.xlsx`
       )
     },
 
@@ -385,7 +386,7 @@ export default {
       if (this.editorChange > 0) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         await this.handleCallAPI(this.autoUpdateRawContent, {
-          rawId: this.currentRaw.id,
+          rawId: this.editorRawId,
           autoSave: false,
           content
         })
@@ -401,7 +402,7 @@ export default {
         accept: async () => {
           const data = this.formatDynamicData()
           const request = {
-            rawId: this.currentRaw.id,
+            rawId: this.editorRawId,
             data
           }
 

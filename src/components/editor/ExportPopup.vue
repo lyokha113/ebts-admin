@@ -188,7 +188,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accessToken', 'currentRaw', 'editorChange'])
+    ...mapGetters([
+      'accessToken',
+      'editorRawId',
+      'editorContent',
+      'editorChange'
+    ])
   },
   methods: {
     ...mapActions([
@@ -218,7 +223,7 @@ export default {
       if (this.editorChange > 0) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         await this.handleCallAPI(this.autoUpdateRawContent, {
-          rawId: this.currentRaw.id,
+          rawId: this.editorRawId,
           autoSave: false,
           content
         })
@@ -229,8 +234,8 @@ export default {
     async handleDownload() {
       await this.fetchInlineContent()
       const file = new File(
-        [this.currentRaw.content],
-        `etbs-${this.currentRaw.name}.html`,
+        [this.editorContent],
+        `etbs-${this.editorRawId}.html`,
         {
           type: 'text/html;charset=utf-8'
         }
@@ -246,7 +251,7 @@ export default {
 
     async handleGMailDraft() {
       await this.fetchInlineContent()
-      await this.handleCallAPI(this.makeDraftGMail, this.currentRaw.id)
+      await this.handleCallAPI(this.makeDraftGMail, this.editorRawId)
     },
 
     async handleOutlookDraft() {
@@ -263,7 +268,7 @@ export default {
 
       await this.fetchInlineContent()
       const request = {
-        rawTemplateId: this.currentRaw.id,
+        rawTemplateId: this.editorRawId,
         email: this.outlookEmail,
         password: this.outlookPassword
       }
@@ -286,7 +291,7 @@ export default {
 
       await this.fetchInlineContent()
       const request = {
-        rawTemplateId: this.currentRaw.id,
+        rawTemplateId: this.editorRawId,
         email: this.yahooEmail,
         password: this.yahooPassword
       }

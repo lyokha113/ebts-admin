@@ -24,18 +24,7 @@ export function connectWSInvitation(vue, token, handleData) {
   connectWS(vue, token, channels, [])
 }
 
-export function connectWSOwnerRaw(vue, token, handleData, rawId) {
-  const channels = [{ name: RAW_USER + rawId, handler: handleData }]
-  connectWS(vue, token, channels, [])
-}
-
-export function connectWSContributorRaw(
-  vue,
-  token,
-  handleData,
-  rawId,
-  message
-) {
+export function connectWSRaw(vue, token, handleData, rawId, message) {
   const channels = [{ name: RAW_USER + rawId, handler: handleData }]
   const messages = [{ name: CONTRIBUTOR_APP, data: message }]
   connectWS(vue, token, channels, messages)

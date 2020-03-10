@@ -86,14 +86,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentRaw'])
+    ...mapGetters(['editorContent'])
   },
   methods: {
     ...mapActions(['getRawTemplate', 'deleteRawTemplate', 'createPublish']),
     async handlePreview(id) {
       await this.handleCallAPI(this.getRawTemplate, id)
       const preview = window.open('', '_blank')
-      preview.document.write(this.currentRaw.content)
+      preview.document.write(this.editorContent)
     },
     async handleDelete(raw) {
       this.$vs.dialog({
@@ -112,7 +112,7 @@ export default {
         accept: async () => {
           await this.handleCallAPI(this.getRawTemplate, id)
           await this.handleCallAPI(this.createPublish, {
-            string: this.currentRaw.content
+            string: this.editorContent
           })
         }
       })

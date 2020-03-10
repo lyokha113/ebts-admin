@@ -61,11 +61,6 @@ const state = {
   workspaces: [],
 
   // ////////////////////////////////////////////
-  // RAW TEMPLATE
-  // ////////////////////////////////////////////
-  currentRaw: null,
-
-  // ////////////////////////////////////////////
   // USER EMAIL
   // ////////////////////////////////////////////
   userEmails: [],
@@ -80,13 +75,17 @@ const state = {
   // DESIGN SESSION
   // ////////////////////////////////////////////
   sessions: [],
-  sessionContributors: [],
-  currentSession: null,
+  contributors: [],
+  sessionFiles: [],
 
   // ////////////////////////////////////////////
   // EDITOR
   // ////////////////////////////////////////////
-  editorChange: false
+  editorRawId: null,
+  editorOwnerId: null,
+  editorContent: '',
+  editorChange: false,
+  forceKick: false
 }
 
 export default state

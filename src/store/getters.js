@@ -62,11 +62,6 @@ const getters = {
   workspaces: state => state.workspaces,
 
   // ////////////////////////////////////////////
-  // RAW TEMPLATE
-  // ////////////////////////////////////////////
-  currentRaw: state => state.currentRaw,
-
-  // ////////////////////////////////////////////
   // USER EMAIL
   // ////////////////////////////////////////////
   userEmails: state => state.userEmails,
@@ -81,11 +76,10 @@ const getters = {
   // DESIGN SESSION
   // ////////////////////////////////////////////
   sessions: state => state.sessions,
-  sessionContributors: state => state.sessionContributors,
-  currentSession: state => state.currentSession,
-  currentSessionFiles: state =>
-    state.currentSession &&
-    state.currentSession.files.map(f => {
+  contributors: state => state.contributors,
+  sessionFiles: state =>
+    state.sessionFiles &&
+    state.sessionFiles.map(f => {
       return {
         id: f.id,
         name: f.name,
@@ -97,7 +91,11 @@ const getters = {
   // ////////////////////////////////////////////
   // EDITOR
   // ////////////////////////////////////////////
-  editorChange: state => state.editorChange
+  editorRawId: state => state.editorRawId,
+  editorOwnerId: state => state.editorOwnerId,
+  editorContent: state => state.editorContent,
+  editorChange: state => state.editorChange,
+  forceKick: state => state.forceKick
 }
 
 export default getters

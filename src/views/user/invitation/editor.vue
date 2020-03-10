@@ -22,9 +22,9 @@ import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import configEditor from '@/components/editor/configEditor.js'
 import {
-  connectWSContributorRaw,
+  connectWSRaw,
   sendOfflineSession,
-  sendDesignContent,
+  // sendDesignContent,
   disconnectWS
 } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
@@ -43,19 +43,22 @@ export default {
     ...mapGetters([
       'accessToken',
       'activeUser',
-      'currentSession',
-      'currentSessionFiles',
+      'editorRawId',
+      'editorOwnerId',
+      'editorContent',
+      'sessionFiles',
+      'forceKick',
       'editorChange'
     ])
   },
   async mounted() {
-    if (!this.currentSession) {
+    if (!this.editorRawId) {
       this.$router.push('/user/invitation')
       return
     }
 
     this.editor = grapesjs.init({
-      components: this.currentSession && this.currentSession.rawContent,
+      components: this.editorRawId && this.editorContent,
       container: '#editor',
       height: '780px',
       plugins: [
@@ -79,7 +82,7 @@ export default {
           })
       ],
       assetManager: {
-        assets: [...this.currentSessionFiles],
+        assets: [...this.sessionFiles],
         noAssets: `<div class="no-image">You haven't upload any image.</div>`,
         dropzone: false,
         openAssetsOnDrop: false,
@@ -108,16 +111,16 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
-      if (this.currentSession) {
-        const message = {
-          content: this.editor.runCommand('gjs-get-inlined-html'),
-          ownerId: this.currentSession.ownerId,
-          rawId: this.currentSession.rawId
-        }
-        if (message.content) {
-          sendDesignContent(this, message)
-        }
-      }
+      // if (this.editorRawId) {
+      //   const message = {
+      //     content: this.editor.runCommand('gjs-get-inlined-html'),
+      //     ownerId: this.editorOwnerId,
+      //     rawId: this.editorRawId
+      //   }
+      //   if (message.content) {
+      //     sendDesignContent(this, message)
+      //   }
+      // }
     })
 
     this.editor.on('load', () => {
@@ -133,16 +136,10 @@ export default {
 
     const message = {
       online: true,
-      ownerId: this.currentSession.ownerId,
-      rawId: this.currentSession.rawId
+      ownerId: this.editorOwnerId,
+      rawId: this.editorRawId
     }
-    connectWSContributorRaw(
-      this,
-      this.accessToken,
-      this.rawWS,
-      this.currentSession.rawId,
-      message
-    )
+    connectWSRaw(this, this.accessToken, this.rawWS, this.editorRawId, message)
   },
   methods: {
     ...mapActions(['getSessionForUser', 'setEditorChange', 'rawWS'])
@@ -255,11 +252,11 @@ export default {
     this.uploadPopup = false
   },
   beforeRouteLeave(to, from, next) {
-    if (this.editorChange > 0) {
+    if (this.editorChange > 0 && !this.forceKick) {
       this.$vs.dialog({
         type: 'confirm',
         title: `Confirm`,
-        text: `Your block haven't saved. Do you want to leave it ?`,
+        text: `This template haven't saved. Do you want to leave it ?`,
         'accept-text': 'Leave',
         cancel: async () => next(false),
         accept: async () => next()
@@ -269,22 +266,22 @@ export default {
     }
   },
   destroyed() {
-    if (this.currentSession) {
+    if (this.editorRawId) {
       const message = {
         online: false,
-        ownerId: this.currentSession.ownerId,
-        rawId: this.currentSession.rawId
+        ownerId: this.editorOwnerId,
+        rawId: this.editorRawId
       }
       sendOfflineSession(this, message)
     }
 
     disconnectWS(this)
-  },
-  watch: {
-    currentSession: function(session) {
-      this.editor.setComponents(session.rawContent)
-    }
   }
+  // watch: {
+  //   editorContent: function(session) {
+  //     this.editor.setComponents(session.rawContent)
+  //   }
+  // }
 }
 </script>
 

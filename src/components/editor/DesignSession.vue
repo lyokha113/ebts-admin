@@ -18,7 +18,7 @@
         <span class="text-lg font-semibold">Online: {{ countOnline }}/4</span>
         <vs-button
           class="w-2/3 mt-1 font-bold"
-          :disabled="!sessionContributors.length"
+          :disabled="!contributors.length"
           @click="handleKickAll"
         >
           KICK ALL
@@ -29,7 +29,7 @@
         <li
           class="truncate"
           :class="{ online: contributor.online }"
-          v-for="contributor in sessionContributors"
+          v-for="contributor in contributors"
           :key="contributor.contributorId"
           @click="handleKick(contributor.contributorId)"
         >
@@ -49,18 +49,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentRaw', 'sessionContributors', 'accessToken']),
+    ...mapGetters(['editorRawId', 'contributors', 'accessToken']),
     countOnline() {
-      return this.sessionContributors.filter(s => s.online).length
+      return this.contributors.filter(s => s.online).length
     }
   },
   methods: {
-    ...mapActions([
-      'createSession',
-      'kickContributors',
-      'kickContributor',
-      'contributorWS'
-    ]),
+    ...mapActions(['createContributor', 'kickContributors', 'kickContributor']),
     handleInvite() {
       if (!this.validateEmail(this.contributorEmail)) {
         this.$vs.notify({
@@ -73,7 +68,7 @@ export default {
         return
       }
 
-      if (this.sessionContributors.length >= 4) {
+      if (this.contributors.length >= 4) {
         this.$vs.notify({
           title: 'Maximum contributors',
           text: 'We currently support maximum 4 contributors at the same time',
@@ -111,21 +106,21 @@ export default {
     async handleInviteConfirm() {
       const invitation = {
         contributorEmail: this.contributorEmail,
-        rawId: this.currentRaw.id
+        rawId: this.editorRawId
       }
-      if (await this.handleCallAPI(this.createSession, invitation)) {
+      if (await this.handleCallAPI(this.createContributor, invitation)) {
         this.contributorEmail = ''
       }
     },
     async handleKickConfirm(contributorId) {
       const request = {
         contributorId: contributorId,
-        rawId: this.currentRaw.id
+        rawId: this.editorRawId
       }
       await this.handleCallAPI(this.kickContributor, request)
     },
     async handleKickAllConfirm() {
-      await this.handleCallAPI(this.kickContributors, this.currentRaw.id)
+      await this.handleCallAPI(this.kickContributors, this.editorRawId)
     }
   },
   mounted() {

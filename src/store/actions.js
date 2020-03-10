@@ -89,7 +89,7 @@ import {
 } from '@/service/userblock'
 
 import {
-  createSession,
+  createContributor,
   getContributors,
   kickContributor,
   kickContributors,
@@ -599,7 +599,7 @@ const actions = {
   async getRawTemplate({ commit }, id) {
     const { data } = await getRawTemplate(id)
     if (data.success) {
-      commit('SET_CURRENT_RAW', data.data)
+      commit('SET_EDITOR', data.data)
     }
   },
 
@@ -649,7 +649,7 @@ const actions = {
   async updateRawContent({ commit }, raw) {
     const { data } = await updateRawContent(raw)
     if (data.success) {
-      commit('SAVE_CONTENT', raw.content)
+      commit('SAVE_EDITOR_CONTENT', raw.content)
       this._vm.$vs.notify({
         title: 'Information',
         text: 'Template was saved',
@@ -663,7 +663,7 @@ const actions = {
   async autoUpdateRawContent({ commit }, raw) {
     const { data } = await updateRawContent(raw)
     if (data.success) {
-      commit('SAVE_CONTENT', raw.content)
+      commit('SAVE_EDITOR_CONTENT', raw.content)
     }
     return data.success
   },
@@ -924,30 +924,30 @@ const actions = {
     }
   },
 
-  async rawWS({ commit, getters }, message) {
+  async rawWS({ commit }, message) {
     message = JSON.parse(message)
     if (message.command == 'contributor') {
-      commit('ON_OFF_SESSION', message.data)
+      commit('SET_ONLINE', message.data)
     } else if (message.command == 'leave') {
       commit('KICK_CONTRIBUTOR', message.data)
+    } else if (message.command == 'kick') {
+      commit('SET_FORCE_KICK', true)
+      router.push('/user/invitation/')
+      commit('SET_FORCE_KICK', false)
     } else if (message.command == 'edit') {
-      if (getters.activeUser.id == message.data.owner) {
-        commit('SAVE_CONTENT', message.data.content)
-      } else {
-        commit('SAVE_CURRENT_SESSION_CONTENT', message.data.content)
-      }
+      commit('SAVE_EDITOR_CONTENT', message.data.content)
     }
   },
 
   async getContributors({ commit }, id) {
     const { data } = await getContributors(id)
     if (data.success) {
-      commit('SET_SESSIONS_CONTRIBUTOR', data.data)
+      commit('SET_CONTRIBUTOR', data.data)
     }
   },
 
-  async createSession({ commit }, session) {
-    const { data } = await createSession(session)
+  async createContributor({ commit }, session) {
+    const { data } = await createContributor(session)
     if (data.success) {
       this._vm.$vs.notify({
         title: 'Information',
@@ -955,7 +955,7 @@ const actions = {
         color: 'success',
         position: 'top-right'
       })
-      commit('CREATE_SESSIONS', data.data)
+      commit('CREATE_CONTRIBUTOR', data.data)
     }
 
     return data.success
@@ -970,7 +970,7 @@ const actions = {
         color: 'success',
         position: 'top-right'
       })
-      commit('SET_SESSIONS_CONTRIBUTOR', [])
+      commit('SET_CONTRIBUTOR', [])
     }
 
     return data.success
@@ -1001,7 +1001,7 @@ const actions = {
   async getSessionForUser({ commit }, rawId) {
     const { data } = await getSessionForUser(rawId)
     if (data.success) {
-      commit('SET_CURRENT_SESSION', data.data)
+      commit('SET_EDITOR_CONTRIBUTOR', data.data)
     }
   },
 
