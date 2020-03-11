@@ -26,6 +26,18 @@ export function getSessionForUser(rawId) {
   return axios.get(`${URI}/user/${rawId}`)
 }
 
-export function leaveSession(id) {
-  return axios.put(`${URI}/user/${id}`)
+export function leaveSession(rawId) {
+  return axios.put(`${URI}/user/${rawId}`)
+}
+
+export function updateContent(rawId, content) {
+  return axios.put(`${URI}/user/${rawId}/content`, {
+    string: content
+  })
+}
+
+export function uploadFileToOwner(rawId, content) {
+  return axios.put(`${URI}/user/${rawId}/file`, {
+    string: content
+  })
 }

@@ -293,11 +293,14 @@ const mutations = {
     state.editorRawId = raw.id
     state.editorContent = raw.content
   },
+  SET_EDITOR_FILE(state, files) {
+    state.editorFiles = files
+  },
   SET_EDITOR_CONTRIBUTOR(state, session) {
     state.editorRawId = session.rawId
     state.editorOwnerId = session.ownerId
     state.editorContent = session.rawContent
-    state.sessionFiles = session.files
+    state.editorFiles = session.files
   },
   SAVE_EDITOR_CONTENT(state, content) {
     if (state.editorContent != content) {

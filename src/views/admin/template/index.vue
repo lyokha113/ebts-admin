@@ -224,7 +224,7 @@ export default {
       if (!this.content) {
         this.$vs.notify({
           title: 'Empty tutorial',
-          text: 'Please enter tutorial before previewing',
+          text: 'Please enter content before previewing',
           color: 'warning',
           icon: 'error',
           position: 'top-right'

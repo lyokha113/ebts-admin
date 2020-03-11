@@ -389,6 +389,13 @@ const actions = {
     }
   },
 
+  async getEditorFiles({ commit }) {
+    const { data } = await getFiles()
+    if (data.success) {
+      commit('SET_EDITOR_FILE', data.data)
+    }
+  },
+
   async createFile({ commit }, uploader) {
     const { data } = await createFile(uploader.file, uploader.onUploadProgress)
     if (data.success) {
@@ -396,6 +403,17 @@ const actions = {
     }
     return data.data
   },
+
+  // async sessionsCreateFile({ commit }, uploader) {
+  //   const { data } = await sessionsCreateFile(
+  //     uploader.file,
+  //     uploader.onUploadProgress
+  //   )
+  //   if (data.success) {
+  //     commit('CREATE_FILE', data.data)
+  //   }
+  //   return data.data
+  // },
 
   async changeStatusFile({ commit }, file) {
     const { data } = await changeStatusFile(file.id, file.active)
@@ -899,13 +917,31 @@ const actions = {
     return data.success
   },
   async synchronizeContent({ commit }, request) {
+    const templates = request.templates
+    request.rawIds = templates.map(t => t.id)
+    delete request.templates
+
     const { data } = await synchronizeContent(request)
     if (data.success) {
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: 'Block content was synchronized to designs',
-        color: 'success',
-        position: 'top-right'
+      const syncs = templates.filter(t => data.data.syncs.includes(t.id))
+      const errors = templates.filter(t => data.data.errors.includes(t.id))
+
+      errors.forEach(e => {
+        this._vm.$vs.notify({
+          title: 'Information',
+          text: `"${e.name}" is being editted. Can't sync data for this template`,
+          color: 'warning',
+          position: 'top-right'
+        })
+      })
+
+      syncs.forEach(s => {
+        this._vm.$vs.notify({
+          title: 'Information',
+          text: `${s.name} was synchronized`,
+          color: 'success',
+          position: 'top-right'
+        })
       })
     }
 
@@ -934,8 +970,10 @@ const actions = {
       commit('SET_FORCE_KICK', true)
       router.push('/user/invitation/')
       commit('SET_FORCE_KICK', false)
-    } else if (message.command == 'edit') {
-      commit('SAVE_EDITOR_CONTENT', message.data.content)
+    } else if (message.command == 'content') {
+      commit('SAVE_EDITOR_CONTENT', message.data)
+    } else if (message.command == 'file') {
+      commit('SET_EDITOR_FILE', message.data)
     }
   },
 

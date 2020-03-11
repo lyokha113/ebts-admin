@@ -59,7 +59,7 @@ export default {
     })
 
     await Promise.all([
-      this.handleCallAPI(this.getFiles, null, false),
+      this.handleCallAPI(this.getEditorFiles, null, false),
       this.handleCallAPI(this.getUserBlocks, null, false)
     ])
 
@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getFiles',
+      'getEditorFiles',
       'createFile',
       'getUserBlocks',
       'updateUserBlockContent',

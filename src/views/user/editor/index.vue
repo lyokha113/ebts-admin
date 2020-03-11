@@ -107,7 +107,8 @@ import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import {
   connectWSRaw,
-  // sendDesignContent,
+  sendOfflineSession,
+  sendDesignContent,
   disconnectWS
 } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
@@ -168,7 +169,7 @@ export default {
     })
 
     await Promise.all([
-      this.handleCallAPI(this.getFiles, null, false),
+      this.handleCallAPI(this.getEditorFiles, null, false),
       this.handleCallAPI(this.getUserEmails, null, false),
       this.handleCallAPI(this.getUserBlocks, null, false),
       this.handleCallAPI(this.getContributors, this.editorRawId, false)
@@ -232,16 +233,15 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
-      // if (this.editorRawId) {
-      //   const message = {
-      //     content: this.editor.runCommand('gjs-get-inlined-html'),
-      //     ownerId: this.activeUser.id,
-      //     rawId: this.editorRawId
-      //   }
-      //   if (message.content) {
-      //     sendDesignContent(this, message)
-      //   }
-      // }
+      if (this.editorRawId) {
+        const message = {
+          content: this.editor.runCommand('gjs-get-inlined-html'),
+          rawId: this.editorRawId
+        }
+        if (message.content) {
+          sendDesignContent(this, message)
+        }
+      }
     })
 
     this.editor.on('load', async () => {
@@ -377,7 +377,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getFiles',
+      'getEditorFiles',
       'getUserBlocks',
       'getUserEmails',
       'getContributors',
@@ -565,13 +565,21 @@ export default {
     }
   },
   destroyed() {
+    if (this.editorRawId) {
+      const message = {
+        online: false,
+        ownerId: this.activeUser.id,
+        rawId: this.editorRawId
+      }
+      sendOfflineSession(this, message)
+    }
     disconnectWS(this)
+  },
+  watch: {
+    editorContent: function(val) {
+      this.editor.setComponents(val)
+    }
   }
-  // watch: {
-  //   editorContent: function(raw) {
-  //     this.editor.setComponents(raw.content)
-  //   }
-  // }
 }
 </script>
 

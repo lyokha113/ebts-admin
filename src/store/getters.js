@@ -33,18 +33,6 @@ const getters = {
   // FILE
   // ////////////////////////////////////////////
   files: state => state.files,
-  editorFiles: state =>
-    state.files &&
-    state.files
-      .filter(f => f.active)
-      .map(f => {
-        return {
-          id: f.id,
-          name: f.name,
-          src: f.link,
-          type: 'image'
-        }
-      }),
 
   // ////////////////////////////////////////////
   // TUTORIAL
@@ -77,16 +65,6 @@ const getters = {
   // ////////////////////////////////////////////
   sessions: state => state.sessions,
   contributors: state => state.contributors,
-  sessionFiles: state =>
-    state.sessionFiles &&
-    state.sessionFiles.map(f => {
-      return {
-        id: f.id,
-        name: f.name,
-        src: f.link,
-        type: 'image'
-      }
-    }),
 
   // ////////////////////////////////////////////
   // EDITOR
@@ -94,6 +72,16 @@ const getters = {
   editorRawId: state => state.editorRawId,
   editorOwnerId: state => state.editorOwnerId,
   editorContent: state => state.editorContent,
+  editorFiles: state =>
+    state.editorFiles &&
+    state.editorFiles.map(f => {
+      return {
+        id: f.id,
+        name: f.name,
+        src: f.link,
+        type: 'image'
+      }
+    }),
   editorChange: state => state.editorChange,
   forceKick: state => state.forceKick
 }

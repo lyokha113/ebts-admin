@@ -24,7 +24,7 @@ import configEditor from '@/components/editor/configEditor.js'
 import {
   connectWSRaw,
   sendOfflineSession,
-  // sendDesignContent,
+  sendDesignContent,
   disconnectWS
 } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
@@ -46,7 +46,7 @@ export default {
       'editorRawId',
       'editorOwnerId',
       'editorContent',
-      'sessionFiles',
+      'editorFiles',
       'forceKick',
       'editorChange'
     ])
@@ -82,7 +82,7 @@ export default {
           })
       ],
       assetManager: {
-        assets: [...this.sessionFiles],
+        assets: [...this.editorFiles],
         noAssets: `<div class="no-image">You haven't upload any image.</div>`,
         dropzone: false,
         openAssetsOnDrop: false,
@@ -111,26 +111,92 @@ export default {
 
     this.editor.on('change:changesCount', async () => {
       this.setEditorChange(true)
-      // if (this.editorRawId) {
-      //   const message = {
-      //     content: this.editor.runCommand('gjs-get-inlined-html'),
-      //     ownerId: this.editorOwnerId,
-      //     rawId: this.editorRawId
-      //   }
-      //   if (message.content) {
-      //     sendDesignContent(this, message)
-      //   }
-      // }
+      if (this.editorRawId) {
+        const message = {
+          content: this.editor.runCommand('gjs-get-inlined-html'),
+          rawId: this.editorRawId
+        }
+        if (message.content) {
+          sendDesignContent(this, message)
+        }
+      }
     })
 
     this.editor.on('load', () => {
-      this.editor.Panels.addButton('options', {
+      const blockManager = this.editor.BlockManager
+      const domComponents = this.editor.DomComponents
+      const panelsManager = this.editor.Panels
+
+      panelsManager.addButton('options', {
         id: 'save',
         label: ' Save',
         className: 'fa fa-upload',
         attributes: { title: 'Save' },
         active: false,
         command: () => this.handleSaveContent()
+      })
+      domComponents.addType('dynamic-link', {
+        isComponent: el => {
+          return (
+            el instanceof HTMLElement &&
+            el.getAttribute('datatype') == 'dynamic link'
+          )
+        },
+        model: {
+          defaults: {
+            tagName: 'a',
+            traits: [
+              { name: 'name', placeholder: 'Field name' },
+              { name: 'text', placeholder: 'Default text' },
+              { name: 'href', placeholder: 'Default link' },
+              {
+                type: 'select',
+                name: 'target',
+                options: [
+                  { name: 'New windows', value: '_blank' },
+                  { name: 'This window', value: '_top' }
+                ]
+              }
+            ],
+            attributes: {
+              datatype: 'dynamic link',
+              href: 'about:blank',
+              target: '_blank'
+            }
+          },
+          init() {
+            this.on('change:attributes:text', this.handleTextChange)
+          },
+
+          handleTextChange() {
+            const text = this.getAttributes().text
+            this.editor.getSelected().set('content', text)
+          }
+        }
+      })
+
+      blockManager.add('dynamic text', {
+        label: 'Dynamic Text',
+        category: 'Dynamic Content',
+        attributes: { class: 'gjs-fonts gjs-f-text' },
+        content: {
+          type: 'dynamic-text',
+          content: 'Dynamic Text',
+          style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
+          droppable: false
+        }
+      })
+
+      blockManager.add('dynamic link', {
+        label: 'Dynamic Link',
+        category: 'Dynamic Content',
+        attributes: { class: 'fa fa-external-link' },
+        content: {
+          type: 'dynamic-link',
+          content: 'Dynamic Link',
+          style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
+          droppable: false
+        }
       })
     })
 
@@ -142,111 +208,111 @@ export default {
     connectWSRaw(this, this.accessToken, this.rawWS, this.editorRawId, message)
   },
   methods: {
-    ...mapActions(['getSessionForUser', 'setEditorChange', 'rawWS'])
+    ...mapActions(['getSessionForUser', 'setEditorChange', 'rawWS']),
 
-    // getFileNameFromAM(src, assetManager) {
-    //   let files = assetManager.getAll()
-    //   files = [...files.models]
-    //   const file = files.find(f => f.attributes.src == src)
-    //   return file && file.attributes.name
-    // },
+    getFileNameFromAM(src, assetManager) {
+      let files = assetManager.getAll()
+      files = [...files.models]
+      const file = files.find(f => f.attributes.src == src)
+      return file && file.attributes.name
+    },
 
-    // handleOnUploaddProgress(progressEvent) {
-    //   this.uploadPercent = parseInt(
-    //     Math.round((progressEvent.loaded * 100) / progressEvent.total)
-    //   )
-    // },
+    handleOnUploaddProgress(progressEvent) {
+      this.uploadPercent = parseInt(
+        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      )
+    },
 
-    // handleApplyEditconfirm(imageEditor, imageModel) {
-    //   this.$vs.dialog({
-    //     type: 'confirm',
-    //     title: `Confirm`,
-    //     text: 'Do you want to create new image with these changes ?',
-    //     accept: () => {
-    //       const assetManager = this.editor.AssetManager
-    //       const name = this.getFileNameFromAM(
-    //         imageModel.attributes.src,
-    //         assetManager
-    //       )
-    //       const file = this.base64ImageToBlob(imageEditor.toDataURL())
-    //       this.handleApplyEditFile(
-    //         file,
-    //         name,
-    //         imageModel,
-    //         this.editor.AssetManager
-    //       )
-    //     }
-    //   })
-    // },
+    handleApplyEditconfirm(imageEditor, imageModel) {
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: 'Do you want to create new image with these changes ?',
+        accept: () => {
+          const assetManager = this.editor.AssetManager
+          const name = this.getFileNameFromAM(
+            imageModel.attributes.src,
+            assetManager
+          )
+          const file = this.base64ImageToBlob(imageEditor.toDataURL())
+          this.handleApplyEditFile(
+            file,
+            name,
+            imageModel,
+            this.editor.AssetManager
+          )
+        }
+      })
+    },
 
-    // async handleSaveContent() {
-    //   const content = this.editor.runCommand('gjs-get-inlined-html')
-    //   await this.handleCallAPI(this.updateUserBlockContent, {
-    //     id: this.currentBlock.id,
-    //     content
-    //   })
-    //   this.setEditorChange(false)
-    // },
+    async handleSaveContent() {
+      const content = this.editor.runCommand('gjs-get-inlined-html')
+      await this.handleCallAPI(this.updateUserBlockContent, {
+        id: this.currentBlock.id,
+        content
+      })
+      this.setEditorChange(false)
+    },
 
-    // async handleApplyEditFile(file, name, imageModel, assetManager) {
-    //   this.uploadPopup = true
-    //   this.uploadPercent = 0
+    async handleApplyEditFile(file, name, imageModel, assetManager) {
+      this.uploadPopup = true
+      this.uploadPercent = 0
 
-    //   if (name) {
-    //     const dot = name.lastIndexOf('.')
-    //     name =
-    //       dot != -1
-    //         ? name.substring(0, dot) + '-edited' + name.substring(dot)
-    //         : name + '-edited'
-    //   } else {
-    //     name = 'edited'
-    //   }
+      if (name) {
+        const dot = name.lastIndexOf('.')
+        name =
+          dot != -1
+            ? name.substring(0, dot) + '-edited' + name.substring(dot)
+            : name + '-edited'
+      } else {
+        name = 'edited'
+      }
 
-    //   let formData = new FormData()
-    //   formData.append('files', file, name)
-    //   const uploader = {
-    //     file: formData,
-    //     onUploadProgress: this.handleOnUploaddProgress
-    //   }
-    //   const uploaded = await this.handleCallAPI(this.createFile, uploader)
-    //   assetManager.add([...this.editorFiles])
-    //   imageModel.set('src', uploaded[0].link)
-    //   this.uploadPercent = 0
-    //   this.uploadPopup = false
-    //   this.editor.Modal.close()
-    // },
+      let formData = new FormData()
+      formData.append('files', file, name)
+      const uploader = {
+        file: formData,
+        onUploadProgress: this.handleOnUploaddProgress
+      }
+      const uploaded = await this.handleCallAPI(this.createFile, uploader)
+      assetManager.add([...this.editorFiles])
+      imageModel.set('src', uploaded[0].link)
+      this.uploadPercent = 0
+      this.uploadPopup = false
+      this.editor.Modal.close()
+    },
 
-    // async handleUploadFile(files, assetManager) {
-    //   this.uploadPopup = true
-    //   this.uploadPercent = 0
-    //   files = [...files]
+    async handleUploadFile(files, assetManager) {
+      this.uploadPopup = true
+      this.uploadPercent = 0
+      files = [...files]
 
-    //   let formData = new FormData()
-    //   files.forEach(file => {
-    //     if (/image.*/.test(file.type)) {
-    //       formData.append('files', file)
-    //     } else {
-    //       this.$vs.notify({
-    //         title: 'File not supported',
-    //         text: `Can't upload ${file.name}`,
-    //         color: 'warning',
-    //         icon: 'error',
-    //         position: 'top-right'
-    //       })
-    //     }
-    //   })
+      let formData = new FormData()
+      files.forEach(file => {
+        if (/image.*/.test(file.type)) {
+          formData.append('files', file)
+        } else {
+          this.$vs.notify({
+            title: 'File not supported',
+            text: `Can't upload ${file.name}`,
+            color: 'warning',
+            icon: 'error',
+            position: 'top-right'
+          })
+        }
+      })
 
-    //   if (formData.getAll('files').length) {
-    //     const uploader = {
-    //       file: formData,
-    //       onUploadProgress: this.handleOnUploaddProgress
-    //     }
-    //     await this.handleCallAPI(this.createFile, uploader)
-    //     assetManager.add([...this.editorFiles])
-    //     this.uploadPercent = 0
-    //     this.uploadPopup = false
-    //   }
-    // }
+      if (formData.getAll('files').length) {
+        const uploader = {
+          file: formData,
+          onUploadProgress: this.handleOnUploaddProgress
+        }
+        await this.handleCallAPI(this.createFile, uploader)
+        assetManager.add([...this.editorFiles])
+        this.uploadPercent = 0
+        this.uploadPopup = false
+      }
+    }
   },
   beforeDestroy() {
     this.uploadPopup = false
@@ -276,12 +342,12 @@ export default {
     }
 
     disconnectWS(this)
+  },
+  watch: {
+    editorContent: function(val) {
+      this.editor.setComponents(val)
+    }
   }
-  // watch: {
-  //   editorContent: function(session) {
-  //     this.editor.setComponents(session.rawContent)
-  //   }
-  // }
 }
 </script>
 

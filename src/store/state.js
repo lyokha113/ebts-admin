@@ -76,7 +76,6 @@ const state = {
   // ////////////////////////////////////////////
   sessions: [],
   contributors: [],
-  sessionFiles: [],
 
   // ////////////////////////////////////////////
   // EDITOR
@@ -84,6 +83,7 @@ const state = {
   editorRawId: null,
   editorOwnerId: null,
   editorContent: '',
+  editorFiles: [],
   editorChange: false,
   forceKick: false
 }

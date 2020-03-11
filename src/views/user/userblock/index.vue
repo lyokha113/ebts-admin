@@ -197,10 +197,14 @@
       </vs-row>
     </vs-popup>
 
-    <vs-popup id="sync-popup" title="UPDATE BLOCK" :active.sync="popupSync">
+    <vs-popup
+      id="sync-popup"
+      title="SYNCHRONIZE BLOCK"
+      :active.sync="popupSync"
+    >
       <vs-row>
         <vs-col vs-w="12">
-          Choose template to sync:
+          Choose templates to sync:
           <multiselect
             v-model="templates"
             track-by="id"
@@ -381,12 +385,12 @@ export default {
       this.$vs.dialog({
         type: 'confirm',
         title: `Confirm`,
-        text: `Do you want to synchronize this block content to selected design tempalates ?. This action can make a conflict to design content if any contributor is editing it`,
+        text: `Do you want to synchronize this block content to selected design tempalates ?`,
         accept: async () => {
           if (
             await this.handleCallAPI(this.synchronizeContent, {
               blockId: this.id,
-              rawIds: this.templates.map(t => t.id)
+              templates: this.templates
             })
           ) {
             this.popupSync = false
@@ -452,10 +456,6 @@ export default {
 
 #sync-popup {
   z-index: 51100;
-
-  /deep/ .vs-popup {
-    height: 200px;
-  }
 }
 
 .new-box-wrapper,
