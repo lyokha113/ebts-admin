@@ -15,7 +15,14 @@ export function updateRawTemplate(raw) {
 }
 
 export function updateRawContent(raw) {
-  return axios.patch(`${URI}/${raw.rawId}`, raw)
+  return axios.patch(`${URI}/${raw.rawId}/content`, raw)
+}
+
+export function uploadFiles(rawId, file, onUploadProgress) {
+  const configToUpload = {
+    onUploadProgress: onUploadProgress
+  }
+  return axios.patch(`${URI}/${rawId}/file`, file, configToUpload)
 }
 
 export function deleteRawTemplate(id) {

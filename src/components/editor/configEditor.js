@@ -24,13 +24,12 @@ export default function(editor) {
   const canvas = editor.Canvas
 
   const sectionBlocksIds = ['sect100', 'sect50', 'sect30', 'sect37']
-  const basicBlocksIds = ['text', 'divider', 'image', 'link']
+  const basicBlocksIds = ['text', 'divider', 'image', 'link', 'link-block']
   const structuredBlocksIds = ['text-sect']
 
   const initConfig = () => {
     blockManager.remove('quote')
     blockManager.remove('button')
-    blockManager.remove('link-block')
     blockManager.remove('list-items')
     blockManager.remove('grid-items')
 

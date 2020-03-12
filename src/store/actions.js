@@ -1,5 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { login, googleAuth, register } from '@/service/user'
+import {
+  login,
+  googleAuth,
+  register,
+  updateUser,
+  updateUserInvitation
+} from '@/service/user'
 import { rate } from '@/service/rating'
 
 import {
@@ -59,6 +65,7 @@ import {
   createRawTemplate,
   updateRawTemplate,
   updateRawContent,
+  uploadFiles,
   deleteRawTemplate
 } from '@/service/rawtemplate'
 
@@ -69,8 +76,6 @@ import {
   sendEmail,
   sendEmailConfirm
 } from '@/service/email'
-
-import { updateUser } from '@/service/user'
 
 import {
   getUserEmails,
@@ -95,7 +100,8 @@ import {
   kickContributors,
   getSessionsForUser,
   getSessionForUser,
-  leaveSession
+  leaveSession,
+  uploadFileToOwner
 } from '@/service/designsession'
 
 import router from '@/router'
@@ -194,6 +200,34 @@ const actions = {
     commit('SET_ACCESS_TOKEN', null)
     commit('SET_ACTIVE_USER', null)
     removeToken()
+  },
+
+  async updateUser({ commit }, user) {
+    const { data } = await updateUser(user)
+    if (data.success) {
+      commit('SET_ACTIVE_USER', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Account was updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
+  },
+
+  async updateUserInvitation({ commit }, allow) {
+    const { data } = await updateUserInvitation(allow)
+    if (data.success) {
+      commit('SET_ACTIVE_USER', data.data)
+      this._vm.$vs.notify({
+        title: 'Information',
+        text: `Account was updated`,
+        color: 'success',
+        position: 'top-right'
+      })
+    }
+    return data.success
   },
 
   // ////////////////////////////////////////////
@@ -403,17 +437,6 @@ const actions = {
     }
     return data.data
   },
-
-  // async sessionsCreateFile({ commit }, uploader) {
-  //   const { data } = await sessionsCreateFile(
-  //     uploader.file,
-  //     uploader.onUploadProgress
-  //   )
-  //   if (data.success) {
-  //     commit('CREATE_FILE', data.data)
-  //   }
-  //   return data.data
-  // },
 
   async changeStatusFile({ commit }, file) {
     const { data } = await changeStatusFile(file.id, file.active)
@@ -686,26 +709,13 @@ const actions = {
     return data.success
   },
 
-  async setEditorChange({ commit }, status) {
-    commit('SET_EDITOR_CHANGE', status)
-  },
-
-  // ////////////////////////////////////////////
-  // USER
-  // ////////////////////////////////////////////
-
-  async updateUser({ commit }, user) {
-    const { data } = await updateUser(user)
-    if (data.success) {
-      commit('SET_ACTIVE_USER', data.data)
-      this._vm.$vs.notify({
-        title: 'Information',
-        text: `Account was updated`,
-        color: 'success',
-        position: 'top-right'
-      })
-    }
-    return data.success
+  async uploadFiles({ commit }, uploader) {
+    const { data } = await uploadFiles(
+      uploader.rawId,
+      uploader.file,
+      uploader.onUploadProgress
+    )
+    return data.data
   },
 
   // ////////////////////////////////////////////
@@ -951,6 +961,10 @@ const actions = {
   // ////////////////////////////////////////////
   // DESIGN SESSION
   // ////////////////////////////////////////////
+  async setEditorChange({ commit }, status) {
+    commit('SET_EDITOR_CHANGE', status)
+  },
+
   async invitationWS({ commit }, message) {
     message = JSON.parse(message)
     if (message.command == 'add') {
@@ -1054,6 +1068,14 @@ const actions = {
       })
       commit('LEAVE_SESSION', id)
     }
+  },
+  async uploadFileToOwner({ commit }, uploader) {
+    const { data } = await uploadFileToOwner(
+      uploader.rawId,
+      uploader.file,
+      uploader.onUploadProgress
+    )
+    return data.data
   }
 }
 export default actions

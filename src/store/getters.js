@@ -74,14 +74,16 @@ const getters = {
   editorContent: state => state.editorContent,
   editorFiles: state =>
     state.editorFiles &&
-    state.editorFiles.map(f => {
-      return {
-        id: f.id,
-        name: f.name,
-        src: f.link,
-        type: 'image'
-      }
-    }),
+    state.editorFiles
+      .filter(f => f.active)
+      .map(f => {
+        return {
+          id: f.id,
+          name: f.name,
+          src: f.link,
+          type: 'image'
+        }
+      }),
   editorChange: state => state.editorChange,
   forceKick: state => state.forceKick
 }

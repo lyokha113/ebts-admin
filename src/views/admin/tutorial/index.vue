@@ -79,7 +79,7 @@
               <p class="font-medium">{{ tr.name }}</p>
             </vs-td>
 
-            <vs-td style="width: 400px; padding: 10px">
+            <vs-td>
               <p>{{ tr.description }}</p>
             </vs-td>
 
@@ -90,14 +90,14 @@
               </vs-chip>
             </vs-td>
 
-            <vs-td style="padding: 10px">
-              <span class="action-icon mr-2" @click.stop="handleStatus(tr)">
+            <vs-td style="width: 100px">
+              <span class="action-icon mr-1" @click.stop="handleStatus(tr)">
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
                 />
               </span>
-              <span class="action-icon ml-2" @click="handleContent(tr.id)">
+              <span class="action-icon ml-1" @click="handleContent(tr.id)">
                 <vs-icon size="small" icon="create" />
               </span>
             </vs-td>

@@ -1,53 +1,5 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <vs-popup
-      id="create-popup"
-      title="CREATE NEW CATEGORY"
-      :active.sync="addPrompt"
-    >
-      <div>
-        Enter category name:
-        <vs-input
-          v-model="name"
-          placeholder="Name"
-          style="width: 100%"
-          class="my-2"
-        />
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-2"
-          :disabled="!name"
-          @click="handleAdd"
-          >Add</vs-button
-        >
-      </div>
-    </vs-popup>
-
-    <vs-popup
-      id="update-popup"
-      title="UPDATE CATEGORY"
-      :active.sync="updatePrompt"
-    >
-      <div>
-        Enter category name to update:
-        <vs-input
-          v-model="updateName"
-          placeholder="Name"
-          style="width: 100%"
-          class="my-2"
-        />
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-2"
-          :disabled="!updateName"
-          @click="handleUpdate"
-          >Update</vs-button
-        >
-      </div>
-    </vs-popup>
-
     <vs-table
       ref="table"
       pagination
@@ -129,18 +81,19 @@
               </vs-chip>
             </vs-td>
 
-            <vs-td style="padding: 10px">
-              <span class="action-icon mr-2" @click.stop="handleStatus(tr)">
+            <vs-td style="width: 100px">
+              <span class="action-icon mr-1" @click.stop="handleStatus(tr)">
                 <vs-icon
                   size="small"
                   :icon="tr.active ? 'lock' : 'lock_open'"
                 />
               </span>
               <span
-                class="action-icon ml-2"
+                class="action-icon ml-1"
                 @click.stop="
                   ;(selected = JSON.parse(JSON.stringify(tr))),
                     (updateName = selected.name),
+                    (updateTrending = selected.trending),
                     (updatePrompt = true)
                 "
               >
@@ -166,6 +119,55 @@
         </tbody>
       </template>
     </vs-table>
+
+    <vs-popup
+      id="create-popup"
+      title="CREATE NEW CATEGORY"
+      :active.sync="addPrompt"
+    >
+      <div>
+        Enter category name:
+        <vs-input
+          v-model="name"
+          placeholder="Name"
+          style="width: 100%"
+          class="my-2"
+        />
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          :disabled="!name"
+          @click="handleAdd"
+          >Add</vs-button
+        >
+      </div>
+    </vs-popup>
+
+    <vs-popup
+      id="update-popup"
+      title="UPDATE CATEGORY"
+      :active.sync="updatePrompt"
+    >
+      <div>
+        Enter category name to update:
+        <vs-input
+          v-model="updateName"
+          placeholder="Name"
+          style="width: 100%"
+          class="my-2"
+        />
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-2"
+          :disabled="!updateName"
+          @click="handleUpdate"
+          >Update</vs-button
+        >
+        <vs-checkbox v-model="updateTrending">Trending</vs-checkbox>
+      </div>
+    </vs-popup>
   </div>
 </template>
 
@@ -184,7 +186,8 @@ export default {
       addPrompt: false,
       name: '',
       updatePrompt: false,
-      updateName: ''
+      updateName: '',
+      updateTrending: false
     }
   },
   computed: {
@@ -206,7 +209,7 @@ export default {
       if (!this.name) {
         this.$vs.notify({
           title: 'Empty tutorial',
-          text: 'Please enter categoryname',
+          text: 'Please enter category name',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -231,7 +234,7 @@ export default {
       if (!this.updateName) {
         this.$vs.notify({
           title: 'Empty tutorial',
-          text: 'Please enter categoryname',
+          text: 'Please enter category name',
           color: 'warning',
           icon: 'error',
           position: 'top-right'
@@ -245,6 +248,7 @@ export default {
         text: `Do you want to update this category ?`,
         accept: async () => {
           this.selected.name = this.updateName
+          this.selected.trending = this.updateTrending
           if (await this.handleCallAPI(this.updateCategory, this.selected)) {
             this.updatePrompt = false
           }

@@ -17,3 +17,9 @@ export function googleAuth(token) {
 export function updateUser(account) {
   return axios.put(`${URI}`, account)
 }
+
+export function updateUserInvitation(allow) {
+  return axios.put(`${URI}/invite`, null, {
+    params: { allow }
+  })
+}

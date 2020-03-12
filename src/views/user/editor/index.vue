@@ -105,6 +105,7 @@ import ExportPopup from '@/components/editor/ExportPopup.vue'
 import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
+import configCustomBlock from '@/components/editor/configCustomBlock.js'
 import {
   connectWSRaw,
   sendOfflineSession,
@@ -186,6 +187,7 @@ export default {
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
         editor => configEditor(editor),
+        editor => configCustomBlock(editor),
         editor =>
           tUIImageEditor(editor, {
             includeUI: {
@@ -212,7 +214,7 @@ export default {
           var files = event.dataTransfer
             ? event.dataTransfer.files
             : event.target.files
-          this.handleUploadFile(files, this.editor.AssetManager)
+          this.handleUploadFile(files)
         },
         handleAdd: () => {}
       },
@@ -247,96 +249,6 @@ export default {
     this.editor.on('load', async () => {
       const blockManager = this.editor.BlockManager
       const domComponents = this.editor.DomComponents
-
-      domComponents.addType('dynamic-text', {
-        isComponent: el => {
-          return (
-            el instanceof HTMLElement &&
-            el.getAttribute('datatype') == 'dynamic text'
-          )
-        },
-        model: {
-          defaults: {
-            traits: [
-              { name: 'name', placeholder: 'Field name' },
-              { name: 'text', placeholder: 'Default text' }
-            ],
-            attributes: { datatype: 'dynamic text' }
-          },
-          init() {
-            this.on('change:attributes:text', this.handleTextChange)
-          },
-
-          handleTextChange() {
-            const text = this.getAttributes().text
-            this.editor.getSelected().set('content', text)
-          }
-        }
-      })
-
-      domComponents.addType('dynamic-link', {
-        isComponent: el => {
-          return (
-            el instanceof HTMLElement &&
-            el.getAttribute('datatype') == 'dynamic link'
-          )
-        },
-        model: {
-          defaults: {
-            tagName: 'a',
-            traits: [
-              { name: 'name', placeholder: 'Field name' },
-              { name: 'text', placeholder: 'Default text' },
-              { name: 'href', placeholder: 'Default link' },
-              {
-                type: 'select',
-                name: 'target',
-                options: [
-                  { name: 'New windows', value: '_blank' },
-                  { name: 'This window', value: '_top' }
-                ]
-              }
-            ],
-            attributes: {
-              datatype: 'dynamic link',
-              href: 'about:blank',
-              target: '_blank'
-            }
-          },
-          init() {
-            this.on('change:attributes:text', this.handleTextChange)
-          },
-
-          handleTextChange() {
-            const text = this.getAttributes().text
-            this.editor.getSelected().set('content', text)
-          }
-        }
-      })
-
-      blockManager.add('dynamic text', {
-        label: 'Dynamic Text',
-        category: 'Dynamic Content',
-        attributes: { class: 'gjs-fonts gjs-f-text' },
-        content: {
-          type: 'dynamic-text',
-          content: 'Dynamic Text',
-          style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
-          droppable: false
-        }
-      })
-
-      blockManager.add('dynamic link', {
-        label: 'Dynamic Link',
-        category: 'Dynamic Content',
-        attributes: { class: 'fa fa-external-link' },
-        content: {
-          type: 'dynamic-link',
-          content: 'Dynamic Link',
-          style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
-          droppable: false
-        }
-      })
 
       this.userBlocks.forEach(block => {
         domComponents.addType(`user-block-${block.name}`, {
@@ -381,7 +293,7 @@ export default {
       'getUserBlocks',
       'getUserEmails',
       'getContributors',
-      'createFile',
+      'uploadFiles',
       'updateRawContent',
       'autoUpdateRawContent',
       'setEditorChange',
@@ -415,7 +327,8 @@ export default {
       this.$vs.dialog({
         type: 'confirm',
         title: `Confirm`,
-        text: 'Do you want to apply these changes ?',
+        text:
+          'Apply these change will create new file. Do you want to make it ?',
         accept: () => {
           const assetManager = this.editor.AssetManager
           const name = this.getFileNameFromAM(
@@ -423,12 +336,7 @@ export default {
             assetManager
           )
           const file = this.base64ImageToBlob(imageEditor.toDataURL())
-          this.handleApplyEditFile(
-            file,
-            name,
-            imageModel,
-            this.editor.AssetManager
-          )
+          this.handleApplyEditFile(file, name, imageModel)
         }
       })
     },
@@ -476,7 +384,7 @@ export default {
         } else {
           this.$vs.notify({
             title: 'Information',
-            text: 'Auto failed',
+            text: 'Auto saved failed',
             color: 'warning',
             position: 'top-right'
           })
@@ -484,7 +392,7 @@ export default {
       }
     },
 
-    async handleApplyEditFile(file, name, imageModel, assetManager) {
+    async handleApplyEditFile(file, name, imageModel) {
       this.uploadPopup = true
       this.uploadPercent = 0
 
@@ -501,18 +409,18 @@ export default {
       let formData = new FormData()
       formData.append('files', file, name)
       const uploader = {
+        rawId: this.editorRawId,
         file: formData,
         onUploadProgress: this.handleOnUploaddProgress
       }
-      const uploaded = await this.handleCallAPI(this.createFile, uploader)
-      assetManager.add([...this.editorFiles])
-      imageModel.set('src', uploaded[0].link)
+      const uploaded = await this.handleCallAPI(this.uploadFiles, uploader)
+      imageModel.set('src', uploaded.link)
       this.uploadPercent = 0
       this.uploadPopup = false
       this.editor.Modal.close()
     },
 
-    async handleUploadFile(files, assetManager) {
+    async handleUploadFile(files) {
       this.uploadPopup = true
       this.uploadPercent = 0
       files = [...files]
@@ -534,11 +442,11 @@ export default {
 
       if (formData.getAll('files').length) {
         const uploader = {
+          rawId: this.editorRawId,
           file: formData,
           onUploadProgress: this.handleOnUploaddProgress
         }
-        await this.handleCallAPI(this.createFile, uploader)
-        assetManager.add([...this.editorFiles])
+        await this.handleCallAPI(this.uploadFiles, uploader)
         this.uploadPercent = 0
         this.uploadPopup = false
       }
@@ -576,8 +484,11 @@ export default {
     disconnectWS(this)
   },
   watch: {
-    editorContent: function(val) {
-      this.editor.setComponents(val)
+    editorContent: function(content) {
+      this.editor.setComponents(content)
+    },
+    editorFiles: function(files) {
+      this.editor.AssetManager && this.editor.AssetManager.add([...files])
     }
   }
 }
@@ -700,7 +611,7 @@ export default {
     justify-content: center;
     .gjs-pn-btn {
       &.fa-bars:before {
-        content: 'STRUCTURE';
+        content: 'LAYER';
         font-size: 17px;
         padding: 5px;
       }

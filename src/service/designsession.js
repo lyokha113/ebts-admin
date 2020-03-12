@@ -36,8 +36,9 @@ export function updateContent(rawId, content) {
   })
 }
 
-export function uploadFileToOwner(rawId, content) {
-  return axios.put(`${URI}/user/${rawId}/file`, {
-    string: content
-  })
+export function uploadFileToOwner(rawId, file, onUploadProgress) {
+  const configToUpload = {
+    onUploadProgress: onUploadProgress
+  }
+  return axios.put(`${URI}/user/${rawId}/file`, file, configToUpload)
 }

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="template"
-    style="background-color: white; width: 1500px; min-width: 1500px; margin:auto"
+    style="background-color: white; width: 1300px; min-width: 1300px; margin:auto"
   >
     <vs-row class="mt-5 pb-5">
       <vs-col vs-type="flex" vs-w="8">
@@ -114,7 +114,7 @@
           <vs-col class="my-3" vs-type="flex" vs-w="12">
             <div
               class="flex py-4 justify-center cursor-pointer"
-              style="width: 50%; background-color: #33caad; color: white; border-radius: 10px; margin: auto"
+              style="width: 60%; background-color: #33caad; color: white; border-radius: 10px; margin: auto"
             >
               <feather-icon
                 class="mr-5"
@@ -132,7 +132,7 @@
         </vs-row>
       </vs-col>
     </vs-row>
-    <vs-row v-if="getOtherTemplates.length" class="mt-5 pb-5">
+    <vs-row v-if="!fetching && getOtherTemplates.length" class="mt-5 pb-5">
       <vs-col vs-type="flex" vs-w="12" vs-justify="center" class="mb-5">
         <h1 class="font-bold">Top by same Author</h1>
       </vs-col>
@@ -215,7 +215,8 @@ export default {
       popupCreateTemplate: false,
       name: '',
       description: '',
-      workspace: ''
+      workspace: '',
+      fetching: false
     }
   },
   computed: {
@@ -297,7 +298,7 @@ export default {
     },
     async fetchData() {
       this.template = await this.handleCallAPI(this.getTemplate, this.id)
-
+      this.fetching = true
       if (this.activeUser) {
         await Promise.all([
           this.handleCallAPI(
@@ -314,6 +315,7 @@ export default {
           false
         )
       }
+      this.fetching = false
     }
   },
   async mounted() {

@@ -86,50 +86,53 @@
           </vs-row>
         </div>
       </div>
+      <CustomPopup
+        id="update-popup"
+        title="UPDATE TEMPLATE"
+        :active.sync="popup"
+      >
+        <div>
+          Enter name:
+          <vs-input
+            v-model="name"
+            placeholder="Name"
+            style="width: 100%"
+            class="mt-1 mb-4"
+          />
+          Enter description:
+          <vs-input
+            v-model="description"
+            placeholder="Description"
+            style="width: 100%"
+            class="mt-1 mb-5"
+          />
+          Enter workspaces:
+          <multiselect
+            v-model="categories"
+            track-by="id"
+            label="name"
+            selectLabel=""
+            selectedLabel=""
+            deselectLabel=""
+            group-values="categories"
+            group-label="group"
+            :options="categoriesNoTemplateSelect"
+            :multiple="true"
+            :close-on-select="false"
+            :searchable="false"
+          >
+          </multiselect>
+          <vs-button
+            color="primary"
+            type="filled"
+            class="float-right mt-5"
+            :disabled="!name && !description && !categories.length"
+            @click="handleUpdate"
+            >Update</vs-button
+          >
+        </div>
+      </CustomPopup>
     </template>
-
-    <CustomPopup id="update-popup" title="UPDATE TEMPLATE" :active.sync="popup">
-      <div>
-        Enter name:
-        <vs-input
-          v-model="name"
-          placeholder="Name"
-          style="width: 100%"
-          class="mt-1 mb-4"
-        />
-        Enter description:
-        <vs-input
-          v-model="description"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-5"
-        />
-        Enter workspaces:
-        <multiselect
-          v-model="categories"
-          track-by="id"
-          label="name"
-          selectLabel=""
-          selectedLabel=""
-          deselectLabel=""
-          group-values="categories"
-          group-label="group"
-          :options="categoriesNoTemplateSelect"
-          :multiple="true"
-          :close-on-select="false"
-          :searchable="false"
-        >
-        </multiselect>
-        <vs-button
-          color="primary"
-          type="filled"
-          class="float-right mt-5"
-          :disabled="!name && !description && !categories.length"
-          @click="handleUpdate"
-          >Update</vs-button
-        >
-      </div>
-    </CustomPopup>
   </vx-card>
 </template>
 

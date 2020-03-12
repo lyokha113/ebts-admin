@@ -21,6 +21,7 @@ import grapesjs from 'grapesjs'
 import grapesjsPresetNewsletter from 'grapesjs-preset-newsletter'
 import tUIImageEditor from 'grapesjs-tui-image-editor'
 import configEditor from '@/components/editor/configEditor.js'
+import configCustomBlock from '@/components/editor/configCustomBlock.js'
 import {
   connectWSRaw,
   sendOfflineSession,
@@ -64,6 +65,7 @@ export default {
       plugins: [
         editor => grapesjsPresetNewsletter(editor, {}),
         editor => configEditor(editor),
+        editor => configCustomBlock(editor),
         editor =>
           tUIImageEditor(editor, {
             includeUI: {
@@ -90,7 +92,7 @@ export default {
           var files = event.dataTransfer
             ? event.dataTransfer.files
             : event.target.files
-          this.handleUploadFile(files, this.editor.AssetManager)
+          this.handleUploadFile(files)
         },
         handleAdd: () => {}
       },
@@ -123,10 +125,7 @@ export default {
     })
 
     this.editor.on('load', () => {
-      const blockManager = this.editor.BlockManager
-      const domComponents = this.editor.DomComponents
       const panelsManager = this.editor.Panels
-
       panelsManager.addButton('options', {
         id: 'save',
         label: ' Save',
@@ -134,69 +133,6 @@ export default {
         attributes: { title: 'Save' },
         active: false,
         command: () => this.handleSaveContent()
-      })
-      domComponents.addType('dynamic-link', {
-        isComponent: el => {
-          return (
-            el instanceof HTMLElement &&
-            el.getAttribute('datatype') == 'dynamic link'
-          )
-        },
-        model: {
-          defaults: {
-            tagName: 'a',
-            traits: [
-              { name: 'name', placeholder: 'Field name' },
-              { name: 'text', placeholder: 'Default text' },
-              { name: 'href', placeholder: 'Default link' },
-              {
-                type: 'select',
-                name: 'target',
-                options: [
-                  { name: 'New windows', value: '_blank' },
-                  { name: 'This window', value: '_top' }
-                ]
-              }
-            ],
-            attributes: {
-              datatype: 'dynamic link',
-              href: 'about:blank',
-              target: '_blank'
-            }
-          },
-          init() {
-            this.on('change:attributes:text', this.handleTextChange)
-          },
-
-          handleTextChange() {
-            const text = this.getAttributes().text
-            this.editor.getSelected().set('content', text)
-          }
-        }
-      })
-
-      blockManager.add('dynamic text', {
-        label: 'Dynamic Text',
-        category: 'Dynamic Content',
-        attributes: { class: 'gjs-fonts gjs-f-text' },
-        content: {
-          type: 'dynamic-text',
-          content: 'Dynamic Text',
-          style: { color: 'lightgrey', padding: '10px 5px 10px 5px' },
-          droppable: false
-        }
-      })
-
-      blockManager.add('dynamic link', {
-        label: 'Dynamic Link',
-        category: 'Dynamic Content',
-        attributes: { class: 'fa fa-external-link' },
-        content: {
-          type: 'dynamic-link',
-          content: 'Dynamic Link',
-          style: { color: '#3b97e3', padding: '10px 5px 10px 5px' },
-          droppable: false
-        }
       })
     })
 
@@ -208,7 +144,12 @@ export default {
     connectWSRaw(this, this.accessToken, this.rawWS, this.editorRawId, message)
   },
   methods: {
-    ...mapActions(['getSessionForUser', 'setEditorChange', 'rawWS']),
+    ...mapActions([
+      'getSessionForUser',
+      'setEditorChange',
+      'uploadFileToOwner',
+      'rawWS'
+    ]),
 
     getFileNameFromAM(src, assetManager) {
       let files = assetManager.getAll()
@@ -235,12 +176,7 @@ export default {
             assetManager
           )
           const file = this.base64ImageToBlob(imageEditor.toDataURL())
-          this.handleApplyEditFile(
-            file,
-            name,
-            imageModel,
-            this.editor.AssetManager
-          )
+          this.handleApplyEditFile(file, name, imageModel)
         }
       })
     },
@@ -254,7 +190,7 @@ export default {
       this.setEditorChange(false)
     },
 
-    async handleApplyEditFile(file, name, imageModel, assetManager) {
+    async handleApplyEditFile(file, name, imageModel) {
       this.uploadPopup = true
       this.uploadPercent = 0
 
@@ -271,18 +207,21 @@ export default {
       let formData = new FormData()
       formData.append('files', file, name)
       const uploader = {
+        rawId: this.editorRawId,
         file: formData,
         onUploadProgress: this.handleOnUploaddProgress
       }
-      const uploaded = await this.handleCallAPI(this.createFile, uploader)
-      assetManager.add([...this.editorFiles])
-      imageModel.set('src', uploaded[0].link)
+      const uploaded = await this.handleCallAPI(
+        this.uploadFileToOwner,
+        uploader
+      )
+      imageModel.set('src', uploaded.link)
       this.uploadPercent = 0
       this.uploadPopup = false
       this.editor.Modal.close()
     },
 
-    async handleUploadFile(files, assetManager) {
+    async handleUploadFile(files) {
       this.uploadPopup = true
       this.uploadPercent = 0
       files = [...files]
@@ -304,11 +243,11 @@ export default {
 
       if (formData.getAll('files').length) {
         const uploader = {
+          rawId: this.editorRawId,
           file: formData,
           onUploadProgress: this.handleOnUploaddProgress
         }
-        await this.handleCallAPI(this.createFile, uploader)
-        assetManager.add([...this.editorFiles])
+        await this.handleCallAPI(this.uploadFileToOwner, uploader)
         this.uploadPercent = 0
         this.uploadPopup = false
       }
@@ -346,6 +285,10 @@ export default {
   watch: {
     editorContent: function(val) {
       this.editor.setComponents(val)
+    },
+    editorFiles: function(files) {
+      const assetManager = this.editor.AssetManager
+      assetManager.add([...files])
     }
   }
 }
@@ -468,7 +411,7 @@ export default {
     justify-content: center;
     .gjs-pn-btn {
       &.fa-bars:before {
-        content: 'STRUCTURE';
+        content: 'LAYER';
         font-size: 17px;
         padding: 5px;
       }

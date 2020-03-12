@@ -20,7 +20,7 @@
         vs-type="flex"
         vs-justify="center"
         vs-align="center"
-        vs-w="3"
+        vs-w="4"
       >
         <AdminTemplateList :template="template" />
       </vs-col>

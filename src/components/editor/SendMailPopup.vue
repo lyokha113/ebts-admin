@@ -92,9 +92,7 @@
                         type="text"
                       />
                       <label :for="`${row.email}-${attr.id}`">{{
-                        attr.datatype == 'dynamic text'
-                          ? 'Text Data'
-                          : 'Link Data'
+                        attr.datatype | label
                       }}</label>
                     </vs-col>
                   </vs-row>
@@ -201,6 +199,13 @@ export default {
       type: Array,
       default: () => [],
       required: true
+    }
+  },
+  filters: {
+    label: function(type) {
+      if (type == 'dynamic text') return 'Text data'
+      if (type == 'dynamic link') return 'Link data'
+      if (type == 'dynamic image') return 'Url data'
     }
   },
   data() {

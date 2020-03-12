@@ -384,7 +384,7 @@ export default {
     justify-content: center;
     .gjs-pn-btn {
       &.fa-bars:before {
-        content: 'STRUCTURE';
+        content: 'LAYER';
         font-size: 17px;
         padding: 5px;
       }
