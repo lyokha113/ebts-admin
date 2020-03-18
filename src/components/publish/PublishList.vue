@@ -46,8 +46,8 @@
       <template slot="thead">
         <vs-th sort-key="requestDate">Request Date</vs-th>
         <vs-th sort-key="authorName">Author Name</vs-th>
-        <vs-th sort-key="duplicateName">Most Duplication Template</vs-th>
-        <vs-th sort-key="duplicateRate">Most Duplication Rate</vs-th>
+        <vs-th sort-key="duplicateName">Template</vs-th>
+        <vs-th sort-key="duplicateRate">Duplicate Rate</vs-th>
         <vs-th sort-key="status">Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
@@ -59,7 +59,7 @@
               <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
 
-            <vs-td style="width: 300px">
+            <vs-td style="width: 200px">
               <p>{{ tr.authorName }}</p>
             </vs-td>
 
@@ -88,20 +88,20 @@
               </vs-chip>
             </vs-td>
 
-            <vs-td style="padding: 10px">
-              <span class="action-icon mr-2" @click="handlePreview(tr.content)">
+            <vs-td style="width: 150px">
+              <span class="action-icon" @click="handlePreview(tr.content)">
                 <vs-icon size="small" icon="search" />
               </span>
               <span
                 v-if="tr.status == 'PENDING'"
                 class="action-icon mx-2"
-                @click="handlePublish(tr.id)"
+                @click="handlePublish(tr)"
               >
                 <vs-icon size="small" icon="publish" />
               </span>
               <span
                 v-if="tr.status == 'PENDING'"
-                class="action-icon ml-2"
+                class="action-icon"
                 @click="handleDeny(tr.id)"
               >
                 <vs-icon size="small" icon="cancel" />
@@ -152,8 +152,8 @@ export default {
       const preview = window.open('', '_blank')
       preview.document.write(content)
     },
-    handlePublish(id) {
-      this.$emit('publish', id)
+    handlePublish(publish) {
+      this.$emit('publish', publish)
     },
     handleDeny(id) {
       this.$emit('deny', id)

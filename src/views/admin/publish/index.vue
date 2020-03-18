@@ -1,7 +1,13 @@
 <template>
   <div>
     <vs-tabs>
-      <vs-tab label="All"> <PublishList :publishes="publishes" /> </vs-tab>
+      <vs-tab label="All">
+        <PublishList
+          :publishes="publishes"
+          @publish="handlePopup"
+          @deny="handleDeny"
+        />
+      </vs-tab>
       <vs-tab label="Pending">
         <PublishList
           :publishes="tabPending"
@@ -113,12 +119,13 @@ export default {
       'getPublishes',
       'denyPublish',
       'approvePublish',
-      'setPublish'
+      'setPublish',
+      'publishWsAdmin'
     ]),
-    handlePopup(id) {
-      this.id = id
-      this.name = ''
-      this.description = ''
+    handlePopup(publish) {
+      this.id = publish.id
+      this.name = publish.name
+      this.description = publish.description
       this.categories = []
       this.popup = true
     },
@@ -176,7 +183,7 @@ export default {
       this.handleCallAPI(this.getPublishes, null),
       this.handleCallAPI(this.getCategories, null, false)
     ])
-    connectWSPublishAdmin(this, this.accessToken, this.setPublish)
+    connectWSPublishAdmin(this, this.accessToken, this.publishWsAdmin)
   },
   destroyed() {
     disconnectWS(this)

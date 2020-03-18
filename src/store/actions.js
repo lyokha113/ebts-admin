@@ -533,7 +533,15 @@ const actions = {
 
   async publishWs({ commit }, message) {
     message = JSON.parse(message)
-    console.log(message)
+    if (message.command == 'get') {
+      commit('SET_PUBLISHES', message.data)
+    } else if (message.command == 'update') {
+      commit('UPDATE_PUBLISH', message.data)
+    }
+  },
+
+  async publishWsAdmin({ commit }, message) {
+    message = JSON.parse(message)
     commit('SET_PUBLISHES', message)
   },
 
@@ -578,7 +586,7 @@ const actions = {
       commit('UPDATE_PUBLISH', data.data)
       this._vm.$vs.notify({
         title: 'Request has been sent',
-        text: `Proccesing could be take some time to re-calculate duplication rate. Please wait until it done to get newest infromation.`,
+        text: `Proccesing could be take some time to re-calculate duplication rate`,
         color: 'success',
         position: 'top-right'
       })
