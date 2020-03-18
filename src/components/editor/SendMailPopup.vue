@@ -97,7 +97,7 @@
                       <vs-button
                         v-if="attr.datatype == 'dynamic image'"
                         class="ml-2"
-                        icon="image_search"
+                        icon="image"
                         @click="handleImagePopup(attr)"
                       />
                     </vs-col>

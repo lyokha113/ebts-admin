@@ -530,6 +530,13 @@ const actions = {
   // ////////////////////////////////////////////
   // PUBLISH
   // ////////////////////////////////////////////
+
+  async publishWs({ commit }, message) {
+    message = JSON.parse(message)
+    console.log(message)
+    commit('SET_PUBLISHES', message)
+  },
+
   async getPublishes({ commit }) {
     const { data } = await getPublishes()
     if (data.success) {
@@ -548,6 +555,7 @@ const actions = {
       })
       router.push('/user/publish/')
     }
+    return data.success
   },
 
   async denyPublish({ commit }, id) {
@@ -641,6 +649,7 @@ const actions = {
     const { data } = await getRawTemplate(id)
     if (data.success) {
       commit('SET_EDITOR', data.data)
+      return data.data
     }
   },
 

@@ -60,7 +60,7 @@
             icon="publish"
             radius
             color="success"
-            @click="handlePublish(raw.id)"
+            @click="handlePublish(raw)"
           />
           <vs-button
             class="ml-2"
@@ -89,7 +89,7 @@ export default {
     ...mapGetters(['editorContent'])
   },
   methods: {
-    ...mapActions(['getRawTemplate', 'deleteRawTemplate', 'createPublish']),
+    ...mapActions(['getRawTemplate', 'deleteRawTemplate']),
     async handlePreview(id) {
       await this.handleCallAPI(this.getRawTemplate, id)
       const preview = window.open('', '_blank')
@@ -104,18 +104,8 @@ export default {
           await this.handleCallAPI(this.deleteRawTemplate, raw)
       })
     },
-    async handlePublish(id) {
-      this.$vs.dialog({
-        type: 'confirm',
-        title: `Confirm`,
-        text: `We are really appreciate if you want to contribute this template. Are you sure to do that ?`,
-        accept: async () => {
-          await this.handleCallAPI(this.getRawTemplate, id)
-          await this.handleCallAPI(this.createPublish, {
-            string: this.editorContent
-          })
-        }
-      })
+    handlePublish(raw) {
+      this.$emit('publishRaw', raw)
     },
     handleUpdate(raw) {
       this.$emit('updateRaw', raw)

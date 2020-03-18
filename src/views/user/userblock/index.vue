@@ -134,7 +134,7 @@
             type="filled"
             class="float-right my-3"
             @click="handleAdd"
-            :disabled="!name && !icon"
+            :disabled="!name || !icon"
             >Create</vs-button
           >
         </vs-col>
@@ -189,7 +189,7 @@
             color="primary"
             type="filled"
             class="float-right my-3"
-            :disabled="!nameUpdate && !iconUpdate"
+            :disabled="!nameUpdate || !iconUpdate"
             @click="handleUpdate"
             >Update</vs-button
           >

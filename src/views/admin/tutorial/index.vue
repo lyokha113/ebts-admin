@@ -161,7 +161,7 @@
             class="flex mx-2"
             type="gradient"
             @click="handleSubmit"
-            :disabled="!name && !description && !content"
+            :disabled="!name || !description || !content"
           >
             {{ isCreating ? 'Create' : 'Update' }}
           </vs-button>

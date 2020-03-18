@@ -52,7 +52,7 @@
           color="primary"
           type="filled"
           class="float-right mt-5"
-          :disabled="!name && !description && !categories.length"
+          :disabled="!name || !description || !categories.length"
           @click="handlePublish"
           >Publish</vs-button
         >
@@ -64,7 +64,7 @@
 <script>
 import CustomPopup from '@/components/CustomPopup.vue'
 import PublishList from '@/components/publish/PublishList.vue'
-import { connectWSPublish, disconnectWS } from '@/service/websocket'
+import { connectWSPublishAdmin, disconnectWS } from '@/service/websocket'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -84,7 +84,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['publishes', 'categoriesNoTemplate']),
+    ...mapGetters(['publishes', 'categoriesNoTemplate', 'accessToken']),
     categoriesNoTemplateSelect() {
       const active = this.categoriesNoTemplate.filter(c => c.active)
       const locked = this.categoriesNoTemplate.filter(c => !c.active)
@@ -176,7 +176,7 @@ export default {
       this.handleCallAPI(this.getPublishes, null),
       this.handleCallAPI(this.getCategories, null, false)
     ])
-    connectWSPublish(this, this.setPublish)
+    connectWSPublishAdmin(this, this.accessToken, this.setPublish)
   },
   destroyed() {
     disconnectWS(this)

@@ -12,7 +12,7 @@ export default function(editor) {
     model: {
       defaults: {
         traits: [
-          { name: 'name', placeholder: 'Field name' },
+          { name: 'name', placeholder: 'Component name' },
           { name: 'text', placeholder: 'Default text' }
         ],
         attributes: { datatype: 'dynamic text' }
@@ -39,7 +39,7 @@ export default function(editor) {
       defaults: {
         tagName: 'a',
         traits: [
-          { name: 'name', placeholder: 'Field name' },
+          { name: 'name', placeholder: 'Component name' },
           { name: 'text', placeholder: 'Default text' },
           { name: 'href', placeholder: 'Default link' },
           {
@@ -79,10 +79,8 @@ export default function(editor) {
       defaults: {
         tagName: 'img',
         traits: [
-          { name: 'name', placeholder: 'Field name' },
-          { name: 'alt', placeholder: 'Alt' },
-          { name: 'width', placeholder: 'Width' },
-          { name: 'height', placeholder: 'Height' }
+          { name: 'name', placeholder: 'Component name' },
+          { name: 'alt', placeholder: 'Alt' }
         ],
         attributes: {
           datatype: 'dynamic image',
@@ -91,6 +89,13 @@ export default function(editor) {
           height: '100',
           src:
             'https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2Fimage_block.png?alt=media&token=e9e4a4f7-449b-495d-9d52-196969774003'
+        },
+        resizable: {
+          tl: 0,
+          tc: 0,
+          tr: 0,
+          cl: 0,
+          bl: 0
         }
       },
       init() {

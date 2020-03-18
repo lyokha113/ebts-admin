@@ -52,6 +52,8 @@
 
       <template slot="thead">
         <vs-th sort-key="requestDate">Request Date</vs-th>
+        <vs-th sort-key="name">Name</vs-th>
+        <vs-th sort-key="description">Description</vs-th>
         <vs-th sort-key="duplicateName">Most Duplication Template</vs-th>
         <vs-th sort-key="duplicateRate">Most Duplication Rate</vs-th>
         <vs-th sort-key="status">Status</vs-th>
@@ -61,13 +63,25 @@
       <template slot-scope="{ data }">
         <tbody>
           <vs-tr v-for="(tr, indextr) in data" :key="indextr" :data="tr">
-            <vs-td style="width: 300px">
+            <vs-td style="width: 200px">
               <p>{{ tr.requestDate | moment('DD-MM-YYYY, HH:mm:ss') }}</p>
             </vs-td>
 
+            <vs-td style="width: 250px">
+              <p class="font-medium">
+                {{ tr.name }}
+              </p>
+            </vs-td>
+
             <vs-td style="width: 400px">
+              <p class="truncate" style="max-width: 350px">
+                {{ tr.description }}
+              </p>
+            </vs-td>
+
+            <vs-td style="width: 250px">
               <p
-                class="font-medium duplicate-name"
+                class="duplicate-name"
                 @click="handlePreview(tr.duplicateContent)"
               >
                 {{ tr.duplicateName }}
@@ -129,7 +143,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['publishes']),
+    ...mapGetters(['publishes', 'accessToken']),
     currentPage() {
       if (this.isMounted) {
         return this.$refs.table.currentx
@@ -145,7 +159,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getPublishes', 'setPublish']),
+    ...mapActions(['getPublishes', 'publishWs']),
     handlePreview(content) {
       const preview = window.open('', '_blank')
       preview.document.write(content)
@@ -153,7 +167,7 @@ export default {
   },
   async created() {
     await this.handleCallAPI(this.getPublishes)
-    connectWSPublish(this, this.setPublish)
+    connectWSPublish(this, this.accessToken, this.publishWs)
   },
   mounted() {
     this.isMounted = true

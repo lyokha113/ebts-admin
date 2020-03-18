@@ -151,7 +151,7 @@
                       :data="tr"
                     >
                       <vs-td style="width: 70%">
-                        <p class="truncate" style="max-width: 450px">
+                        <p class="truncate" style="max-width: 500px">
                           {{ tr.email }}
                         </p>
                       </vs-td>

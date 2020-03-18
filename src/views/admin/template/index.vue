@@ -77,7 +77,7 @@
             class="flex mx-2"
             type="gradient"
             @click="handleSubmit"
-            :disabled="!name && !description && !content && !categories.length"
+            :disabled="!name || !description || !content || !categories.length"
           >
             Create
           </vs-button>

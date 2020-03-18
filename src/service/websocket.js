@@ -5,12 +5,18 @@ const ENDPOINT = '/ws'
 const CONTRIBUTOR_APP = '/app/contributor/'
 const CONTENT_APP = '/app/content/'
 const PUBLISH_TOPIC = '/topic/publish/'
+const PUBLISH_USER = '/user/queue/publish/'
 const USEREMAIL_USER = '/user/queue/useremail/'
 const INVITATION_USER = '/user/queue/invitation/'
 const RAW_USER = '/user/queue/raw/'
 
-export function connectWSPublish(vue, token, handleData) {
+export function connectWSPublishAdmin(vue, token, handleData) {
   const channels = [{ name: PUBLISH_TOPIC, handler: handleData }]
+  connectWS(vue, token, channels)
+}
+
+export function connectWSPublish(vue, token, handleData) {
+  const channels = [{ name: PUBLISH_USER, handler: handleData }]
   connectWS(vue, token, channels)
 }
 

@@ -47,7 +47,11 @@
         vs-align="center"
         vs-w="2"
       >
-        <WorkspaceItem :raw="item" @updateRaw="handlePopupUpdateRaw($event)" />
+        <WorkspaceItem
+          :raw="item"
+          @updateRaw="handlePopupUpdateRaw($event)"
+          @publishRaw="handlePopupPublishRaw($event)"
+        />
       </vs-col>
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
         <vx-card class="grid-view-item mb-base overflow-hidden new-box-wrapper">
@@ -70,7 +74,11 @@
       </vs-col>
     </vs-row>
 
-    <vs-popup id="create-popup" title="CREATE NEW" :active.sync="popupCreate">
+    <vs-popup
+      id="create-popup"
+      title="Create Workspace"
+      :active.sync="popupCreate"
+    >
       <div>
         Enter workspace name:
         <vs-input
@@ -90,7 +98,11 @@
       </div>
     </vs-popup>
 
-    <vs-popup id="update-popup" title="UPDATE" :active.sync="popupUpdate">
+    <vs-popup
+      id="update-popup"
+      title="Update Workspace"
+      :active.sync="popupUpdate"
+    >
       <div>
         Enter workspace name:
         <vs-input
@@ -112,7 +124,7 @@
 
     <vs-popup
       id="create-template-popup"
-      title="CREATE TEMPLATE"
+      title="Create Template"
       :active.sync="popupCreateTemplate"
     >
       <div>
@@ -135,7 +147,7 @@
           color="primary"
           type="filled"
           class="float-right mt-2"
-          :disabled="!templateName && !templateDescription"
+          :disabled="!templateName || !templateDescription"
           @click="handlePopupCreateTemplate"
           >Create</vs-button
         >
@@ -144,7 +156,7 @@
 
     <CustomPopup
       id="template-popup"
-      title="TEMPLATES"
+      title="Templates"
       fullscreen
       button-close-hidden
       :active.sync="popupTemplates"
@@ -154,7 +166,7 @@
 
     <CustomPopup
       id="update-template-popup"
-      title="Publish info"
+      title="Update Template"
       :active.sync="popupUpdateTemplate"
     >
       <div>
@@ -191,9 +203,38 @@
           class="float-right mt-5"
           @click="handleUpdateRaw"
           :disabled="
-            !templateName && !templateDescription && !templateWorkspace.length
+            !templateName || !templateDescription || !templateWorkspace.length
           "
           >Update</vs-button
+        >
+      </div>
+    </CustomPopup>
+
+    <CustomPopup
+      id="publish-template-popup"
+      title="Publish Info"
+      :active.sync="popupPublishTemplate"
+    >
+      <div>
+        Enter name:
+        <vs-input
+          v-model="publishName"
+          placeholder="Name"
+          style="width: 100%"
+          class="mt-1 mb-4"
+        />Enter description:
+        <vs-textarea
+          v-model="publishDescription"
+          width="100%"
+          class="mt-1 mb-5"
+        />
+        <vs-button
+          color="primary"
+          type="filled"
+          class="float-right mt-5"
+          @click="handllePublishRaw"
+          :disabled="!publishName || !publishDescription"
+          >Submit</vs-button
         >
       </div>
     </CustomPopup>
@@ -221,11 +262,15 @@ export default {
       templateWorkspace: '',
       templateBlank: false,
       templateToUpdate: null,
+      publishId: '',
+      publishName: '',
+      publishDescription: '',
       popupCreate: false,
       popupUpdate: false,
       popupTemplates: false,
       popupCreateTemplate: false,
-      popupUpdateTemplate: false
+      popupUpdateTemplate: false,
+      popupPublishTemplate: false
     }
   },
   computed: {
@@ -245,12 +290,19 @@ export default {
       'createRawTemplate',
       'updateRawTemplate',
       'getCategories',
-      'getTemplates'
+      'getTemplates',
+      'createPublish'
     ]),
     handleChange() {
       this.workspaceName = this.workspaces.find(
         w => w.id == this.workspace
       ).name
+    },
+    handlePopupPublishRaw(raw) {
+      this.publishId = raw.id
+      this.publishName = ''
+      this.publishDescription = ''
+      this.popupPublishTemplate = true
     },
     handlePopupAdd() {
       this.name = ''
@@ -333,6 +385,36 @@ export default {
           }
         })
       }
+    },
+    async handllePublishRaw() {
+      if (!this.publishName || !this.publishDescription) {
+        this.$vs.notify({
+          title: 'Empty value',
+          text: 'Please enter all information',
+          color: 'warning',
+          icon: 'error',
+          position: 'top-right'
+        })
+        return
+      }
+
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: `We are really appreciate if you want to contribute this template. Are you sure to do that ?`,
+        accept: async () => {
+          const raw = await this.handleCallAPI(
+            this.getRawTemplate,
+            this.publishId
+          )
+          this.popupPublishTemplate = false
+          await this.handleCallAPI(this.createPublish, {
+            name: this.publishName,
+            description: this.publishDescription,
+            content: raw.content
+          })
+        }
+      })
     },
     async handleUpdateRaw() {
       if (!this.templateName || !this.templateDescription) {
@@ -461,6 +543,7 @@ export default {
   width: 320px;
 }
 
+#publish-template-popup,
 #create-template-popup,
 #update-template-popup,
 #template-popup,

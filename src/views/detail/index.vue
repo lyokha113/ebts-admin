@@ -190,7 +190,7 @@
           type="filled"
           class="float-right mt-5"
           @click="handleCreateTemplate"
-          :disabled="!name && !description && !workspaces.length"
+          :disabled="!name || !description || !workspaces.length"
           >Create</vs-button
         >
       </div>

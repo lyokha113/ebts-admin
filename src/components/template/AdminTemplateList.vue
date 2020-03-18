@@ -126,7 +126,7 @@
             color="primary"
             type="filled"
             class="float-right mt-5"
-            :disabled="!name && !description && !categories.length"
+            :disabled="!name || !description || !categories.length"
             @click="handleUpdate"
             >Update</vs-button
           >
