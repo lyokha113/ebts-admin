@@ -78,12 +78,34 @@ export default function(editor) {
     model: {
       defaults: {
         tagName: 'img',
-        traits: [{ name: 'name', placeholder: 'Field name' }],
+        traits: [
+          { name: 'name', placeholder: 'Field name' },
+          { name: 'alt', placeholder: 'Alt' },
+          { name: 'width', placeholder: 'Width' },
+          { name: 'height', placeholder: 'Height' }
+        ],
         attributes: {
           datatype: 'dynamic image',
+          alt: 'dynamic image',
+          width: '100',
+          height: '100',
           src:
             'https://firebasestorage.googleapis.com/v0/b/etbs-441a1.appspot.com/o/default%2Fimage_block.png?alt=media&token=e9e4a4f7-449b-495d-9d52-196969774003'
         }
+      },
+      init() {
+        this.on('change:attributes:width', this.handleWidthChange)
+        this.on('change:attributes:height', this.handleHeightChange)
+      },
+
+      handleWidthChange() {
+        const width = this.getAttributes().width
+        editor.getSelected().set('width', width)
+      },
+
+      handleHeightChange() {
+        const height = this.getAttributes().height
+        editor.getSelected().set('height', height)
       }
     }
   })

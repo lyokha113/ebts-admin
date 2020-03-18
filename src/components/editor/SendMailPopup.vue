@@ -94,6 +94,12 @@
                       <label :for="`${row.email}-${attr.id}`">{{
                         attr.datatype | label
                       }}</label>
+                      <vs-button
+                        v-if="attr.datatype == 'dynamic image'"
+                        class="ml-2"
+                        icon="image_search"
+                        @click="handleImagePopup(attr)"
+                      />
                     </vs-col>
                   </vs-row>
                 </div>
@@ -172,6 +178,38 @@
         </div>
       </div>
     </CustomPopup>
+
+    <CustomPopup title="Images" :active.sync="imagePopup" fullscreen>
+      <vs-row v-if="editorFiles.length">
+        <vs-col
+          vs-type="flex"
+          vs-w="2"
+          vs-justify="center"
+          vs-align="center"
+          v-for="file in editorFiles"
+          :key="file.id"
+        >
+          <vx-card class="grid-view-item mb-base overflow-hidden">
+            <div
+              class="item-img-container bg-white h-32 flex items-center justify-center mx-3 cursor-pointer"
+            >
+              <img
+                :src="file.src"
+                class="grid-view-img"
+                @click="handleImageSelect(file.src)"
+              />
+            </div>
+          </vx-card>
+        </vs-col>
+      </vs-row>
+      <vs-row v-else>
+        <vs-col vs-w="12">
+          <p class="text-center text-xl font-semibold mt-10">
+            You haven't upload any image. Upload to use them in editor
+          </p>
+        </vs-col>
+      </vs-row>
+    </CustomPopup>
   </div>
 </template>
 
@@ -214,7 +252,9 @@ export default {
       selected: [],
       dynamicForm: [],
       excelPopup: false,
-      isDynamicData: false
+      imagePopup: false,
+      isDynamicData: false,
+      selectedImageAttr: null
     }
   },
   computed: {
@@ -224,7 +264,8 @@ export default {
       'editorChange',
       'editorRawId',
       'editorRawId',
-      'userEmails'
+      'userEmails',
+      'editorFiles'
     ]),
     disableDynamic() {
       return (
@@ -385,6 +426,16 @@ export default {
         this.handleImportExcelData(data)
       }
       reader.readAsArrayBuffer(excelFile)
+    },
+
+    handleImagePopup(attr) {
+      this.selectedImageAttr = attr
+      this.imagePopup = true
+    },
+
+    handleImageSelect(link) {
+      this.selectedImageAttr.value = link
+      this.imagePopup = false
     },
 
     async fetchInlineContent() {
@@ -567,6 +618,24 @@ export default {
           top: 0;
         }
       }
+    }
+  }
+}
+
+.grid-view-item {
+  .grid-view-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    transition: 0.35s;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
+
+    .grid-view-img {
+      opacity: 0.9;
     }
   }
 }
