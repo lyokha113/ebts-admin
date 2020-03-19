@@ -85,7 +85,14 @@ const getters = {
         }
       }),
   editorChange: state => state.editorChange,
-  forceKick: state => state.forceKick
+  forceKick: state => state.forceKick,
+
+  // ////////////////////////////////////////////
+  // NOTIFICATION
+  // ////////////////////////////////////////////
+
+  notifications: state => state.notifications,
+  newNoti: state => state.newNoti
 }
 
 export default getters

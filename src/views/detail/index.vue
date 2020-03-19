@@ -298,6 +298,11 @@ export default {
     },
     async fetchData() {
       this.template = await this.handleCallAPI(this.getTemplate, this.id)
+      if (!this.template) {
+        this.$router.push('/')
+        return
+      }
+
       this.fetching = true
       if (this.activeUser) {
         await Promise.all([
@@ -315,6 +320,7 @@ export default {
           false
         )
       }
+
       this.fetching = false
     }
   },

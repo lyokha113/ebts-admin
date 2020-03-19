@@ -104,8 +104,15 @@ import {
   uploadFileToOwner
 } from '@/service/designsession'
 
+import {
+  getNewNotifications,
+  getAllNotifications,
+  loadNotification
+} from '@/service/notification'
+
 import router from '@/router'
 import { removeToken, setToken, decodeToken } from '@/plugins/auth'
+import logo from '@/assets/images/logo/logo.png'
 
 const actions = {
   // ////////////////////////////////////////////
@@ -1093,6 +1100,36 @@ const actions = {
       uploader.onUploadProgress
     )
     return data.data
+  },
+
+  // ////////////////////////////////////////////
+  // NOTIFICATIONS
+  // ////////////////////////////////////////////
+  async getNewNotifications({ commit }) {
+    const { data } = await getNewNotifications()
+    if (data.success) {
+      commit('SET_NOTIFICATIONS', data.data)
+    }
+  },
+
+  async getAllNotifications({ commit }) {
+    const { data } = await getAllNotifications()
+    if (data.success) {
+      commit('SET_ALL_NOTIFICATIONS', data.data)
+    }
+  },
+
+  async loadNotification({ commit }, id) {
+    const { data } = await loadNotification(id)
+    if (data.success) {
+      commit('LOAD_NOTIFICATIONS', id)
+    }
+  },
+
+  async notificationWs({ commit }, message) {
+    message = JSON.parse(message)
+    commit('ADD_NOTIFICATIONS', message)
+    new Notification(message.title, { body: message.content, icon: logo })
   }
 }
 export default actions

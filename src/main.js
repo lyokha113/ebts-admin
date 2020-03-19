@@ -25,7 +25,6 @@ import router from './router'
 // Vuex Store
 import store from './store/store'
 
-// Vuesax Admin Filters
 import './filters/filters'
 
 // Feather font icon
@@ -34,16 +33,12 @@ require('./assets/css/iconfont.css')
 // Mixins
 import mixins from '@/mixin.js'
 
-// Filters
-import filters from '@/filters.js'
-
 // Plugins
 import '@/plugins'
 
 Vue.config.productionTip = false
 
 new Vue({
-  filters,
   router,
   store,
   render: h => h(App)

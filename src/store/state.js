@@ -85,7 +85,13 @@ const state = {
   editorContent: '',
   editorFiles: [],
   editorChange: false,
-  forceKick: false
+  forceKick: false,
+
+  // ////////////////////////////////////////////
+  // NOTIFICATION
+  // ////////////////////////////////////////////
+  notifications: [],
+  newNoti: 0
 }
 
 export default state

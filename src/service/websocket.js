@@ -9,6 +9,12 @@ const PUBLISH_USER = '/user/queue/publish/'
 const USEREMAIL_USER = '/user/queue/useremail/'
 const INVITATION_USER = '/user/queue/invitation/'
 const RAW_USER = '/user/queue/raw/'
+const NOTIFICATION_USER = '/user/queue/notification/'
+
+export function connectWSNotification(vue, token, handleData) {
+  const channels = [{ name: NOTIFICATION_USER, handler: handleData }]
+  connectWS(vue, token, channels)
+}
 
 export function connectWSPublishAdmin(vue, token, handleData) {
   const channels = [{ name: PUBLISH_TOPIC, handler: handleData }]

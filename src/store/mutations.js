@@ -315,6 +315,26 @@ const mutations = {
   },
   SET_FORCE_KICK(state, status) {
     state.forceKick = status
+  },
+
+  // ////////////////////////////////////////////
+  // NOTIFICATION
+  // ////////////////////////////////////////////
+  SET_NOTIFICATIONS(state, notifications) {
+    state.notifications = notifications
+    state.newNoti = notifications.length
+  },
+  SET_ALL_NOTIFICATIONS(state, notifications) {
+    state.notifications = notifications
+  },
+  ADD_NOTIFICATIONS(state, notification) {
+    state.notifications.unshift(notification)
+    state.newNoti++
+  },
+  LOAD_NOTIFICATIONS(state, id) {
+    const current = state.notifications.find(n => n.id === id)
+    Object.assign(current, { loaded: true })
+    state.newNoti--
   }
 }
 
