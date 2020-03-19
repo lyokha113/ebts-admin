@@ -340,8 +340,10 @@ export default {
     }
   },
   mounted() {
-    this.getNewNotifications()
-    connectWSNotification(this, this.accessToken, this.notificationWs)
+    if (this.accessToken) {
+      this.getNewNotifications()
+      connectWSNotification(this, this.accessToken, this.notificationWs)
+    }
   },
   destroyed() {
     disconnectWS(this)
