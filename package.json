@@ -26,6 +26,7 @@
     "instantsearch.css": "^7.3.1",
     "jwt-decode": "^2.2.0",
     "material-icons": "^0.3.1",
+    "pako": "^1.0.11",
     "prismjs": "^1.16.0",
     "sockjs-client": "^1.4.0",
     "vee-validate": "^2.2.8",

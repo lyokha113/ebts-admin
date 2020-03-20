@@ -370,7 +370,7 @@ export default {
         if (
           await this.handleCallAPI(
             this.autoUpdateRawContent,
-            { rawId: this.editorRawId, autoSave: true, content },
+            { rawId: this.editorRawId, content },
             false
           )
         ) {

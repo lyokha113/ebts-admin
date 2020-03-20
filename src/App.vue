@@ -19,7 +19,9 @@ export default {
       window.addEventListener('resize', this.handleWindowResize)
     })
     this.$store.dispatch('updateWindowWidth', window.innerWidth)
-    Notification.requestPermission()
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission()
+    }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleWindowResize)

@@ -726,6 +726,7 @@ const actions = {
   },
 
   async autoUpdateRawContent({ commit }, raw) {
+    raw.autoSave = true
     const { data } = await updateRawContent(raw)
     if (data.success) {
       commit('SAVE_EDITOR_CONTENT', raw.content)
@@ -998,10 +999,14 @@ const actions = {
     }
   },
 
-  async rawWS({ commit }, message) {
+  async rawWS({ commit, dispatch, getters }, message) {
     message = JSON.parse(message)
     if (message.command == 'contributor') {
       commit('SET_ONLINE', message.data)
+      dispatch('autoUpdateRawContent', {
+        rawId: getters.editorRawId,
+        content: getters.editorContent
+      })
     } else if (message.command == 'leave') {
       commit('KICK_CONTRIBUTOR', message.data)
     } else if (message.command == 'kick') {
@@ -1129,7 +1134,12 @@ const actions = {
   async notificationWs({ commit }, message) {
     message = JSON.parse(message)
     commit('ADD_NOTIFICATIONS', message)
-    new Notification(message.title, { body: message.content, icon: logo })
+    const permission = await Notification.requestPermission()
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission()
+    } else {
+      new Notification(message.title, { body: message.content, icon: logo })
+    }
   }
 }
 export default actions
