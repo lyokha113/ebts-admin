@@ -282,7 +282,7 @@ export default {
 
     const message = {
       online: true,
-      ownerId: this.activeUser.id,
+      ownerId: this.activeUser && this.activeUser.id,
       rawId: this.editorRawId
     }
     connectWSRaw(this, this.accessToken, this.rawWS, this.editorRawId, message)
@@ -476,7 +476,7 @@ export default {
     if (this.editorRawId) {
       const message = {
         online: false,
-        ownerId: this.activeUser.id,
+        ownerId: this.activeUser && this.activeUser.id,
         rawId: this.editorRawId
       }
       sendOfflineSession(this, message)

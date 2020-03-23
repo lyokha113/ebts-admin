@@ -1003,10 +1003,10 @@ const actions = {
     message = JSON.parse(message)
     if (message.command == 'contributor') {
       commit('SET_ONLINE', message.data)
-      dispatch('autoUpdateRawContent', {
-        rawId: getters.editorRawId,
-        content: getters.editorContent
-      })
+      // dispatch('autoUpdateRawContent', {
+      //   rawId: getters.editorRawId,
+      //   content: getters.editorContent
+      // })
     } else if (message.command == 'leave') {
       commit('KICK_CONTRIBUTOR', message.data)
     } else if (message.command == 'kick') {

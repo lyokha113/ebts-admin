@@ -253,7 +253,7 @@ export default {
 
       const template = {
         name: this.name,
-        authorId: this.activeUser.id,
+        authorId: this.activeUser && this.activeUser.id,
         content: this.content,
         description: this.description,
         categoryIds: this.categories.map(c => c.id)
