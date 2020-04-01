@@ -489,6 +489,15 @@ export default {
     },
     editorFiles: function(files) {
       this.editor.AssetManager && this.editor.AssetManager.add([...files])
+    },
+    // eslint-disable-next-line no-unused-vars
+    contributors: function(contributors) {
+      const content = this.editor.runCommand('gjs-get-inlined-html')
+      this.handleCallAPI(
+        this.autoUpdateRawContent,
+        { rawId: this.editorRawId, content },
+        false
+      )
     }
   }
 }

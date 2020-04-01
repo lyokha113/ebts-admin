@@ -225,13 +225,10 @@ export default {
         if (/image.*/.test(file.type)) {
           formData.append('files', file)
         } else {
-          this.$vs.notify({
-            title: 'File not supported',
-            text: `Can't upload ${file.name}`,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput(
+            'File not supported',
+            `Can't upload ${file.name}`
+          )
         }
       })
 

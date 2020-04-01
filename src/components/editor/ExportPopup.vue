@@ -255,13 +255,10 @@ export default {
 
     async handleOutlookDraft() {
       if (!this.validateEmail(this.outlookEmail)) {
-        this.$vs.notify({
-          title: 'Email format incorrect',
-          text: 'Please re-check email format',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Email format incorrect',
+          `Please re-check email format`
+        )
         return
       }
 
@@ -278,13 +275,10 @@ export default {
 
     async handleYahooDraft() {
       if (!this.validateEmail(this.yahooEmail)) {
-        this.$vs.notify({
-          title: 'Email format incorrect',
-          text: 'Please re-check email format',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Email format incorrect',
+          `Please re-check email format`
+        )
         return
       }
 

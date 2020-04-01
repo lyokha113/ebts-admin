@@ -138,17 +138,17 @@ export default {
       })
     },
     async handleLeaveConfirm(rawId) {
-      await this.handleCallAPI(this.leaveSession, rawId)
+      this.handleCallAPI(this.leaveSession, rawId)
     },
     async handleEditConfirm(rawId) {
       await this.handleCallAPI(this.getSessionForUser, rawId)
       this.$router.push('/user/invitation/editor')
     }
   },
-  async created() {
-    await this.handleCallAPI(this.getSessionsForUser)
+  created() {
+    this.handleCallAPI(this.getSessionsForUser)
   },
-  async mounted() {
+  mounted() {
     this.isMounted = true
     connectWSInvitation(this, this.accessToken, this.invitationWS)
   },

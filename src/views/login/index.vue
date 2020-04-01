@@ -139,13 +139,7 @@ export default {
     },
     OnGoogleAuthFail(error) {
       if (error.error !== 'popup_closed_by_user') {
-        this.$vs.notify({
-          title: 'Login Error',
-          text: error.error.toUpperCase(),
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Login Error', error.error.toUpperCase())
       }
     },
     handleRecovery() {
@@ -157,14 +151,9 @@ export default {
         this.popupRecovery = false
       }
     },
-    async handleLogin() {
+    handleLogin() {
       if (!this.email || !this.password) {
-        this.$vs.notify({
-          title: 'Warning',
-          text: 'Please enter email and password',
-          color: 'warning',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Empty value', 'Please enter email and password')
         return
       }
       this.handleloginConfirm()
@@ -175,7 +164,7 @@ export default {
         password: this.password,
         page: this.$route.query.return
       }
-      await this.handleCallAPI(this.login, loginInfo)
+      this.handleCallAPI(this.login, loginInfo)
     }
   }
 }

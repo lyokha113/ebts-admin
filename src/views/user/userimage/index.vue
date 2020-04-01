@@ -122,8 +122,7 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: message,
-        accept: async () =>
-          await this.handleCallAPI(this.changeStatusFile, file)
+        accept: () => this.handleCallAPI(this.changeStatusFile, file)
       })
     },
     handleChangeOpen(selected) {
@@ -136,8 +135,7 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: 'Do you want to change accessible of this file ?',
-        accept: async () =>
-          await this.handleCallAPI(this.changeAccessibleFile, file)
+        accept: () => this.handleCallAPI(this.changeAccessibleFile, file)
       })
     }
   },

@@ -222,32 +222,41 @@ export default {
     },
     handlePreview() {
       if (!this.content) {
-        this.$vs.notify({
-          title: 'Empty tutorial',
-          text: 'Please enter content before previewing',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Error input value', 'Please enter content')
         return
       }
       const preview = window.open('', '_blank')
       preview.document.write(this.content)
     },
     async handleSubmit() {
-      if (
-        !this.name ||
-        !this.description ||
-        !this.content ||
-        !this.categories.length
-      ) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isError = false
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (this.description.length < 5 || this.description.length > 300) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isError = true
+      }
+
+      if (!this.categories.length) {
+        this.handleErrorInput('Empty value', 'Category must be selected')
+        isError = true
+      }
+
+      if (!this.content) {
+        this.handleErrorInput('Error input value', 'Please enter content')
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
@@ -271,8 +280,8 @@ export default {
       })
     }
   },
-  async created() {
-    await Promise.all([
+  created() {
+    Promise.all([
       this.handleCallAPI(this.getTemplates, null),
       this.handleCallAPI(this.getCategories, null, false)
     ])

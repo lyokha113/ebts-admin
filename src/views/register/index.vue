@@ -121,50 +121,57 @@ export default {
     ...mapActions(['register', 'googleAuth']),
     async OnGoogleAuthSuccess(token) {
       const loginInfo = { string: token, page: this.$route.query.return }
-      await this.handleCallAPI(this.googleAuth, loginInfo)
+      this.handleCallAPI(this.googleAuth, loginInfo)
     },
     OnGoogleAuthFail(error) {
       if (error.error !== 'popup_closed_by_user') {
-        this.$vs.notify({
-          title: 'Login Error',
-          text: error.error.toUpperCase(),
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Login Error', error.error.toUpperCase())
       }
     },
     async handleRegister() {
-      if (!this.email || !this.name || !this.password || !this.confirm) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all account information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
+      let isError = false
 
       if (!this.validateEmail(this.email)) {
-        this.$vs.notify({
-          title: 'Email format incorrect',
-          text: 'Please re-check your email',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
+        this.handleErrorInput(
+          'Email format incorrect',
+          'Please re-check your email'
+        )
+        isError = true
+      }
+
+      if (!this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (this.description.length < 5 || this.description.length > 300) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isError = true
+      }
+
+      if (this.password.length < 6 || this.password.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Password must be 6 - 30 characters'
+        )
+        isError = true
       }
 
       if (this.password != this.confirm) {
-        this.$vs.notify({
-          title: 'Confirm password not matched',
-          text: 'Please re-check confirm password',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Confirm password not matched',
+          'Please re-check confirm password'
+        )
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
@@ -178,15 +185,13 @@ export default {
             fullName: this.name,
             password: this.password
           }
-          if (await this.handleCallAPI(this.register, registerInfo)) {
-            this.$emit('closeSidebar')
-          }
+          this.handleCallAPI(this.register, registerInfo)
         }
       })
     },
 
     async handleGoogleAuth() {
-      await this.googleAuth()
+      this.googleAuth()
     }
   }
 }

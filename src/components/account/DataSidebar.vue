@@ -10,7 +10,7 @@
     spacer
   >
     <div class="mt-6 flex items-center justify-between px-6">
-      <h4>{{ selected ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
+      <h4>{{ isCreating ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
       <feather-icon
         icon="XIcon"
         class="cursor-pointer"
@@ -29,7 +29,7 @@
           label="Email"
           name="email"
           class="mt-5 w-full"
-          :readonly="selected"
+          :readonly="isCreating"
         />
         <vs-input
           v-model="fullName"
@@ -39,7 +39,7 @@
         />
         <vs-input
           v-model="password"
-          label="Password"
+          label="Password (Leave blank to not update)"
           name="password"
           type="password"
           class="mt-5 w-full"
@@ -72,7 +72,7 @@
 
     <div slot="footer" class="flex flex-wrap items-center justify-center p-6">
       <vs-button class="mr-6" @click="handleSubmit">{{
-        selected ? 'Update' : 'Create'
+        isCreating ? 'Update' : 'Create'
       }}</vs-button>
       <vs-button
         type="border"
@@ -93,7 +93,7 @@ export default {
       type: Boolean,
       default: true
     },
-    selected: {
+    isCreating: {
       type: Object,
       default: null
     }
@@ -133,11 +133,11 @@ export default {
   },
   watch: {
     isSidebarActive() {
-      if (this.selected) {
-        this.email = this.selected.email
-        this.fullName = this.selected.fullName
-        this.provider = this.selected.provider.toUpperCase()
-        this.role = this.selected.roleName.toUpperCase()
+      if (this.isCreating) {
+        this.email = this.isCreating.email
+        this.fullName = this.isCreating.fullName
+        this.provider = this.isCreating.provider.toUpperCase()
+        this.role = this.isCreating.roleName.toUpperCase()
       } else {
         this.initForm()
       }
@@ -153,37 +153,56 @@ export default {
       this.role = 'ADMINISTRATOR'
     },
     async handleSubmit() {
-      if (!this.email || !this.fullName || (!this.selected && !this.password)) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all account information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
-      }
+      let isError = false
 
       if (!this.validateEmail(this.email)) {
-        this.$vs.notify({
-          title: 'Email format incorrect',
-          text: 'Please re-check your email',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Email format incorrect',
+          'Please re-check your email'
+        )
+        isError = true
+      }
+
+      if (!this.fullName.length < 5 || this.fullName.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (
+        !this.isCreating &&
+        this.password.length != 0 &&
+        (this.password.length < 6 || this.password.length > 30)
+      ) {
+        this.handleErrorInput(
+          'Error input value',
+          'Password must be 6 - 30 characters'
+        )
+      } else if (
+        this.isCreating &&
+        (this.password.length < 6 || this.password.length > 30)
+      ) {
+        this.handleErrorInput(
+          'Error input value',
+          'Password must be 6 - 30 characters'
+        )
+      }
+
+      if (isError) {
         return
       }
 
-      if (this.selected) {
+      if (this.isCreating) {
         this.$vs.dialog({
           type: 'confirm',
           title: `Confirm`,
           text: `Please check all information to create new account`,
           accept: async () => {
             const obj = {
-              id: this.selected.id,
-              active: this.selected.active,
+              id: this.isCreating.id,
+              active: this.isCreating.active,
               fullName: this.fullName,
               password: this.password
             }

@@ -136,11 +136,10 @@
           class="mt-1 mb-4"
         />
         Enter description:
-        <vs-input
+        <vs-textarea
           v-model="templateDescription"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-4"
+          width="100%"
+          class="mt-1 mb-5"
         />
         <vs-checkbox v-model="templateBlank">Set blank content</vs-checkbox>
         <vs-button
@@ -176,12 +175,6 @@
           placeholder="Name"
           style="width: 100%"
           class="mt-1 mb-4"
-        />Enter description:
-        <vs-input
-          v-model="templateDescription"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-5"
         />
         Enter workspace:
         <multiselect
@@ -197,6 +190,12 @@
           :allow-empty="false"
         >
         </multiselect>
+        Enter description:
+        <vs-textarea
+          v-model="templateDescription"
+          width="100%"
+          class="mt-1 mb-5"
+        />
         <vs-button
           color="primary"
           type="filled"
@@ -222,7 +221,8 @@
           placeholder="Name"
           style="width: 100%"
           class="mt-1 mb-4"
-        />Enter description:
+        />
+        Enter description:
         <vs-textarea
           v-model="publishDescription"
           width="100%"
@@ -329,14 +329,27 @@ export default {
       this.popupUpdateTemplate = true
     },
     handlePopupCreateTemplate() {
-      if (!this.templateName || !this.templateDescription) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isErrors = false
+      if (this.templateName.length < 5 || this.templateName.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isErrors = true
+      }
+
+      if (
+        this.templateDescription.length < 5 &&
+        this.templateDescription.length > 300
+      ) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isErrors = true
+      }
+
+      if (isErrors) {
         return
       }
 
@@ -387,14 +400,27 @@ export default {
       }
     },
     async handllePublishRaw() {
-      if (!this.publishName || !this.publishDescription) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isErrors = false
+      if (this.publishName.length < 5 || this.publishName.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isErrors = true
+      }
+
+      if (
+        this.publishDescription.length < 5 &&
+        this.publishDescription.length > 300
+      ) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isErrors = true
+      }
+
+      if (isErrors) {
         return
       }
 
@@ -417,14 +443,27 @@ export default {
       })
     },
     async handleUpdateRaw() {
-      if (!this.templateName || !this.templateDescription) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isErrors = false
+      if (this.templateName.length < 5 || this.templateName.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isErrors = true
+      }
+
+      if (
+        this.templateDescription.length < 5 &&
+        this.templateDescription.length > 300
+      ) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isErrors = true
+      }
+
+      if (isErrors) {
         return
       }
 
@@ -452,14 +491,11 @@ export default {
       })
     },
     async handleAdd() {
-      if (!this.name) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter workspace name',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
         return
       }
 
@@ -478,14 +514,11 @@ export default {
       })
     },
     async handleUpdate() {
-      if (!this.name) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter workspace name',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
         return
       }
 
@@ -523,7 +556,7 @@ export default {
   async mounted() {
     await this.handleCallAPI(this.getWorkspaces, null)
     this.workspace = this.workspaces.find(w => w.name == 'Default workspace').id
-    await Promise.all([
+    Promise.all([
       this.handleCallAPI(this.getCategories, null, false),
       this.handleCallAPI(this.getTemplates, null, false)
     ])

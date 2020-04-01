@@ -100,8 +100,7 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: `This action can't be undo. Do you want to delete this template ?`,
-        accept: async () =>
-          await this.handleCallAPI(this.deleteRawTemplate, raw)
+        accept: () => this.handleCallAPI(this.deleteRawTemplate, raw)
       })
     },
     handlePublish(raw) {

@@ -58,13 +58,10 @@ export default {
       const selectedFiles = [...this.$refs.uploader.files]
 
       if (selectedFiles.length > 10) {
-        this.$vs.notify({
-          title: 'Maximum file limit',
-          text: `Please select maximum 10 files`,
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Maximum limitation',
+          `Please select maximum 10 files`
+        )
         return
       }
 
@@ -72,13 +69,10 @@ export default {
         if (/image.*/.test(file.type)) {
           this.files.push(file)
         } else {
-          this.$vs.notify({
-            title: 'File not supported',
-            text: `Can't upload ${file.name}`,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput(
+            'File not supported',
+            `Can't upload ${file.name}`
+          )
         }
       })
       this.uploadFile()

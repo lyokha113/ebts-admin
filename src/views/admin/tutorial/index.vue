@@ -311,7 +311,7 @@ export default {
     async handleContent(id) {
       if (id != null) {
         this.isCreating = false
-        const tutorial = await this.getTutorial(id)
+        const tutorial = await this.handleCallAPI(this.getTutorial, id)
         this.id = id
         this.content = tutorial.content
         this.name = tutorial.name
@@ -320,14 +320,29 @@ export default {
       this.popup = true
     },
     async handleSubmit() {
-      if (!this.content || !this.name || !this.description) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please input all tutorial information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isError = false
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (this.description.length < 5 || this.description.length > 300) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isError = true
+      }
+
+      if (!this.content) {
+        this.handleErrorInput('Error input value', 'Please enter content')
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
@@ -377,9 +392,9 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: `Do you want to ${actionMsg} this tutorial ?`,
-        accept: async () => {
+        accept: () => {
           tutorial.active = !tutorial.active
-          await this.handleCallAPI(this.updateStatusTutorial, tutorial)
+          this.handleCallAPI(this.updateStatusTutorial, tutorial)
         }
       })
     },
@@ -388,32 +403,23 @@ export default {
       if (/image.*/.test(selectedFiles.type)) {
         this.thumbnail = selectedFiles
       } else {
-        this.$vs.notify({
-          title: 'File not supported',
-          text: `Can't upload ${selectedFiles.name}`,
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'File not supported',
+          `Can't upload ${selectedFiles.name}`
+        )
       }
     },
     handlePreview() {
       if (!this.content) {
-        this.$vs.notify({
-          title: 'Empty tutorial',
-          text: 'Please enter tutorial before previewing',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Error input value', 'Please enter content')
         return
       }
       const preview = window.open('', '_blank')
       preview.document.write(this.content)
     }
   },
-  async created() {
-    await this.handleCallAPI(this.getTutorials)
+  created() {
+    this.handleCallAPI(this.getTutorials)
   },
   mounted() {
     this.isMounted = true

@@ -227,66 +227,65 @@ export default {
       'userEmailWS'
     ]),
     handleChangePassword() {
-      if (!this.password || !this.confirm) {
-        this.$vs.notify({
-          title: 'Warning',
-          text: 'Please enter password and confirm',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
+      let isError = false
+      if (this.password.length < 6 || this.password.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Password must be 6 - 30 characters'
+        )
+        isError = true
       }
+
       if (this.password != this.confirm) {
-        this.$vs.notify({
-          title: 'Confirm password not matched',
-          text: 'Please re-check confirm password',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Confirm password not matched',
+          'Please re-check confirm password'
+        )
+        isError = true
+      }
+
+      if (isError) {
         return
       }
       this.handleChangePasswordConfirm()
     },
     handleAddEmail() {
+      let isError = false
       if (!this.validateEmail(this.emailTest)) {
-        this.$vs.notify({
-          title: 'Email empty or format incorrect',
-          text: 'Please re-check your input email',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
-        return
+        this.handleErrorInput(
+          'Email format incorrect',
+          'Please re-check your email'
+        )
+        isError = true
       }
 
       if (this.userEmails.length >= 5) {
-        this.$vs.notify({
-          title: 'Maximum emails',
-          text: 'We currently support 5 emails for each user',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Maximum emails',
+          'We currently support 5 emails for each user'
+        )
+
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
       this.handleAddEmailConfirm()
     },
     async handleUpdateInvite() {
-      await this.handleCallAPI(this.updateUserInvitation, !this.allowInvite)
+      this.handleCallAPI(this.updateUserInvitation, !this.allowInvite)
     },
-    async handleUpdate() {
-      if (!this.name) {
-        this.$vs.notify({
-          title: 'Warning',
-          text: 'Please enter name',
-          color: 'warning',
-          position: 'top-right'
-        })
+    handleUpdate() {
+      if (!this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
         return
       }
+
       this.handleUpdateConfirm()
     },
     async handleChangePasswordConfirm() {
@@ -333,13 +332,10 @@ export default {
         }
         reader.readAsDataURL(image)
       } else {
-        this.$vs.notify({
-          title: 'File not supported',
-          text: `Can't upload ${image.name}`,
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'File not supported',
+          `Can't upload ${image.name}`
+        )
       }
     }
   },

@@ -206,14 +206,11 @@ export default {
       'updateCategory'
     ]),
     handleAdd() {
-      if (!this.name) {
-        this.$vs.notify({
-          title: 'Empty tutorial',
-          text: 'Please enter category name',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      if (this.name.length < 5 && this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 1 - 10 characters'
+        )
         return
       }
 
@@ -231,14 +228,11 @@ export default {
       })
     },
     handleUpdate() {
-      if (!this.updateName) {
-        this.$vs.notify({
-          title: 'Empty tutorial',
-          text: 'Please enter category name',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      if (this.updateName.length < 5 && this.updateName.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 1 - 10 characters'
+        )
         return
       }
 
@@ -262,15 +256,15 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: `This action could be affect to other parts. Do you want to ${actionMsg} this category ?`,
-        accept: async () => {
+        accept: () => {
           this.selected.active = !this.selected.active
-          await this.handleCallAPI(this.updateCategory, this.selected)
+          this.handleCallAPI(this.updateCategory, this.selected)
         }
       })
     }
   },
-  async created() {
-    await this.handleCallAPI(this.getCategoriesWithTemplates)
+  created() {
+    this.handleCallAPI(this.getCategoriesWithTemplates)
   },
   mounted() {
     this.isMounted = true

@@ -58,24 +58,18 @@ export default {
     ...mapActions(['createContributor', 'kickContributors', 'kickContributor']),
     handleInvite() {
       if (!this.validateEmail(this.contributorEmail)) {
-        this.$vs.notify({
-          title: 'Email empty or format incorrect',
-          text: 'Please re-check your input email',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Email format incorrect',
+          `Please re-check email format`
+        )
         return
       }
 
       if (this.contributors.length >= 4) {
-        this.$vs.notify({
-          title: 'Maximum contributors',
-          text: 'We currently support maximum 4 contributors at the same time',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Maximum limitation',
+          `We currently support maximum 4 contributors at the same time`
+        )
         return
       }
 
@@ -112,15 +106,15 @@ export default {
         this.contributorEmail = ''
       }
     },
-    async handleKickConfirm(contributorId) {
+    handleKickConfirm(contributorId) {
       const request = {
         contributorId: contributorId,
         rawId: this.editorRawId
       }
-      await this.handleCallAPI(this.kickContributor, request)
+      this.handleCallAPI(this.kickContributor, request)
     },
-    async handleKickAllConfirm() {
-      await this.handleCallAPI(this.kickContributors, this.editorRawId)
+    handleKickAllConfirm() {
+      this.handleCallAPI(this.kickContributors, this.editorRawId)
     }
   },
   mounted() {

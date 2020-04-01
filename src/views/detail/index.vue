@@ -165,12 +165,7 @@
           class="mt-1 mb-4"
         />
         Enter description:
-        <vs-input
-          v-model="description"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-5"
-        />
+        <vs-textarea v-model="description" width="100%" class="mt-1 mb-5" />
         Choose workspace:
         <multiselect
           v-model="workspace"
@@ -252,14 +247,29 @@ export default {
       }
     },
     async handleCreateTemplate() {
-      if (!this.name || !this.description || !this.workspace) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isError = false
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (this.description.length < 5 || this.description.length > 300) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isError = true
+      }
+
+      if (!this.workspace) {
+        this.handleErrorInput('Empty value', 'Workspace must be selected')
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
@@ -324,7 +334,7 @@ export default {
       this.fetching = false
     }
   },
-  async mounted() {
+  mounted() {
     this.fetchData()
   },
   beforeRouteUpdate(to, from, next) {

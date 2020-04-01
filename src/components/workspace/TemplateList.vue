@@ -58,7 +58,7 @@ export default {
   computed: {
     ...mapGetters(['categoriesNoTemplate', 'templates'])
   },
-  async mounted() {
+  mounted() {
     this.items = this.templates
   },
   methods: {

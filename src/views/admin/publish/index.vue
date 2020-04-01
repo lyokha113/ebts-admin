@@ -32,12 +32,7 @@
           style="width: 100%"
           class="mt-1 mb-4"
         />Enter description:
-        <vs-input
-          v-model="description"
-          placeholder="Description"
-          style="width: 100%"
-          class="mt-1 mb-5"
-        />
+        <vs-textarea v-model="description" width="100%" class="mt-1 mb-5" />
         Enter workspaces:
         <multiselect
           v-model="categories"
@@ -130,19 +125,29 @@ export default {
       this.popup = true
     },
     async handlePublish() {
-      if (
-        !this.id ||
-        !this.name ||
-        !this.description ||
-        !this.categories.length
-      ) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isError = false
+      if (this.name.length < 5 || this.name.length > 30) {
+        this.handleErrorInput(
+          'Error input value',
+          'Name must be 5 - 30 characters'
+        )
+        isError = true
+      }
+
+      if (this.description.length < 5 || this.description.length > 300) {
+        this.handleErrorInput(
+          'Error input value',
+          'Description must be 5 - 300 characters'
+        )
+        isError = true
+      }
+
+      if (!this.categories.length) {
+        this.handleErrorInput('Empty value', 'Category must be selected')
+        isError = true
+      }
+
+      if (isError) {
         return
       }
 
@@ -170,7 +175,7 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: `Do you want to deny this publish request ?`,
-        accept: async () => await this.handleCallAPI(this.denyPublish, id)
+        accept: () => this.handleCallAPI(this.denyPublish, id)
       })
     },
     handlePreview(content) {

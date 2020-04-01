@@ -2,7 +2,7 @@
   <div id="data-list-list-view" class="data-list-container">
     <DataSidebar
       :is-sidebar-active="sideBar"
-      :selected="selected"
+      :isCreating="selected"
       @closeSidebar="sideBar = false"
     />
 
@@ -174,13 +174,13 @@ export default {
       this.selected = account ? JSON.parse(JSON.stringify(account)) : null
       this.sideBar = true
     },
-    async handleStatusConfirm() {
+    handleStatusConfirm() {
       this.selected.active = !this.selected.active
-      await this.handleCallAPI(this.updateAccountStatus, this.selected)
+      this.handleCallAPI(this.updateAccountStatus, this.selected)
     }
   },
-  async created() {
-    await this.handleCallAPI(this.getAccounts)
+  created() {
+    this.handleCallAPI(this.getAccounts)
   },
   mounted() {
     this.isMounted = true

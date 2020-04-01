@@ -400,13 +400,10 @@ export default {
           'application/vnd.ms-excel'
         ]
         if (!types.includes(excelFile.type)) {
-          this.$vs.notify({
-            title: 'File not supported',
-            text: `Can't import ${excelFile.name}`,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput(
+            'File not supported',
+            `Can't import ${excelFile.name}`
+          )
           return
         }
         let workbook = XLSX.read(new Uint8Array(e.target.result), {
@@ -414,13 +411,10 @@ export default {
         })
         let data = XLSX.utils.sheet_to_json(workbook.Sheets['Dynamic Data'])
         if (!data.length) {
-          this.$vs.notify({
-            title: 'Wrong formation',
-            text: `File don't have any sheet with name "Dynamic Data"`,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput(
+            'Wrong formation',
+            `File don't have any sheet with name "Dynamic Data"`
+          )
           return
         }
         this.handleImportExcelData(data)

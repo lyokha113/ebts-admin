@@ -225,7 +225,7 @@
           <vs-button
             color="primary"
             class="float-right my-5 ml-2"
-            @click="handleAll"
+            @click="handleCheckAll"
             >{{ titleDisplay }}</vs-button
           >
           <vs-button
@@ -300,7 +300,7 @@ export default {
       this.templates = []
       this.popupSync = true
     },
-    handleAll() {
+    handleCheckAll() {
       let count = 0
       this.workspaces.forEach(w => (count += w.rawTemplates.length))
 
@@ -314,14 +314,21 @@ export default {
       }
     },
     async handleAdd() {
-      if (!this.name || !this.icon) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isErrors = false
+      if (!this.icon) {
+        this.handleErrorInput('Error input value', 'Please select icon')
+        isErrors = true
+      }
+
+      if (this.name.length < 1 && this.name.length > 10) {
+        this.handleErrorInput(
+          'Error input value',
+          'Block name must be 1 - 10 characters'
+        )
+        isErrors = true
+      }
+
+      if (isErrors) {
         return
       }
 
@@ -342,14 +349,21 @@ export default {
       })
     },
     async handleUpdate() {
-      if (!this.nameUpdate || !this.iconUpdate) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please enter all information',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+      let isErrors = false
+      if (!this.iconUpdate) {
+        this.handleErrorInput('Error input value', 'Please select icon')
+        isErrors = true
+      }
+
+      if (this.nameUpdate.length < 1 && this.nameUpdate.length > 10) {
+        this.handleErrorInput(
+          'Error input value',
+          'Block name must be 1 - 10 characters'
+        )
+        isErrors = true
+      }
+
+      if (isErrors) {
         return
       }
 
@@ -372,13 +386,10 @@ export default {
     },
     async handleSync() {
       if (!this.templates.length) {
-        this.$vs.notify({
-          title: 'Empty value',
-          text: 'Please choose template to sync',
-          color: 'warning',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput(
+          'Error input value',
+          'Please choose template to sync'
+        )
         return
       }
 
@@ -403,7 +414,7 @@ export default {
         type: 'confirm',
         title: `Confirm`,
         text: `This action can't be undo. Do you want to delete this block ?`,
-        accept: async () => await this.handleCallAPI(this.deleteUserBlock, id)
+        accept: () => this.handleCallAPI(this.deleteUserBlock, id)
       })
     },
     handleEdit(id) {

@@ -28,36 +28,27 @@ export default {
         }
 
         if (error.response.status == 400) {
-          this.$vs.notify({
-            title: 'Input error',
-            text: error.response.data.message,
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput('Input error', error.response.data.message)
           return
         }
 
         if (error.response.status == 401 || error.response.status == 403) {
           this.$router.push('/login')
-          this.$vs.notify({
-            title: 'Permission error',
-            text: 'Action was denied.',
-            color: 'warning',
-            icon: 'error',
-            position: 'top-right'
-          })
+          this.handleErrorInput('Permission error', 'Action was denied')
           return
         }
 
-        this.$vs.notify({
-          title: 'Error',
-          text: error.response.data.status,
-          color: 'danger',
-          icon: 'error',
-          position: 'top-right'
-        })
+        this.handleErrorInput('Error', error.response.data.status)
       }
+    },
+    handleErrorInput(title, text) {
+      this.$vs.notify({
+        title,
+        text,
+        color: 'warning',
+        icon: 'error',
+        position: 'top-right'
+      })
     },
     base64ImageToBlob(str) {
       let pos = str.indexOf(';base64,')
