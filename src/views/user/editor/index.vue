@@ -5,42 +5,8 @@
         <DesignSession />
       </div>
       <div class="p-3 flex shadow-md bg-white" style="width: 35%">
-        <div class="flex justify-center self-center" style="width: 60%">
-          <div class="w-1/3">
-            <vs-button
-              class="btn-command"
-              size="large"
-              icon="cloud_download"
-              @click="handleExportPopup"
-            ></vs-button>
-          </div>
-          <div class="w-1/3">
-            <vs-button
-              class="btn-command"
-              size="large"
-              icon="drafts"
-              @click="handleSendMailPopup"
-            ></vs-button>
-          </div>
-          <div class="w-1/3">
-            <vs-button
-              class="btn-command"
-              size="large"
-              icon="dvr"
-              @click="handleSendMailPopup"
-            ></vs-button>
-          </div>
-        </div>
-        <div class="flex justify-end self-center" style="width: 40%">
-          <div style="width: 20%">
-            <vs-button
-              class="btn-command"
-              size="large"
-              icon="save"
-              @click="handleSaveContent"
-            ></vs-button>
-          </div>
-          <div style="width: 70%">
+        <div class="flex justify-center self-center w-2/3">
+          <div class="w-4/5 px-3">
             <multiselect
               v-model="timeoutSave"
               track-by="time"
@@ -53,6 +19,32 @@
               :searchable="false"
             >
             </multiselect>
+          </div>
+          <div class="w-1/5">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="save"
+              @click="handleSaveContent"
+            ></vs-button>
+          </div>
+        </div>
+        <div class="flex justify-center self-center w-1/3">
+          <div class="w-1/2">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="cloud_download"
+              @click="handleExportPopup"
+            ></vs-button>
+          </div>
+          <div class="w-1/2">
+            <vs-button
+              class="btn-command"
+              size="large"
+              icon="drafts"
+              @click="handleSendMailPopup"
+            ></vs-button>
           </div>
         </div>
       </div>
@@ -126,6 +118,7 @@ export default {
   data() {
     return {
       editor: {},
+      loaded: false,
       uploadPopup: false,
       uploadPercent: 0,
       dynamicAttrs: [],
@@ -278,6 +271,7 @@ export default {
       })
 
       window.setTimeout(() => this.setEditorChange(false), 1000)
+      this.loaded = true
     })
 
     const message = {
@@ -355,17 +349,19 @@ export default {
     },
 
     async handleSaveContent() {
-      const content = this.editor.runCommand('gjs-get-inlined-html')
-      await this.handleCallAPI(this.updateRawContent, {
-        rawId: this.editorRawId,
-        autoSave: false,
-        content
-      })
-      this.setEditorChange(false)
+      if (this.loaded) {
+        const content = this.editor.runCommand('gjs-get-inlined-html')
+        await this.handleCallAPI(this.updateRawContent, {
+          rawId: this.editorRawId,
+          autoSave: false,
+          content
+        })
+        this.setEditorChange(false)
+      }
     },
 
     async handleAutoSave() {
-      if (this.editorChange) {
+      if (this.editorChange && this.loaded) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         if (
           await this.handleCallAPI(
@@ -492,12 +488,14 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     contributors: function(contributors) {
-      const content = this.editor.runCommand('gjs-get-inlined-html')
-      this.handleCallAPI(
-        this.autoUpdateRawContent,
-        { rawId: this.editorRawId, content },
-        false
-      )
+      if (this.loaded) {
+        const content = this.editor.runCommand('gjs-get-inlined-html')
+        this.handleCallAPI(
+          this.autoUpdateRawContent,
+          { rawId: this.editorRawId, content },
+          false
+        )
+      }
     }
   }
 }

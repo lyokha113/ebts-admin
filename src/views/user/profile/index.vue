@@ -274,7 +274,7 @@ export default {
 
       this.handleAddEmailConfirm()
     },
-    async handleUpdateInvite() {
+    handleUpdateInvite() {
       this.handleCallAPI(this.updateUserInvitation, !this.allowInvite)
     },
     handleUpdate() {

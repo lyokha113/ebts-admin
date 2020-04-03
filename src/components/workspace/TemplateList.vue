@@ -28,6 +28,17 @@
       </vs-col>
     </vs-row>
 
+    <vs-row
+      class="pt-5 mt-5"
+      vs-type="flex"
+      vs-align="center"
+      vs-justify="center"
+      vs-w="12"
+      v-if="!items.length"
+    >
+      <h1>Loading data</h1>
+    </vs-row>
+
     <vs-row class="pt-5" vs-type="flex" vs-align="center" vs-w="12">
       <vs-col
         v-for="item in items"
@@ -80,6 +91,14 @@ export default {
         text: `Use this template for your content ?`,
         accept: () => this.$emit('getTemplate', id)
       })
+    }
+  },
+  watch: {
+    templates: {
+      immediate: true,
+      handler(templates) {
+        this.items = templates
+      }
     }
   }
 }
