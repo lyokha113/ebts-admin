@@ -20,6 +20,7 @@
     "elasticlunr": "^0.9.5",
     "file-saver": "^2.0.2",
     "firebase": "^6.0.4",
+    "font-awesome": "^4.7.0",
     "grapesjs": "^0.15.9",
     "grapesjs-preset-newsletter": "^0.2.20",
     "grapesjs-tui-image-editor": "^0.1.3",

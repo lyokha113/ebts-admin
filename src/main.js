@@ -20,7 +20,7 @@ import './assets/scss/main.scss'
 import '@/assets/css/main.css'
 
 // Font Awesome 4
-import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+import 'font-awesome/css/font-awesome.min.css'
 
 // Vue Router
 import router from './router'
