@@ -147,6 +147,7 @@ export default {
     ...mapActions([
       'getSessionForUser',
       'setEditorChange',
+      'updateRawContent',
       'uploadFileToOwner',
       'rawWS'
     ]),
@@ -183,8 +184,9 @@ export default {
 
     async handleSaveContent() {
       const content = this.editor.runCommand('gjs-get-inlined-html')
-      await this.handleCallAPI(this.updateUserBlockContent, {
-        id: this.currentBlock.id,
+      await this.handleCallAPI(this.updateRawContent, {
+        rawId: this.editorRawId,
+        autoSave: false,
         content
       })
       this.setEditorChange(false)
