@@ -186,6 +186,7 @@ export default {
       const content = this.editor.runCommand('gjs-get-inlined-html')
       await this.handleCallAPI(this.updateRawContent, {
         rawId: this.editorRawId,
+        contributor: this.activeUser.id,
         autoSave: false,
         content
       })
