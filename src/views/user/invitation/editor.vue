@@ -190,7 +190,7 @@ export default {
         autoSave: false,
         content
       })
-      this.setEditorChange(false)
+      window.setTimeout(() => this.setEditorChange(false), 1000)
     },
 
     async handleApplyEditFile(file, name, imageModel) {

@@ -174,4 +174,8 @@ export default {
   display: -webkit-box;
   overflow: hidden;
 }
+
+p {
+  font-family: 'Roboto';
+}
 </style>

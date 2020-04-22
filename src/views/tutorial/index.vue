@@ -1,38 +1,30 @@
 <template>
-  <div>
+  <div style="width: 1300px; margin:auto;">
     <vs-row>
       <vs-col :key="tut.id" v-for="tut in tutorials" vs-type="flex" vs-w="4">
         <div
-          class="tutorial cursor-pointer mb-base"
+          class="tutorial cursor-pointer"
           style="width: 100%; transition: 0.35s;"
           @click="showTutorialDetail(tut.id)"
         >
           <vx-card class="overflow-hidden">
             <template slot="no-body">
-              <vs-row>
-                <vs-col
-                  vs-type="flex"
-                  vs-justify="center"
-                  vs-align="center"
-                  vs-w="4"
-                >
-                  <div class="flex h-64 my-4">
-                    <img
-                      :src="tut.thumbnail"
-                      :alt="tut.name"
-                      style="max-width: 100%; max-height: 100%; margin: auto"
-                    />
-                  </div>
-                </vs-col>
-                <vs-col vs-w="8" class="my-4">
-                  <p class="truncate-two font-semibold" style="font-size: 20px">
-                    {{ tut.name }}
-                  </p>
-                  <p class="truncate-three mt-3" style="font-size: 18px">
-                    {{ tut.description }}
-                  </p>
-                </vs-col>
-              </vs-row>
+              <div class="h-64 img-holder">
+                <img
+                  :src="tut.thumbnail"
+                  :alt="tut.name"
+                  style="width: 100%; height: 100%;"
+                />
+              </div>
+              <p
+                class="truncate-two font-semibold px-5 py-2"
+                style="font-size: 20px; color: #33caad"
+              >
+                {{ tut.name }}
+              </p>
+              <p class="truncate-three px-5 pb-2" style="font-size: 14px">
+                {{ tut.description }}
+              </p>
             </template>
           </vx-card>
         </div>
@@ -99,5 +91,61 @@ div.box {
 .tutorial:hover {
   transform: translateY(-5px);
   box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* .wave-bottom {
+  position: relative;
+}
+
+.wave-bottom::before,
+.wave-bottom::after {
+  border-top: 5px solid rgba(237, 30, 30, 1);
+}
+
+.wave-bottom::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  background-size: 20px 40px;
+  background-image: radial-gradient(
+    circle at 10px -15px,
+    transparent 20px,
+    #fff 21px
+  );
+}
+
+.wave-bottom::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 15px;
+  background-size: 40px 40px;
+  background-image: radial-gradient(
+    circle at 10px 26px,
+    #fff 20px,
+    transparent 21px
+  );
+} */
+
+.img-holder {
+  position: relative;
+}
+
+.img-holder::before {
+  content: '';
+  width: 102%;
+  height: 100%;
+  position: absolute;
+  left: -2px;
+  bottom: -3px;
+  z-index: 2;
+  background: url(https://stripo.email/img/front/wave-line-black-white.svg) 100%
+    100% no-repeat;
+  background-size: 100%;
 }
 </style>

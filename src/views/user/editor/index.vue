@@ -356,7 +356,7 @@ export default {
           autoSave: false,
           content
         })
-        this.setEditorChange(false)
+        window.setTimeout(() => this.setEditorChange(false), 1000)
       }
     },
 
