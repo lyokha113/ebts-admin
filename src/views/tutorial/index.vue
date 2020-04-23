@@ -17,12 +17,19 @@
                 />
               </div>
               <p
-                class="truncate-two font-semibold px-5 py-2"
-                style="font-size: 20px; color: #33caad"
+                class="px-5 pb-1"
+                style="font-size: 16px; color: grey; text-transform: capitalize;"
+              >
+                <feather-icon icon="ClockIcon" svgClasses="h-4 w-4" />
+                {{ tut.date | duration('humanize') }}
+              </p>
+              <p
+                class="truncate-two font-semibold px-5 pb-2"
+                style="font-size: 22px; color: #33caad"
               >
                 {{ tut.name }}
               </p>
-              <p class="truncate-three px-5 pb-2" style="font-size: 14px">
+              <p class="truncate-three px-5 pb-1" style="font-size: 14px">
                 {{ tut.description }}
               </p>
             </template>
@@ -93,45 +100,6 @@ div.box {
   box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* .wave-bottom {
-  position: relative;
-}
-
-.wave-bottom::before,
-.wave-bottom::after {
-  border-top: 5px solid rgba(237, 30, 30, 1);
-}
-
-.wave-bottom::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 10px;
-  background-size: 20px 40px;
-  background-image: radial-gradient(
-    circle at 10px -15px,
-    transparent 20px,
-    #fff 21px
-  );
-}
-
-.wave-bottom::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 15px;
-  background-size: 40px 40px;
-  background-image: radial-gradient(
-    circle at 10px 26px,
-    #fff 20px,
-    transparent 21px
-  );
-} */
-
 .img-holder {
   position: relative;
 }
@@ -144,8 +112,8 @@ div.box {
   left: -2px;
   bottom: -3px;
   z-index: 2;
-  background: url(https://stripo.email/img/front/wave-line-black-white.svg) 100%
-    100% no-repeat;
+  background: url(../../assets/images/wave-line-black-white.svg) 100% 100%
+    no-repeat;
   background-size: 100%;
 }
 </style>
