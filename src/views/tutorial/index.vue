@@ -121,6 +121,6 @@ div.box {
 }
 
 /deep/ .vs-popup {
-  width: 40%;
+  width: 75%;
 }
 </style>
