@@ -320,7 +320,7 @@ export default {
         isErrors = true
       }
 
-      if (this.name.length < 1 && this.name.length > 10) {
+      if (this.name.trim().length < 1 || this.name.trim().length > 10) {
         this.handleErrorInput(
           'Error input value',
           'Block name must be 1 - 10 characters'
@@ -339,7 +339,7 @@ export default {
         accept: async () => {
           if (
             await this.handleCallAPI(this.createUserBlock, {
-              name: this.name,
+              name: this.name.trim(),
               icon: this.icon
             })
           ) {
@@ -355,7 +355,10 @@ export default {
         isErrors = true
       }
 
-      if (this.nameUpdate.length < 1 && this.nameUpdate.length > 10) {
+      if (
+        this.nameUpdate.trim().length < 1 ||
+        this.nameUpdate.trim().length > 10
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Block name must be 1 - 10 characters'
@@ -375,7 +378,7 @@ export default {
           if (
             await this.handleCallAPI(this.updateUserBlock, {
               id: this.id,
-              name: this.nameUpdate,
+              name: this.nameUpdate.trim(),
               icon: this.iconUpdate
             })
           ) {
@@ -467,6 +470,14 @@ export default {
 
 #sync-popup {
   z-index: 51100;
+
+  /deep/ .vs-popup--content {
+    overflow-y: scroll;
+  }
+
+  /deep/ .multiselect--active .multiselect__content-wrapper {
+    display: contents;
+  }
 }
 
 .new-box-wrapper,

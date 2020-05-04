@@ -185,7 +185,7 @@
           type="filled"
           class="float-right mt-5"
           @click="handleCreateTemplate"
-          :disabled="!name || !description || !workspaces.length"
+          :disabled="!name || !description || !workspace"
           >Create</vs-button
         >
       </div>
@@ -248,7 +248,7 @@ export default {
     },
     async handleCreateTemplate() {
       let isError = false
-      if (this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -256,7 +256,10 @@ export default {
         isError = true
       }
 
-      if (this.description.length < 5 || this.description.length > 300) {
+      if (
+        this.description.trim().length < 5 ||
+        this.description.trim().length > 300
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Description must be 5 - 300 characters'
@@ -279,8 +282,8 @@ export default {
         text: `Do you want to create with this template content ?`,
         accept: async () => {
           const raw = {
-            name: this.name,
-            description: this.description,
+            name: this.name.trim(),
+            description: this.description.trim(),
             workspaceId: this.workspace.id,
             templateId: this.id
           }

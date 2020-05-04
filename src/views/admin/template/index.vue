@@ -238,7 +238,10 @@ export default {
         isError = true
       }
 
-      if (this.description.length < 5 || this.description.length > 300) {
+      if (
+        this.description.trim().length < 5 ||
+        this.description.trim().length > 300
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Description must be 5 - 300 characters'
@@ -264,7 +267,7 @@ export default {
         name: this.name,
         authorId: this.activeUser && this.activeUser.id,
         content: this.content,
-        description: this.description,
+        description: this.description.trim(),
         categoryIds: this.categories.map(c => c.id)
       }
 

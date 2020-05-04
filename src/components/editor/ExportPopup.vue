@@ -254,7 +254,7 @@ export default {
     },
 
     async handleOutlookDraft() {
-      if (!this.validateEmail(this.outlookEmail)) {
+      if (!this.validateEmail(this.outlookEmail.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           `Please re-check email format`
@@ -265,7 +265,7 @@ export default {
       await this.fetchInlineContent()
       const request = {
         rawTemplateId: this.editorRawId,
-        email: this.outlookEmail,
+        email: this.outlookEmail.trim(),
         password: this.outlookPassword
       }
       if (await this.handleCallAPI(this.makeDraftOutlook, request)) {
@@ -274,7 +274,7 @@ export default {
     },
 
     async handleYahooDraft() {
-      if (!this.validateEmail(this.yahooEmail)) {
+      if (!this.validateEmail(this.yahooEmail.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           `Please re-check email format`
@@ -285,7 +285,7 @@ export default {
       await this.fetchInlineContent()
       const request = {
         rawTemplateId: this.editorRawId,
-        email: this.yahooEmail,
+        email: this.yahooEmail.trim(),
         password: this.yahooPassword
       }
       if (await this.handleCallAPI(this.makeDraftYahoo, request)) {

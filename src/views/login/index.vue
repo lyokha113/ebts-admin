@@ -147,12 +147,21 @@ export default {
       this.popupRecovery = true
     },
     async handleRecoveryConfirm() {
-      if (await this.handleCallAPI(this.sendEmailConfirm, this.emailRecovery)) {
+      if (!this.emailRecovery.trim()) {
+        this.handleErrorInput('Empty value', 'Please enter email')
+        return
+      }
+      if (
+        await this.handleCallAPI(
+          this.sendEmailConfirm,
+          this.emailRecovery.trim()
+        )
+      ) {
         this.popupRecovery = false
       }
     },
     handleLogin() {
-      if (!this.email || !this.password) {
+      if (!this.email.trim() || !this.password) {
         this.handleErrorInput('Empty value', 'Please enter email and password')
         return
       }
@@ -160,7 +169,7 @@ export default {
     },
     async handleloginConfirm() {
       const loginInfo = {
-        email: this.email,
+        email: this.email.trim(),
         password: this.password,
         page: this.$route.query.return
       }

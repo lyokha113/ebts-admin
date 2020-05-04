@@ -202,7 +202,7 @@
           class="float-right mt-5"
           @click="handleUpdateRaw"
           :disabled="
-            !templateName || !templateDescription || !templateWorkspace.length
+            !templateName || !templateDescription || !templateWorkspace
           "
           >Update</vs-button
         >
@@ -330,7 +330,10 @@ export default {
     },
     handlePopupCreateTemplate() {
       let isErrors = false
-      if (this.templateName.length < 5 || this.templateName.length > 30) {
+      if (
+        this.templateName.trim().length < 5 ||
+        this.templateName.trim().length > 30
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -339,8 +342,8 @@ export default {
       }
 
       if (
-        this.templateDescription.length < 5 &&
-        this.templateDescription.length > 300
+        this.templateDescription.trim().length < 5 ||
+        this.templateDescription.trim().length > 300
       ) {
         this.handleErrorInput(
           'Error input value',
@@ -366,8 +369,8 @@ export default {
     },
     async handleAddRaw(templateId) {
       const raw = {
-        name: this.templateName,
-        description: this.templateDescription,
+        name: this.templateName.trim(),
+        description: this.templateDescription.trim(),
         workspaceId: this.workspace,
         templateId: templateId
       }
@@ -401,7 +404,10 @@ export default {
     },
     async handllePublishRaw() {
       let isErrors = false
-      if (this.publishName.length < 5 || this.publishName.length > 30) {
+      if (
+        this.publishName.trim().length < 5 ||
+        this.publishName.trim().length > 30
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -410,8 +416,8 @@ export default {
       }
 
       if (
-        this.publishDescription.length < 5 &&
-        this.publishDescription.length > 300
+        this.publishDescription.trim().length < 5 ||
+        this.publishDescription.trim().length > 300
       ) {
         this.handleErrorInput(
           'Error input value',
@@ -435,8 +441,8 @@ export default {
           )
           this.popupPublishTemplate = false
           await this.handleCallAPI(this.createPublish, {
-            name: this.publishName,
-            description: this.publishDescription,
+            name: this.publishName.trim(),
+            description: this.publishDescription.trim(),
             content: raw.content
           })
         }
@@ -444,7 +450,10 @@ export default {
     },
     async handleUpdateRaw() {
       let isErrors = false
-      if (this.templateName.length < 5 || this.templateName.length > 30) {
+      if (
+        this.templateName.trim().length < 5 ||
+        this.templateName.trim().length > 30
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -453,8 +462,8 @@ export default {
       }
 
       if (
-        this.templateDescription.length < 5 &&
-        this.templateDescription.length > 300
+        this.templateDescription.trim().length < 5 ||
+        this.templateDescription.trim().length > 300
       ) {
         this.handleErrorInput(
           'Error input value',
@@ -469,8 +478,8 @@ export default {
 
       const raw = {
         id: this.templateToUpdate.id,
-        name: this.templateName,
-        description: this.templateDescription,
+        name: this.templateName.trim(),
+        description: this.templateDescription.trim(),
         workspaceId: this.templateWorkspace && this.templateWorkspace.id,
         currentWS: this.templateToUpdate.workspaceId
       }
@@ -491,7 +500,7 @@ export default {
       })
     },
     async handleAdd() {
-      if (this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -505,7 +514,7 @@ export default {
         text: `Do you want to create new workspace ?`,
         accept: async () => {
           this.workspace = await this.handleCallAPI(this.createWorkspace, {
-            name: this.name
+            name: this.name.trim()
           })
           if (this.workspace != undefined) {
             this.popupCreate = false
@@ -514,7 +523,7 @@ export default {
       })
     },
     async handleUpdate() {
-      if (this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -529,7 +538,7 @@ export default {
         accept: async () => {
           if (
             await this.handleCallAPI(this.updateWorkspace, {
-              id: this.workspace,
+              id: this.workspace.trim(),
               name: this.name
             })
           ) {

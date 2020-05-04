@@ -2,7 +2,7 @@
   <div id="data-list-list-view" class="data-list-container">
     <DataSidebar
       :is-sidebar-active="sideBar"
-      :isCreating="selected"
+      :selected="selected"
       @closeSidebar="sideBar = false"
     />
 
@@ -119,7 +119,7 @@
                 />
               </span>
               <span
-                v-if="activeUser && activeUser.id != tr.id && tr.roleId == 1"
+                v-if="tr.roleId == 1"
                 class="action-icon mx-1"
                 @click="handleSideBar(tr)"
               >

@@ -3,7 +3,7 @@
     <vs-row>
       <vs-col :key="tut.id" v-for="tut in tutorials" vs-type="flex" vs-w="4">
         <div
-          class="tutorial cursor-pointer"
+          class="tutorial cursor-pointer mb-5"
           style="width: 100%; transition: 0.35s;"
           @click="showTutorialDetail(tut.id)"
         >
@@ -29,7 +29,10 @@
               >
                 {{ tut.name }}
               </p>
-              <p class="truncate-three px-5 pb-1" style="font-size: 14px">
+              <p
+                class="truncate-three px-5 pb-1"
+                style="font-size: 14px; min-height: 70px"
+              >
                 {{ tut.description }}
               </p>
             </template>
@@ -37,7 +40,7 @@
         </div>
       </vs-col>
     </vs-row>
-    <CustomPopup :title="title" fullscreen :active.sync="popupDetails">
+    <CustomPopup :title="title" :active.sync="popupDetails">
       <div v-html="content" />
     </CustomPopup>
   </div>
@@ -74,7 +77,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss" scoped>
 img.thumbnail {
   width: 100px;
   float: left;
@@ -115,5 +118,9 @@ div.box {
   background: url(../../assets/images/wave-line-black-white.svg) 100% 100%
     no-repeat;
   background-size: 100%;
+}
+
+/deep/ .vs-popup {
+  width: 40%;
 }
 </style>

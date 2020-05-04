@@ -437,12 +437,12 @@ export default {
       })
 
       if (formData.getAll('files').length) {
-        const uploader = {
+        const task = {
           rawId: this.editorRawId,
           file: formData,
           onUploadProgress: this.handleOnUploaddProgress
         }
-        await this.handleCallAPI(this.uploadFiles, uploader)
+        await this.handleCallAPI(this.uploadFiles, task)
         this.uploadPercent = 0
         this.uploadPopup = false
       }

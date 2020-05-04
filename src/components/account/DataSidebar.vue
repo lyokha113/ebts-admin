@@ -10,7 +10,7 @@
     spacer
   >
     <div class="mt-6 flex items-center justify-between px-6">
-      <h4>{{ isCreating ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
+      <h4>{{ selected ? 'UPDATE ACCOUNT' : 'CREATE NEW ACCOUNT' }}</h4>
       <feather-icon
         icon="XIcon"
         class="cursor-pointer"
@@ -29,7 +29,7 @@
           label="Email"
           name="email"
           class="mt-5 w-full"
-          :readonly="isCreating"
+          :readonly="selected"
         />
         <vs-input
           v-model="fullName"
@@ -72,7 +72,7 @@
 
     <div slot="footer" class="flex flex-wrap items-center justify-center p-6">
       <vs-button class="mr-6" @click="handleSubmit">{{
-        isCreating ? 'Update' : 'Create'
+        selected ? 'Update' : 'Create'
       }}</vs-button>
       <vs-button
         type="border"
@@ -93,7 +93,7 @@ export default {
       type: Boolean,
       default: true
     },
-    isCreating: {
+    selected: {
       type: Object,
       default: null
     }
@@ -133,11 +133,11 @@ export default {
   },
   watch: {
     isSidebarActive() {
-      if (this.isCreating) {
-        this.email = this.isCreating.email
-        this.fullName = this.isCreating.fullName
-        this.provider = this.isCreating.provider.toUpperCase()
-        this.role = this.isCreating.roleName.toUpperCase()
+      if (this.selected) {
+        this.email = this.selected.email
+        this.fullName = this.selected.fullName
+        this.provider = this.selected.provider.toUpperCase()
+        this.role = this.selected.roleName.toUpperCase()
       } else {
         this.initForm()
       }
@@ -155,7 +155,7 @@ export default {
     async handleSubmit() {
       let isError = false
 
-      if (!this.validateEmail(this.email)) {
+      if (!this.validateEmail(this.email.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           'Please re-check your email'
@@ -163,7 +163,7 @@ export default {
         isError = true
       }
 
-      if (!this.fullName.length < 5 || this.fullName.length > 30) {
+      if (this.fullName.trim().length < 5 || this.fullName.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -172,38 +172,40 @@ export default {
       }
 
       if (
-        !this.isCreating &&
-        this.password.length != 0 &&
+        !this.selected &&
         (this.password.length < 6 || this.password.length > 30)
       ) {
         this.handleErrorInput(
           'Error input value',
           'Password must be 6 - 30 characters'
         )
+        isError = true
       } else if (
-        this.isCreating &&
-        (this.password.length < 6 || this.password.length > 30)
+        this.selected &&
+        ((this.password.length > 0 && this.password.length < 6) ||
+          this.password.length > 30)
       ) {
         this.handleErrorInput(
           'Error input value',
           'Password must be 6 - 30 characters'
         )
+        isError = true
       }
 
       if (isError) {
         return
       }
 
-      if (this.isCreating) {
+      if (this.selected) {
         this.$vs.dialog({
           type: 'confirm',
           title: `Confirm`,
           text: `Please check all information to create new account`,
           accept: async () => {
             const obj = {
-              id: this.isCreating.id,
-              active: this.isCreating.active,
-              fullName: this.fullName,
+              id: this.selected.id,
+              active: this.selected.active,
+              fullName: this.fullName.trim(),
               password: this.password
             }
             if (await this.handleCallAPI(this.updateAccount, obj)) {
@@ -218,8 +220,8 @@ export default {
           text: `Please check all information to update account`,
           accept: async () => {
             const obj = {
-              email: this.email,
-              fullName: this.fullName,
+              email: this.email.trim(),
+              fullName: this.fullName.trim(),
               password: this.password,
               roleId: 1
             }

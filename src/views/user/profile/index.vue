@@ -251,7 +251,7 @@ export default {
     },
     handleAddEmail() {
       let isError = false
-      if (!this.validateEmail(this.emailTest)) {
+      if (!this.validateEmail(this.emailTest.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           'Please re-check your email'
@@ -278,7 +278,7 @@ export default {
       this.handleCallAPI(this.updateUserInvitation, !this.allowInvite)
     },
     handleUpdate() {
-      if (!this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -298,7 +298,7 @@ export default {
     },
     async handleAddEmailConfirm() {
       const userEmail = {
-        string: this.emailTest
+        string: this.emailTest.trim()
       }
       if (await this.handleCallAPI(this.createUserEmail, userEmail)) {
         this.emailTest = ''
@@ -306,7 +306,7 @@ export default {
     },
     async handleUpdateConfirm() {
       const account = {
-        fullName: this.name,
+        fullName: this.name.trim(),
         imageUrl: this.imageUrl
       }
       if (await this.handleCallAPI(this.updateUser, account)) {

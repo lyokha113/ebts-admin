@@ -126,7 +126,7 @@ export default {
     },
     async handlePublish() {
       let isError = false
-      if (this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -134,7 +134,10 @@ export default {
         isError = true
       }
 
-      if (this.description.length < 5 || this.description.length > 300) {
+      if (
+        this.description.trim().length < 5 ||
+        this.description.trim().length > 300
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Description must be 5 - 300 characters'
@@ -153,9 +156,9 @@ export default {
 
       const request = {
         id: this.id,
-        name: this.name,
+        name: this.name.trim(),
         content: this.content,
-        description: this.description,
+        description: this.description.trim(),
         categoryIds: this.categories.map(c => c.id)
       }
 

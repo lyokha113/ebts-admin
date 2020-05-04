@@ -206,10 +206,10 @@ export default {
       'updateCategory'
     ]),
     handleAdd() {
-      if (this.name.length < 5 && this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
-          'Name must be 1 - 10 characters'
+          'Name must be 5 - 30 characters'
         )
         return
       }
@@ -220,7 +220,9 @@ export default {
         text: `Do you want to create new category ?`,
         accept: async () => {
           if (
-            await this.handleCallAPI(this.createCategory, { name: this.name })
+            await this.handleCallAPI(this.createCategory, {
+              name: this.name.trim()
+            })
           ) {
             this.addPrompt = false
           }
@@ -228,10 +230,13 @@ export default {
       })
     },
     handleUpdate() {
-      if (this.updateName.length < 5 && this.updateName.length > 30) {
+      if (
+        this.updateName.trim().length < 5 ||
+        this.updateName.trim().length > 30
+      ) {
         this.handleErrorInput(
           'Error input value',
-          'Name must be 1 - 10 characters'
+          'Name must be 5 - 30 characters'
         )
         return
       }
@@ -241,7 +246,7 @@ export default {
         title: `Confirm`,
         text: `Do you want to update this category ?`,
         accept: async () => {
-          this.selected.name = this.updateName
+          this.selected.name = this.updateName.trim()
           this.selected.trending = this.updateTrending
           if (await this.handleCallAPI(this.updateCategory, this.selected)) {
             this.updatePrompt = false

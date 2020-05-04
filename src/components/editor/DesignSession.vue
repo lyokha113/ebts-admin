@@ -57,7 +57,7 @@ export default {
   methods: {
     ...mapActions(['createContributor', 'kickContributors', 'kickContributor']),
     handleInvite() {
-      if (!this.validateEmail(this.contributorEmail)) {
+      if (!this.validateEmail(this.contributorEmail.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           `Please re-check email format`
@@ -99,7 +99,7 @@ export default {
     },
     async handleInviteConfirm() {
       const invitation = {
-        contributorEmail: this.contributorEmail,
+        contributorEmail: this.contributorEmail.trim(),
         rawId: this.editorRawId
       }
       if (await this.handleCallAPI(this.createContributor, invitation)) {

@@ -131,7 +131,7 @@ export default {
     async handleRegister() {
       let isError = false
 
-      if (!this.validateEmail(this.email)) {
+      if (!this.validateEmail(this.email.trim())) {
         this.handleErrorInput(
           'Email format incorrect',
           'Please re-check your email'
@@ -139,7 +139,7 @@ export default {
         isError = true
       }
 
-      if (!this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -147,7 +147,10 @@ export default {
         isError = true
       }
 
-      if (this.description.length < 5 || this.description.length > 300) {
+      if (
+        this.description.trim().length < 5 ||
+        this.description.trim().length > 300
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Description must be 5 - 300 characters'
@@ -181,8 +184,8 @@ export default {
         text: `Please check all information to create new account`,
         accept: async () => {
           const registerInfo = {
-            email: this.email,
-            fullName: this.name,
+            email: this.email.trim(),
+            fullName: this.name.trim(),
             password: this.password
           }
           this.handleCallAPI(this.register, registerInfo)

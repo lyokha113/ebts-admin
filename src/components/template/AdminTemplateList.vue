@@ -183,14 +183,14 @@ export default {
     },
     handleUpdatePopup(template) {
       this.id = template.id
-      this.name = template.name
-      this.description = template.description
+      this.name = template.name.trim()
+      this.description = template.description.trim()
       this.categories = template.categories
       this.popup = true
     },
     async handleUpdate() {
       let isError = false
-      if (this.name.length < 5 || this.name.length > 30) {
+      if (this.name.trim().length < 5 || this.name.trim().length > 30) {
         this.handleErrorInput(
           'Error input value',
           'Name must be 5 - 30 characters'
@@ -198,7 +198,10 @@ export default {
         isError = true
       }
 
-      if (this.description.length < 5 || this.description.length > 300) {
+      if (
+        this.description.trim().length < 5 ||
+        this.description.trim().length > 300
+      ) {
         this.handleErrorInput(
           'Error input value',
           'Description must be 5 - 300 characters'
@@ -217,8 +220,8 @@ export default {
 
       const template = {
         id: this.id,
-        name: this.name,
-        description: this.description,
+        name: this.name.trim(),
+        description: this.description.trim(),
         categoryIds: this.categories.map(c => c.id),
         active: true
       }
