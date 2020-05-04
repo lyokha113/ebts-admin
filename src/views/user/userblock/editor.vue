@@ -393,6 +393,9 @@ export default {
     }
   }
 }
+/deep/ .gjs-pn-btn.fa.fa-code {
+  display: none;
+}
 #left-panel {
   width: 13%;
   font-family: Arial, Helvetica, sans-serif;

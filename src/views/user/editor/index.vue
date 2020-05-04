@@ -616,6 +616,7 @@ export default {
 /deep/ .gjs-pn-panel.gjs-pn-views {
   .gjs-pn-buttons {
     justify-content: center;
+
     .gjs-pn-btn {
       &.fa-bars:before {
         content: 'LAYER';
@@ -630,6 +631,11 @@ export default {
     }
   }
 }
+
+/deep/ .gjs-pn-btn.fa.fa-code {
+  display: none;
+}
+
 #top-panel {
   width: 100%;
   height: 90px;

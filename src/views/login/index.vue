@@ -147,8 +147,8 @@ export default {
       this.popupRecovery = true
     },
     async handleRecoveryConfirm() {
-      if (!this.emailRecovery.trim()) {
-        this.handleErrorInput('Empty value', 'Please enter email')
+      if (!this.validateEmail(this.emailRecovery.trim())) {
+        this.handleErrorInput('Empty value', 'Please enter email to recover')
         return
       }
       if (

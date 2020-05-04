@@ -147,17 +147,6 @@ export default {
         isError = true
       }
 
-      if (
-        this.description.trim().length < 5 ||
-        this.description.trim().length > 300
-      ) {
-        this.handleErrorInput(
-          'Error input value',
-          'Description must be 5 - 300 characters'
-        )
-        isError = true
-      }
-
       if (this.password.length < 6 || this.password.length > 30) {
         this.handleErrorInput(
           'Error input value',
