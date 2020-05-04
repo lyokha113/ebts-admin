@@ -32,6 +32,7 @@ export default function(editor) {
     blockManager.remove('button')
     blockManager.remove('list-items')
     blockManager.remove('grid-items')
+    blockManager.remove('link-block')
 
     blockManager.getAll().forEach(b => {
       if (sectionBlocksIds.includes(b.id)) b.set('category', 'Section')
@@ -43,6 +44,7 @@ export default function(editor) {
 
     panelManager.removeButton('options', 'gjs-open-import-template')
     panelManager.removeButton('options', 'gjs-toggle-images')
+    panelManager.removeButton('options', 'View code')
   }
 
   const addButtons = () => {
