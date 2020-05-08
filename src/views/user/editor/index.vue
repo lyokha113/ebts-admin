@@ -244,7 +244,7 @@ export default {
       const domComponents = this.editor.DomComponents
 
       this.userBlocks.forEach(block => {
-        domComponents.addType(`user-block-${block.name}`, {
+        domComponents.addType(`user-block`, {
           isComponent: el => {
             return (
               el instanceof HTMLElement &&
@@ -253,7 +253,10 @@ export default {
           },
           model: {
             defaults: {
-              attributes: { datatype: 'user block', name: block.name }
+              attributes: {
+                datatype: 'user block',
+                name: `${block.id}-${block.name}`
+              }
             }
           }
         })
@@ -263,7 +266,7 @@ export default {
           category: 'User Blocks',
           attributes: { class: `fa fa-${block.icon}` },
           content: {
-            type: `user-block-${block.name}`,
+            type: `user-block`,
             content: block.content,
             droppable: false
           }
@@ -296,7 +299,7 @@ export default {
 
     handleTimeoutSave() {
       clearInterval(this.autosaveInterval)
-      if (this.timeoutSave && this.timeoutSave.name != 'None') {
+      if (this.timeoutSave && this.timeoutSave.name != 'No autosave') {
         this.autosaveInterval = setInterval(
           this.handleAutoSave,
           this.timeoutSave.time
@@ -361,7 +364,12 @@ export default {
     },
 
     async handleAutoSave() {
-      if (this.editorChange && this.loaded) {
+      if (
+        this.editorChange &&
+        this.loaded &&
+        this.timeoutSave &&
+        this.timeoutSave.name != 'No autosave'
+      ) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
         if (
           await this.handleCallAPI(
