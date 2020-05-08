@@ -35,14 +35,14 @@
               }"
               @click="handleYahooPopup"
             />
-            <!-- <div
+            <div
               class="shadow-md cursor-pointer export"
               :style="{
                 backgroundImage:
                   'url(' + require('@/assets/images/export-outlook.png') + ')'
               }"
               @click="handleOutlookPopup"
-            /> -->
+            />
           </div>
           <div class="text-row">
             <div>
@@ -54,9 +54,9 @@
             <div>
               Draft Yahoo
             </div>
-            <!-- <div>
+            <div>
               Draft Outlook
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="modal-footer">
