@@ -180,6 +180,13 @@ export default {
 
     async handleSaveContent() {
       const content = this.editor.runCommand('gjs-get-inlined-html')
+      if (!content) {
+        this.handleErrorInput(
+          'Can not save userblock',
+          'Content can not be empty'
+        )
+        return
+      }
       await this.handleCallAPI(this.updateUserBlockContent, {
         id: this.currentBlock.id,
         content

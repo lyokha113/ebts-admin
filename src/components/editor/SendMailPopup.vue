@@ -36,6 +36,8 @@
               </span>
             </div>
             <div v-if="isDynamicData" class="description-row text-base italic">
+              <span>Input values won't be validate. Use at your own way.</span>
+              <br />
               <span
                 >All dynamic components must have unique name attribute</span
               >

@@ -323,6 +323,13 @@ export default {
     async handleSaveContent() {
       if (this.loaded) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
+        if (!content) {
+          this.handleErrorInput(
+            'Can not save template',
+            'Template can not be empty'
+          )
+          return
+        }
         await this.handleCallAPI(this.updateRawContent, {
           rawId: this.editorRawId,
           autoSave: false,
@@ -340,6 +347,9 @@ export default {
         this.timeoutSave.name != 'No autosave'
       ) {
         const content = this.editor.runCommand('gjs-get-inlined-html')
+        if (!content) {
+          return
+        }
         if (
           await this.handleCallAPI(
             this.autoUpdateRawContent,
