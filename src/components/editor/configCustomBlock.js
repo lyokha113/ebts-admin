@@ -2,7 +2,7 @@ export default function(editor) {
   const blockManager = editor.BlockManager
   const domComponents = editor.DomComponents
 
-  domComponents.addType('dynamic-text', {
+  domComponents.addType('Dynamic Text', {
     isComponent: el => {
       return (
         el instanceof HTMLElement &&
@@ -28,7 +28,7 @@ export default function(editor) {
     }
   })
 
-  domComponents.addType('dynamic-link', {
+  domComponents.addType('Dynamic Link', {
     isComponent: el => {
       return (
         el instanceof HTMLElement &&
@@ -68,7 +68,7 @@ export default function(editor) {
     }
   })
 
-  domComponents.addType('dynamic-image', {
+  domComponents.addType('Dynamic Image', {
     isComponent: el => {
       return (
         el instanceof HTMLElement &&
@@ -115,36 +115,36 @@ export default function(editor) {
     }
   })
 
-  blockManager.add('dynamic text', {
+  blockManager.add('Dynamic Text', {
     label: 'Dynamic Text',
     category: 'Dynamic Content',
     attributes: { class: 'gjs-fonts gjs-f-text' },
     content: {
-      type: 'dynamic-text',
+      type: 'Dynamic Text',
       content: 'Dynamic Text',
       style: { color: 'lightgrey', padding: '10px' },
       droppable: false
     }
   })
 
-  blockManager.add('dynamic link', {
+  blockManager.add('Dynamic Link', {
     label: 'Dynamic Link',
     category: 'Dynamic Content',
     attributes: { class: 'fa fa-external-link' },
     content: {
-      type: 'dynamic-link',
+      type: 'Dynamic Link',
       content: 'Dynamic Link',
       style: { color: '#3b97e3', padding: '0 10px 0 10px' },
       droppable: false
     }
   })
 
-  blockManager.add('dynamic image', {
+  blockManager.add('Dynamic Image', {
     label: 'Dynamic Image',
     category: 'Dynamic Content',
     attributes: { class: 'fa fa-file-image-o' },
     content: {
-      type: 'dynamic-image',
+      type: 'Dynamic Image',
       droppable: false
     }
   })

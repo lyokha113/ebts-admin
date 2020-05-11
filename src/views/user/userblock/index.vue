@@ -498,6 +498,10 @@ export default {
   background-position: center;
 }
 
+.icon-wrapper {
+  margin-top: 5px;
+}
+
 .icon-wrapper:hover {
   box-shadow: 0px 0px 3px 3px #7367f0;
 }

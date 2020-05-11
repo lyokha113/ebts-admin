@@ -98,6 +98,7 @@ import SendMailPopup from '@/components/editor/SendMailPopup.vue'
 import DesignSession from '@/components/editor/DesignSession.vue'
 import configEditor from '@/components/editor/configEditor.js'
 import configCustomBlock from '@/components/editor/configCustomBlock.js'
+import configUserBlock from '@/components/editor/configUserBlock.js'
 import {
   connectWSRaw,
   sendOfflineSession,
@@ -181,6 +182,7 @@ export default {
         editor => grapesjsPresetNewsletter(editor, {}),
         editor => configEditor(editor),
         editor => configCustomBlock(editor),
+        editor => configUserBlock(editor, this),
         editor =>
           tUIImageEditor(editor, {
             includeUI: {
@@ -240,39 +242,6 @@ export default {
     })
 
     this.editor.on('load', async () => {
-      const blockManager = this.editor.BlockManager
-      const domComponents = this.editor.DomComponents
-
-      this.userBlocks.forEach(block => {
-        domComponents.addType(`user-block`, {
-          isComponent: el => {
-            return (
-              el instanceof HTMLElement &&
-              el.getAttribute('datatype') == 'user block'
-            )
-          },
-          model: {
-            defaults: {
-              attributes: {
-                datatype: 'user block',
-                name: `${block.id}-${block.name}`
-              }
-            }
-          }
-        })
-
-        blockManager.add(`${block.id}-${block.name}`, {
-          label: block.name,
-          category: 'User Blocks',
-          attributes: { class: `fa fa-${block.icon}` },
-          content: {
-            type: `user-block`,
-            content: block.content,
-            droppable: false
-          }
-        })
-      })
-
       window.setTimeout(() => this.setEditorChange(false), 1000)
       this.loaded = true
     })
