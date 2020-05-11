@@ -41,8 +41,8 @@
               >
               <br />
               <span
-                >Empty attribute names was ignored and duplicate one will be got
-                the last one</span
+                >Empty attribute names was ignored and duplications will get
+                same value</span
               >
             </div>
 
