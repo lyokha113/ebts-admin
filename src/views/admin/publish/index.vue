@@ -33,7 +33,7 @@
           class="mt-1 mb-4"
         />Enter description:
         <vs-textarea v-model="description" width="100%" class="mt-1 mb-5" />
-        Enter workspaces:
+        Enter categories:
         <multiselect
           v-model="categories"
           track-by="id"
