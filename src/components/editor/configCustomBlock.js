@@ -11,6 +11,7 @@ export default function(editor) {
     },
     model: {
       defaults: {
+        droppable: false,
         traits: [
           { name: 'name', placeholder: 'Component name' },
           { name: 'text', placeholder: 'Default text' }
@@ -37,6 +38,7 @@ export default function(editor) {
     },
     model: {
       defaults: {
+        droppable: false,
         tagName: 'a',
         traits: [
           { name: 'name', placeholder: 'Component name' },
@@ -77,6 +79,7 @@ export default function(editor) {
     },
     model: {
       defaults: {
+        droppable: false,
         tagName: 'img',
         traits: [
           { name: 'name', placeholder: 'Component name' },
@@ -122,8 +125,7 @@ export default function(editor) {
     content: {
       type: 'Dynamic Text',
       content: 'Dynamic Text',
-      style: { color: 'lightgrey', padding: '10px' },
-      droppable: false
+      style: { color: 'lightgrey', padding: '10px' }
     }
   })
 
@@ -134,8 +136,7 @@ export default function(editor) {
     content: {
       type: 'Dynamic Link',
       content: 'Dynamic Link',
-      style: { color: '#3b97e3', padding: '0 10px 0 10px' },
-      droppable: false
+      style: { color: '#3b97e3', padding: '0 10px 0 10px' }
     }
   })
 
@@ -144,8 +145,7 @@ export default function(editor) {
     category: 'Dynamic Content',
     attributes: { class: 'fa fa-file-image-o' },
     content: {
-      type: 'Dynamic Image',
-      droppable: false
+      type: 'Dynamic Image'
     }
   })
 }

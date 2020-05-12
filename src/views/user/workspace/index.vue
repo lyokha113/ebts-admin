@@ -369,6 +369,13 @@ export default {
       this.popupCreateTemplate = true
     },
     async handleCopyRaw(raw) {
+      if (raw.name.length > 20) {
+        this.handleErrorInput(
+          'Name is too long',
+          'Please edit name before make a copy'
+        )
+        return
+      }
       const copied = {
         rawId: raw.id,
         name: raw.name + ' (Copied)',
