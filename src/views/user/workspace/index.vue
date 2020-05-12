@@ -51,6 +51,7 @@
           :raw="item"
           @updateRaw="handlePopupUpdateRaw($event)"
           @publishRaw="handlePopupPublishRaw($event)"
+          @copyRaw="handleCopyRaw($event)"
         />
       </vs-col>
       <vs-col vs-type="flex" vs-align="center" vs-w="2">
@@ -366,6 +367,21 @@ export default {
     handleBack() {
       this.popupTemplates = false
       this.popupCreateTemplate = true
+    },
+    async handleCopyRaw(raw) {
+      const copied = {
+        rawId: raw.id,
+        name: raw.name + ' (Copied)',
+        description: raw.description,
+        workspaceId: this.workspace
+      }
+      this.$vs.dialog({
+        type: 'confirm',
+        title: `Confirm`,
+        text: `Do you want to copy this design ?`,
+        accept: async () =>
+          await this.handleCallAPI(this.createRawTemplate, copied)
+      })
     },
     async handleAddRaw(templateId) {
       const raw = {

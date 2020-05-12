@@ -43,9 +43,9 @@
           <vs-button
             class="mr-2"
             type="gradient"
-            icon="search"
+            icon="file_copy"
             radius
-            @click="handlePreview(raw.id)"
+            @click="handleCopy(raw)"
           />
           <vs-button
             class="mx-2"
@@ -90,10 +90,8 @@ export default {
   },
   methods: {
     ...mapActions(['getRawTemplate', 'deleteRawTemplate']),
-    async handlePreview(id) {
-      await this.handleCallAPI(this.getRawTemplate, id)
-      const preview = window.open('', '_blank')
-      preview.document.write(this.editorContent)
+    async handleCopy(raw) {
+      this.$emit('copyRaw', raw)
     },
     async handleDelete(raw) {
       this.$vs.dialog({
