@@ -14,7 +14,7 @@
     "ag-grid-vue": "^20.2.0",
     "algoliasearch": "^3.33.0",
     "apexcharts": "^3.11.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.8.0",
     "core-js": "2.6.5",
     "elasticlunr": "^0.9.5",
